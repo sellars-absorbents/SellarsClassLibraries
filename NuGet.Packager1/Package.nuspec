@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Sellars.DRCLib</id>
+    <version>1.0.0</version>
+    <title>Sellars DRCLib</title>
+    <authors>Jim Radke</authors>
+    <owners></owners>
+    <description>
+      Library of functions uses to access various common system components.
+    </description>
+    <releaseNotes>
+    </releaseNotes>
+    <summary>
+      Library of functions uses to access various common system components.
+    </summary>
+    <language>en-US</language>
+    <projectUrl>https://nuget.org/packages/Sellars.DRCLib</projectUrl>
+    <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
+    <copyright>Copyright  2015</copyright>
+    <dependencies>
+        <group targetFramework="net45">
+        </group>
+    </dependencies>
+    <references></references>
+    <tags></tags>
+  </metadata>
+  <files>
+    <file src="lib\" target="lib" />
+    <file src="tools\" target="tools" />
+    <file src="content\" target="content" />
+  </files>
+</package>
