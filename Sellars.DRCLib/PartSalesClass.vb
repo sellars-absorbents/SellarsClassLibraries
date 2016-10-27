@@ -36,6 +36,14 @@ Public Class PartSalesClass
         End Get
     End Property
 
+    Public Sub New()
+
+    End Sub
+
+    Public Sub New(ByVal passpart As String)
+        Read(passpart)
+    End Sub
+
     Public Function IsTaxable(ByVal passpart As String) As Boolean
         ' Declare necessary local variables
         Dim taxabl As Boolean = False
