@@ -141,7 +141,7 @@ Public Class Inventory
     Public Function Available(ByVal Warehouse As String, ByVal PartNumber As String, ByVal OriginalQuantity As Integer, ByVal NewQuantity As Integer) As WarehouseData
 
         ' Get a list of all the warehouses (given, primary backup, and secondary backup)
-        Dim Warehouses As BlockingCollection(Of WarehouseData) = GetWarehouses(Warehouse)
+        Dim Warehouses As BlockingCollection(Of WarehouseData) = GetBackupWarehouses(Warehouse)
 
         ' Check all the applicable locations for available inventory
         Parallel.ForEach(Warehouses, Sub(whse As WarehouseData)
@@ -698,7 +698,7 @@ Public Class Inventory
         Return rtnQty
     End Function
 
-    Private Function GetWarehouses(ByVal Warehouse As String) As BlockingCollection(Of WarehouseData)
+    Private Function GetBackupWarehouses(ByVal Warehouse As String) As BlockingCollection(Of WarehouseData)
         Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
         Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
@@ -712,7 +712,7 @@ Public Class Inventory
             ' Open the SQL connection
             Conn.Open()
 
-            Dim command As String = "SELECT @Primary = isnull(PrimaryBackup, ''), @Secondary = isnull(SecondaryBackup, '') from UnisourceFacilities where STK = @Warehouse"
+            Dim command As String = "SELECT @Primary = isnull(PrimaryBackup, ''), @Secondary = isnull(SecondaryBackup, '') from Warehouses where STK = @Warehouse"
             Dim cmd As New SqlCommand(command, Conn)
             cmd.CommandType = CommandType.Text
             cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
@@ -768,7 +768,7 @@ Public Class Inventory
         Dim rtnWarehouses As New List(Of WarehouseData)
 
         ' Get all the warehouses data
-        Dim AllWarehouses As BlockingCollection(Of WarehouseData) = GetAllWarehouses()
+        Dim AllWarehouses As BlockingCollection(Of WarehouseData) = GetFGWarehouses()
 
         ' Set up the query to get all the warehouses that have overstock quantities of the identified product
         ' sorted by the closest to where the primary warehouse is to the farthest away
@@ -872,7 +872,7 @@ Public Class Inventory
             ' warehouses had enough to fill the line order
             If Not found Then
                 ' First we need to get all the warehouses associated with the primary warehouse
-                Dim warehouses As List(Of String) = (From whse As WarehouseData In GetWarehouses(PrimaryWarehouse)
+                Dim warehouses As List(Of String) = (From whse As WarehouseData In GetBackupWarehouses(PrimaryWarehouse)
                                                      Order By whse.Sequence
                                                      Select whse.Warehouse).ToList()
 
@@ -945,7 +945,7 @@ Public Class Inventory
 
     End Function
 
-    Private Function GetAllWarehouses() As BlockingCollection(Of WarehouseData)
+    Private Function GetFGWarehouses() As BlockingCollection(Of WarehouseData)
         Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
         Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
@@ -953,7 +953,7 @@ Public Class Inventory
             ' Open the SQL connection
             Conn.Open()
 
-            Dim command As String = "SELECT STK, GeoLoc from UnisourceFacilities"
+            Dim command As String = "SELECT STK, GeoLoc from Warehouses where FGWarehouse = 1 and Active = 1"
             Dim cmd As New SqlCommand(command, Conn)
             cmd.CommandType = CommandType.Text
 

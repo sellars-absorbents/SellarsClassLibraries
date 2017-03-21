@@ -2485,7 +2485,7 @@ Public Class SalesOrderDetailClass
     ' Function used to update the line part number
     Public Sub UpdatePartNumber(ByVal MaxProcess As Integer, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal PartNumber As String, ByVal STK As String)
         ' Declare necessary local variables and initialize them
-        Dim Status As String
+        Dim Status As String = "3"
 
         ' Declare the necessary internal variables
         _ErrorDescription = "Line Item Clear Structures"
