@@ -1695,6 +1695,12 @@ Public Class SalesOrderDetailClass
         myDataColumn.ReadOnly = True
         myDataTable.Columns.Add(myDataColumn)
 
+        myDataColumn = New DataColumn
+        myDataColumn.DataType = System.Type.GetType("System.Decimal")
+        myDataColumn.ColumnName = "CaseWeight"
+        myDataColumn.ReadOnly = True
+        myDataTable.Columns.Add(myDataColumn)
+
         ' Add the new DataTable to the DataSet. 
         Dim myDataSet As New DataSet
         myDataSet.Tables.Add(myDataTable)
@@ -1710,12 +1716,12 @@ Public Class SalesOrderDetailClass
         ' Define a variable for the database name so the application automatically sets up the SQL string below with the correct table names for test versus production
         Dim dataBaseName As String = IIf(System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString.ToUpper.Contains("TEST"), "TestShopfloorControl", "ShopfloorControl")
 
-        Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth " & _
-                       "From SO_Detail sod join CUSTOMER_MASTER cm on CUSTID_28 = CUSTID_23 " & _
-                       "join " + dataBaseName + "..SalesOrderDetailExt sodx on sodx.ORDNUM = sod.ORDNUM_28 and sodx.DELNUM = DELNUM_28 and sodx.LINNUM = LINNUM_28 " & _
-                       "left outer join Part_Sales on PRTNUM_29 = PRTNUM_28 " & _
-                       "left outer join " + dataBaseName + "..PartMasterCharacteristics pmc on pmc.PRTNUM = PRTNUM_28 " & _
-                       "Where ORDNUM_28 = '" & passorder & "' " & _
+        Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth, isnull(GrossWeight, 0) GrossWeight " &
+                       "From SO_Detail sod join CUSTOMER_MASTER cm on CUSTID_28 = CUSTID_23 " &
+                       "join " + dataBaseName + "..SalesOrderDetailExt sodx on sodx.ORDNUM = sod.ORDNUM_28 and sodx.DELNUM = DELNUM_28 and sodx.LINNUM = LINNUM_28 " &
+                       "left outer join Part_Sales on PRTNUM_29 = PRTNUM_28 " &
+                       "left outer join " + dataBaseName + "..PartMasterCharacteristics pmc on pmc.PRTNUM = PRTNUM_28 " &
+                       "Where ORDNUM_28 = '" & passorder & "' " &
                        "Order by LINNUM_28, DELNUM_28"
 
         Dim cmd As New SqlCommand(strSQL, MaxConnection)
@@ -1762,6 +1768,7 @@ Public Class SalesOrderDetailClass
             myRow("CaseHeight") = myReader("CaseHeight")
             myRow("CaseLength") = myReader("CaseLength")
             myRow("CaseWidth") = myReader("CaseWidth")
+            myRow("CaseWeight") = myReader("GrossWeight")
 
             ' Start a task to get the base information
             Dim baseInfoTask As Task = Task.Factory.StartNew(Sub()
