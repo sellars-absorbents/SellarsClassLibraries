@@ -112,7 +112,6 @@ Public Class SalesOrderPromotionCodes
             Try
                 cmd.ExecuteNonQuery()
 
-                ' Set the FastenalOrdersWaiting flag appropriately
                 If ParmCount.Value > 0 Then
                     rtnValue = True
                 Else

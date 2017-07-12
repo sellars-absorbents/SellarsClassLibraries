@@ -118,7 +118,9 @@ Public Class Inventory
         ' Wait for all the threaded tasks to complete
         Task.WaitAll(onHandTask, onOrderTask, onCartTask, onTransferTask, onPendingTransferTask, getConversionTask)
 
-        Dim Avail As Integer = onHandTask.Result - onOrderTask.Result - onCartTask.Result - Round(onTransferTask.Result * getConversionTask.Result, 0) - Round(onPendingTransferTask.Result * getConversionTask.Result, 0)
+        'Dim Avail As Integer = onHandTask.Result - onOrderTask.Result - onCartTask.Result - Round(onTransferTask.Result * getConversionTask.Result, 0) - Round(onPendingTransferTask.Result * getConversionTask.Result, 0)
+
+        Dim Avail As Integer = onHandTask.Result - onOrderTask.Result - onCartTask.Result - onTransferTask.Result - onPendingTransferTask.Result
 
         If Avail > 0 Then
             Return Avail
@@ -175,9 +177,9 @@ Public Class Inventory
             Dim command As String = ""
 
             If UseStage Then
-                command = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 = @STK"
+                command = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 = @STK and charindex('TRN', STK_06) = 0 and charindex('REW', STK_06) = 0"
             Else
-                command = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('STG', STK_06) = 0 and charindex('TRN', STK_06) = 0"
+                command = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('STG', STK_06) = 0 and charindex('TRN', STK_06) = 0 and charindex('REW', STK_06) = 0"
             End If
 
             Dim cmd As New SqlCommand(command, Conn)
@@ -225,7 +227,7 @@ Public Class Inventory
             ' Open the SQL connection
             Conn.Open()
 
-            Dim command As String = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('TRN', STK_06) = 0"
+            Dim command As String = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('TRN', STK_06) = 0 and charindex('REW', STK_06) = 0 and charindex('STG', STK_06) = 0"
             Dim cmd As New SqlCommand(command, Conn)
             cmd.CommandType = CommandType.Text
             cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
@@ -899,7 +901,7 @@ Public Class Inventory
             ' if none of the warehouses had enough inventory, and the customer was not excluded from Round Robin 
             ' then set the warehouse to be NEWB
             If Not found Then
-                rtnData.Warehouse = "NEWB"
+                rtnData.Warehouse = "DSC1"
             End If
         Catch Ex As Exception
             ErrorMessage = Ex.Message

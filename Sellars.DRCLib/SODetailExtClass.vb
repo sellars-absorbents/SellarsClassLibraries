@@ -695,7 +695,13 @@ Public Class SODetailExtClass
         Dim rtnData As Boolean = False
 
         ' Set the UnisourceStatus for the applicable lines in the order
-        Dim strSQL As String = "update SalesOrderDetailExt set ShipFromWarehouse = @ShipFromWarehouse where ORDNUM = @ORDNUM and LINNUM = @LINNUM and DELNUM = @DELNUM"
+        Dim strSQL As String = ""
+
+        If ShipFromWarehouse = "DSC1" Or ShipFromWarehouse = "MIL2" Then
+            strSQL = "update SalesOrderDetailExt set UnisourceStatus = 0, SentToUnisource = '12/31/2050 00:00:00 AM', AcknowledgedOn = '12/31/2050 00:00:00 AM', ShipFromWarehouse = @ShipFromWarehouse where ORDNUM = @ORDNUM And LINNUM = @LINNUM And DELNUM = @DELNUM"
+        Else
+            strSQL = "update SalesOrderDetailExt set UnisourceStatus = case when UnisourceStatus = 0 then 1 else UnisourceStatus end, ShipFromWarehouse = @ShipFromWarehouse where ORDNUM = @ORDNUM And LINNUM = @LINNUM And DELNUM = @DELNUM"
+        End If
 
         Dim conn As SqlConnection = New SqlConnection(ConnectionString)
         Dim cmd As SqlCommand = Nothing

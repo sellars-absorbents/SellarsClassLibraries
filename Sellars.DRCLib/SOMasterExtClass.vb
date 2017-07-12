@@ -41,6 +41,10 @@ Public Class SOMasterExtClass
     Private _ContactPhone As String = ""
     Private _ContactEmail As String = ""
     Private _EstimatedShipping As Decimal = 0
+    Private _ThirdPartyBillingID As Long = 0
+    Private _NoteID As Long = 0
+    Private _NoteType As Short = 0
+
 
     Public ReadOnly Property AddressLocationNumber() As String
         Get
@@ -231,6 +235,24 @@ Public Class SOMasterExtClass
     Public ReadOnly Property ShipFromStockID() As String
         Get
             Return _ShipFromStockID
+        End Get
+    End Property
+
+    Public ReadOnly Property ThirdPartyBillingID() As Long
+        Get
+            Return _ThirdPartyBillingID
+        End Get
+    End Property
+
+    Public ReadOnly Property NoteID() As Long
+        Get
+            Return _NoteID
+        End Get
+    End Property
+
+    Public ReadOnly Property NoteType() As Short
+        Get
+            Return _NoteType
         End Get
     End Property
 
@@ -591,6 +613,10 @@ Public Class SOMasterExtClass
             Else
                 _ShipFromStockID = dr("ShipFromStockID")
             End If
+
+            _ThirdPartyBillingID = dr("ThirdPartyBillingID")
+            _NoteID = dr("CustomerNoteID")
+            _NoteType = dr("NoteType")
         Else
             ClearFields()
         End If
@@ -633,6 +659,9 @@ Public Class SOMasterExtClass
         _LastPickPrinted = DefaultDate
         _EstimatedShipping = 0
         _ShipFromStockID = ""
+        _ThirdPartyBillingID = 0
+        _NoteID = 0
+        _NoteType = 0
     End Sub
 
     Public Sub Update(ByVal ORDNUM As String)
@@ -818,7 +847,12 @@ Public Class SOMasterExtClass
 
         Dim strSQL As String = ""
 
-        strSQL = "Update SalesOrderMasterExt set Finished = @Finished, PickPrinted = @PickPrinted where ORDNUM = @ORDNUM"
+        strSQL = "Update SalesOrderMasterExt set Finished = @Finished, PickPrinted = @PickPrinted, FinishedAt = @FinishedAt where ORDNUM = @ORDNUM"
+
+        Dim FinishedAt As DateTime = New DateTime(2050, 12, 31, 0, 0, 0)
+        If Finished Then
+            FinishedAt = DateTime.Now
+        End If
 
         Try
             Cmd = New SqlCommand(strSQL, Conn)
@@ -826,6 +860,7 @@ Public Class SOMasterExtClass
             Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
             Cmd.Parameters.Add(New SqlParameter("@Finished", Finished))
             Cmd.Parameters.Add(New SqlParameter("@PickPrinted", PickPrinted))
+            Cmd.Parameters.Add(New SqlParameter("@FinishedAt", FinishedAt))
             Cmd.ExecuteNonQuery()
         Catch ex As Exception
             Throw ex

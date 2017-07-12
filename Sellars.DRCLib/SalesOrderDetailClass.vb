@@ -2526,7 +2526,7 @@ Public Class SalesOrderDetailClass
                 Throw New System.Exception("Error updating sales order detail.")
             Case Else
                 ' Update the record status on the Sellars SQL sales order detail table
-                UpdateSellars(ORDNUM, LINNUM, DELNUM, Status)
+                UpdateSellarsPart(ORDNUM, LINNUM, DELNUM, PartNumber)
         End Select
     End Sub
 
@@ -2919,6 +2919,25 @@ Public Class SalesOrderDetailClass
         cmd.Parameters.Add(New System.Data.SqlClient.SqlParameter("@CURQTY", pCurQty))
         cmd.Parameters.Add(New System.Data.SqlClient.SqlParameter("@DUEQTY", pDueQty))
         cmd.Parameters.Add(New System.Data.SqlClient.SqlParameter("@CURDUE", pCurDue))
+
+        ' Run the stored procedure
+        cmd.ExecuteNonQuery()
+    End Sub
+
+    ' The following routine will update a sales order detail record on the sellars SQL sales order table
+    Private Sub UpdateSellarsPart(ByVal SalesOrder As String, ByVal Line As String, ByVal Delivery As String, ByVal PartNumber As String)
+        Dim conn As New SqlConnection(ConnectionString)
+        conn.Open()
+
+        ' Declare the SQL data layer class
+        Dim cmd As New SqlCommand("UpdateSalesOrderDetailPart", conn)
+        cmd.CommandType = CommandType.StoredProcedure
+
+        ' Add the parameters to the command object
+        cmd.Parameters.Add(New SqlParameter("@ORDNUM", SalesOrder))
+        cmd.Parameters.Add(New SqlParameter("@LINNUM", Line))
+        cmd.Parameters.Add(New SqlParameter("@DELNUM", Delivery))
+        cmd.Parameters.Add(New SqlParameter("@PART", PartNumber))
 
         ' Run the stored procedure
         cmd.ExecuteNonQuery()

@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sellars.LineConfig", "Sellars.LineConfig\Sellars.LineConfig.vbproj", "{E58F36FE-38F6-4974-B849-337AFCF917E4}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sellars.Reel", "Sellars.Reel\Sellars.Reel.vbproj", "{9B5CDC9E-C110-4676-91F2-81B7688320FE}"
@@ -8,14 +10,13 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SellarsQualityControl", "SellarsQualityControl\SellarsQualityControl.vbproj", "{98D5D339-7EEC-43CA-B6A1-EE95B19DDEEE}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Sellars.DRCLib", "Sellars.DRCLib\Sellars.DRCLib.vbproj", "{792F5FF7-45CB-4866-871E-D9F45B4D473D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6510FF9D-EE1D-4911-98F3-305AD85E9858} = {6510FF9D-EE1D-4911-98F3-305AD85E9858}
+	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SellarsSQL", "SellarsSQL\SellarsSQL.vbproj", "{6510FF9D-EE1D-4911-98F3-305AD85E9858}"
 EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
@@ -58,5 +59,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
