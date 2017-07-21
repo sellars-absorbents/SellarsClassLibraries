@@ -887,7 +887,7 @@ Public Class SOMasterExtClass
 
         Dim strSQL As String = ""
 
-        strSQL = "Update SalesOrderMasterExt set Finished = 0, PickPrinted = 0, LastPickPrinted = '12/31/2050 00:00:00 AM' where ORDNUM = @ORDNUM"
+        strSQL = "Update SalesOrderMasterExt set Finished = 0, PickPrinted = 0 where ORDNUM = @ORDNUM"
 
         Try
             Cmd = New SqlCommand(strSQL, Conn)
