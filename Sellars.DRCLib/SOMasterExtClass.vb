@@ -279,7 +279,7 @@ Public Class SOMasterExtClass
         oSQL.RunProc("AddSOMasterExt")
     End Sub
 
-    Public Sub Add(ByVal ORDNUM As String, ByVal EnteredBy As String, ByVal CarrierID As Integer, ByVal CarrierMethod As String, ByVal CarrierThirdParty As String, ByVal CarrierName As String, ByVal ContactName As String, ByVal ContactPhone As String, ByVal ContactEmail As String, ByVal DefaultStockID As String, ByVal OrderType As String, ByVal ConversionID As Integer, ByVal ShipFromStockID As String, Optional ByVal SendAcknowledgement As Boolean = False)
+    Public Sub Add(ByVal ORDNUM As String, ByVal EnteredBy As String, ByVal CarrierID As Integer, ByVal CarrierMethod As String, ByVal CarrierThirdParty As String, ByVal CarrierName As String, ByVal ContactName As String, ByVal ContactPhone As String, ByVal ContactEmail As String, ByVal DefaultStockID As String, ByVal OrderType As String, ByVal ConversionID As Integer, ByVal ShipFromStockID As String, ByVal ThirdPartyBillingID As Long, Optional ByVal SendAcknowledgement As Boolean = False)
         If String.IsNullOrEmpty(ORDNUM.Trim) Then
             Throw New ApplicationException("SalesOrderMasterExtClass:Add():Order number is empty.")
         End If
@@ -299,14 +299,15 @@ Public Class SOMasterExtClass
         oSQL.AddParameter("@DefaultStockID", SqlDbType.NVarChar, 10, DefaultStockID, ParameterDirection.Input)
         oSQL.AddParameter("@OrderType", SqlDbType.NVarChar, 2, OrderType, ParameterDirection.Input)
         oSQL.AddParameter("@ConversionID", SqlDbType.SmallInt, 0, ConversionID, ParameterDirection.Input)
-        oSQL.AddParameter("@ShipFromStockID", SqlDbType.NVarChar, 10, ShipFromStockID, ParameterDirection.Input)
         oSQL.AddParameter("@SendAcknowledgement", SqlDbType.Bit, 0, SendAcknowledgement, ParameterDirection.Input)
+        oSQL.AddParameter("@ShipFromStockID", SqlDbType.NVarChar, 10, ShipFromStockID, ParameterDirection.Input)
+        oSQL.AddParameter("@ThirdPartyBillingID", SqlDbType.BigInt, 0, ThirdPartyBillingID, ParameterDirection.Input)
 
         ' Run the stored procedure
         oSQL.RunProc("AddSOMasterExtWCarrier")
     End Sub
 
-    Public Sub Add(ByVal ORDNUM As String, ByVal EnteredBy As String, ByVal CarrierID As Integer, ByVal CarrierMethod As String, ByVal CarrierThirdParty As String, ByVal CarrierName As String, ByVal ContactName As String, ByVal ContactPhone As String, ByVal ContactEmail As String, ByVal DefaultStockID As String, ByVal OrderType As String, ByVal ConversionID As Integer, ByVal CCTransactionID As String, ByVal CCAuthCode As String, ByVal EstimatedShipping As Decimal, ByVal Websitetotal As Decimal, ByVal ShipFromStockID As String, Optional ByVal SendAcknowledgement As Boolean = False)
+    Public Sub Add(ByVal ORDNUM As String, ByVal EnteredBy As String, ByVal CarrierID As Integer, ByVal CarrierMethod As String, ByVal CarrierThirdParty As String, ByVal CarrierName As String, ByVal ContactName As String, ByVal ContactPhone As String, ByVal ContactEmail As String, ByVal DefaultStockID As String, ByVal OrderType As String, ByVal ConversionID As Integer, ByVal CCTransactionID As String, ByVal CCAuthCode As String, ByVal EstimatedShipping As Decimal, ByVal Websitetotal As Decimal, ByVal ShipFromStockID As String, ByVal ThirdPartyBillingID As Long, Optional ByVal SendAcknowledgement As Boolean = False)
         If String.IsNullOrEmpty(ORDNUM.Trim) Then
             Throw New ApplicationException("SalesOrderMasterExtClass:Add():Order number is empty.")
         End If
@@ -331,6 +332,7 @@ Public Class SOMasterExtClass
         oSQL.AddParameter("@EstimatedShipping", SqlDbType.Decimal, 0, EstimatedShipping, ParameterDirection.Input)
         oSQL.AddParameter("@WebsiteTotal", SqlDbType.Decimal, 0, Websitetotal, ParameterDirection.Input)
         oSQL.AddParameter("@ShipFromStockID", SqlDbType.NVarChar, 10, ShipFromStockID, ParameterDirection.Input)
+        oSQL.AddParameter("@ThirdPartyBillingID", SqlDbType.BigInt, 0, ThirdPartyBillingID, ParameterDirection.Input)
         oSQL.AddParameter("@SendAcknowledgement", SqlDbType.Bit, 0, SendAcknowledgement, ParameterDirection.Input)
 
         ' Run the stored procedure
