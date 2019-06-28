@@ -1360,7 +1360,7 @@ Public Class SalesOrderMasterClass
         Dim dataBaseName As String = IIf(System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString.ToUpper.Contains("TEST"), "TestShopfloorControl", "ShopfloorControl")
 
         ' Check if there are any roll goods parts on the order
-        Dim strSQL As String = "select @Count = count(LINNUM_28) from SO_Detail join Part_Master on PRTNUM_01 = PRTNUM_28 where ORDNUM_28 = @ORDNUM and PLANID_01 in (select PlanId from " + dataBaseName + "..OrderTypePlanIds where OrderType = @OrderType); select @ItemsCount = count(*) from SO_Detail where ORDNUM_28  = @ORDNUM; select @SType = STYPE_27 from SO_Master where ORDNUM_27 = @ORDNUM; select @ItemMasterCount = count(*) from SO_Detail join Part_Master on PRTNUM_01 = PRTNUM_28 where ORDNUM_28 = @ORDNUM;"
+        Dim strSQL As String = "select @Count = count(LINNUM_28) from SO_Detail join Part_Master on PRTNUM_01 = PRTNUM_28 where ORDNUM_28 = @ORDNUM and PLANID_01 in (select PlanId from ShopfloorControl..OrderTypePlanIds where OrderType = @OrderType); select @ItemsCount = count(*) from SO_Detail where ORDNUM_28  = @ORDNUM; select @SType = STYPE_27 from SO_Master where ORDNUM_27 = @ORDNUM; select @ItemMasterCount = count(*) from SO_Detail join Part_Master on PRTNUM_01 = PRTNUM_28 where ORDNUM_28 = @ORDNUM;"
 
         Dim cmd As SqlCommand = Nothing
         Dim dr As SqlDataReader = Nothing
