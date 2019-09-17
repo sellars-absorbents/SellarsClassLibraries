@@ -166,22 +166,22 @@ Public Class SalesOrderMasterClass
     Private _MODIFICATIONDATE As Date = DefaultDate
 
     ' Keep track of sales order master extension data
-    Private _EnteredBy As String
-    Private _LastChanged As Date
-    Private _LastPrinted As Date
-    Private _ProofedBy As String
-    Private _Notes As String
-    Private _Hold As Boolean
-    Private _HoldUserEmail As String
+    Private _EnteredBy As String = ""
+    Private _LastChanged As Date = DefaultDate
+    Private _LastPrinted As Date = DefaultDate
+    Private _ProofedBy As String = ""
+    Private _Notes As String = ""
+    Private _Hold As Boolean = False
+    Private _HoldUserEmail As String = ""
 
-    Private _DefaultStockID As String
-    Private _ShipFromStockID As String
-    Private _SellarsOrderType As String
+    Private _DefaultStockID As String = ""
+    Private _ShipFromStockID As String = ""
+    Private _SellarsOrderType As String = ""
     Private _Finished As Boolean = False
     Private _EstimatedShipping As Decimal = 0
     Private _AllowFinish As Boolean = False
 
-    Private _Function As String
+    Private _Function As String = ""
 
     Public Enum OrderStatus
         Closed = 4
@@ -193,12 +193,13 @@ Public Class SalesOrderMasterClass
         RollGoods = 2
     End Enum
 
-    Public Sub New()
-    End Sub
-
     Public Sub New(ByVal passOrder As String)
         _ORDNUM = passOrder
         Read(passOrder)
+    End Sub
+
+    Public Sub New()
+
     End Sub
 
 #Region "Properties"

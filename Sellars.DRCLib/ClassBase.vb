@@ -9,9 +9,9 @@ Public MustInherit Class ClassBase
     ' Declare varible to hold the database connection string
     Private _ConnectionString As String = System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString
     Private _maxConnectionString As String = System.Configuration.ConfigurationManager.ConnectionStrings("Max").ConnectionString
-    Private _dynamicsConnectionString As String
-    Protected MaxConnection As SqlConnection
-    Protected DynamicsConnection As SqlConnection
+    Private _dynamicsConnectionString As String = ""
+    Protected MaxConnection As New SqlConnection()
+    Protected DynamicsConnection As New SqlConnection()
 
     ' Set up a default date constant
     Protected Friend Const DefaultDate As Date = #1/1/2000 12:01:00 AM#
@@ -80,7 +80,7 @@ Public MustInherit Class ClassBase
         '
         ' Returns : Encoded date.
         '
-        MakeDate = piYear * 2 ^ 16 + piMon * 2 ^ 8 + piDay
+        Return piYear * 2 ^ 16 + piMon * 2 ^ 8 + piDay
     End Function
 
 End Class
