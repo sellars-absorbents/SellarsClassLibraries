@@ -89,58 +89,58 @@ Namespace Windows
 
             ' If the field type is percent c compare to three decimal places 
             If FieldType = FieldTypeEnum.C_Percentage Then
-                Select Case Round(passValue, 3)
-                    Case Is < Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 3)
+                Select Case Convert.ToDecimal(Round(passValue, 3))
+                    Case Is < Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 3))
                         backBrush = RedBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 3) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 3) - 0.001
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 3)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 3)) - 0.001D
                         backBrush = YellowBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 3) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 3) - 0.001
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 3)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 3)) - 0.001D
                         backBrush = GreenBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 3) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 3) - 0.001
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 3)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 3)) - 0.001D
                         backBrush = YellowBrush(bounds)
-                    Case Is >= Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 3)
+                    Case Is >= Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 3))
                         backBrush = RedBrush(bounds)
                 End Select
             ElseIf FieldType = FieldTypeEnum.WD Then
                 ' If the field type is wd compare to two decimal places 
-                Select Case Round(passValue, 2)
-                    Case Is < Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 2)
+                Select Case Convert.ToDecimal(Round(passValue, 2))
+                    Case Is < Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 2))
                         backBrush = RedBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 2) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 2) - 0.01
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 2)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 2)) - 0.01D
                         backBrush = YellowBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 2) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 2) - 0.01
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 2)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 2)) - 0.01D
                         backBrush = GreenBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 2) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 2) - 0.01
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 2)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 2)) - 0.01D
                         backBrush = YellowBrush(bounds)
-                    Case Is >= Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 2)
+                    Case Is >= Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 2))
                         backBrush = RedBrush(bounds)
                 End Select
             ElseIf FieldType = FieldTypeEnum.Weight Or FieldType = FieldTypeEnum.OpSideBulk Or FieldTypeEnum.DriveSideBulk Then
                 ' If the field type is weight or bulk compare to one decimal place, 
                 ' otherwise compare to whole numbers
-                Select Case Round(passValue, 1)
-                    Case Is < Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 1)
+                Select Case Convert.ToDecimal(Round(passValue, 1))
+                    Case Is < Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 1))
                         backBrush = RedBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 1) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 1) - 0.1
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 1)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 1)) - 0.1D
                         backBrush = YellowBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 1) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 1) - 0.1
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 1)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 1)) - 0.1D
                         backBrush = GreenBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 1) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 1) - 0.1
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 1)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 1)) - 0.1D
                         backBrush = YellowBrush(bounds)
-                    Case Is >= Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 1)
+                    Case Is >= Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 1))
                         backBrush = RedBrush(bounds)
                 End Select
             Else
-                Select Case Round(passValue, 0)
-                    Case Is < Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 0)
+                Select Case Convert.ToDecimal(Round(passValue, 0))
+                    Case Is < Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 0))
                         backBrush = RedBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 0) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 0) - 1
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LRL, 0)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 0)) - 1D
                         backBrush = YellowBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 0) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 0) - 1
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).LCL, 0)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 0)) - 1D
                         backBrush = GreenBrush(bounds)
-                    Case Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 0) To Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 0) - 1
+                    Case Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).UCL, 0)) To Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 0)) - 1D
                         backBrush = YellowBrush(bounds)
-                    Case Is >= Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 0)
+                    Case Is >= Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 0))
                         backBrush = RedBrush(bounds)
                 End Select
             End If
