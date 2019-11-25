@@ -1,3 +1,5 @@
+Imports System
+Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
 
@@ -32,81 +34,101 @@ Public Class PaymentTermsClass
     Public Sub New()
     End Sub
 
-    Public Function Read() As SqlDataReader
-        ' Add is only currently available for the max datasource
+    Public Function Read() As List(Of PaymentTermsData)
+        ' declare return value
+        Dim rtnVal As New List(Of PaymentTermsData)
 
-        Dim strSQL As String = "select CODE_36 as Code, DESC_36 as Description " & _
-                                "from ""Code_Master"" " & _
-                                "where CDEKEY_36 = 'TERM' " & _
+        Dim strSQL As String = "select CODE_36 as Code, DESC_36 as Description " &
+                                "from Code_Master with (nolock) " &
+                                "where CDEKEY_36 = 'TERM' " &
                                 "ORDER BY CODE_36 ASC"
-        OpenMaxConnection()
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Return cmd.ExecuteReader(Data.CommandBehavior.CloseConnection)
+
+        Using MaxConnection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
+
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                cmd.CommandType = CommandType.Text
+
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+                    While dr.Read()
+                        Dim x As New PaymentTermsData()
+                        x.Code = dr("Code").ToString().Trim
+                        x.Description = dr("Description").ToString().Trim()
+                        rtnVal.Add(x)
+                    End While
+                End Using
+            End Using
+        End Using
+
+        Return rtnVal
     End Function
 
     Public Function Read(ByVal Code As String) As Boolean
-        ' Add is only currently available for the max datasource
+        ' set up the variable to be returned
         Dim rtnVal As Boolean = False
 
-        Try
+        Dim strSQL As String = "select @Days = DAYS_36, @Discount = DISC_36, @DiscountDays = DISCDY_36 " &
+                               "from Code_Master with (nolock) " &
+                               "where CDEKEY_36 = 'TERM' " &
+                               "and CODE_36 = @TermCode"
 
-            Dim strSQL As String = "select @Days = DAYS_36, @Discount = DISC_36, @DiscountDays = DISCDY_36 " & _
-                                    "from Code_Master " & _
-                                    "where CDEKEY_36 = 'TERM' " & _
-                                    "and CODE_36 = @TermCode"
-            OpenMaxConnection()
-            Dim cmd As New SqlCommand(strSQL, MaxConnection)
+        ' try to open another connection to the max database
+        Using MaxConnection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
 
-            Dim prmDays As New SqlParameter("@Days", SqlDbType.SmallInt, 0)
-            prmDays.Direction = ParameterDirection.Output
-            cmd.Parameters.Add(prmDays)
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                cmd.CommandType = CommandType.Text
 
-            Dim prmDiscount As New SqlParameter("@Discount", SqlDbType.SmallInt, 0)
-            prmDiscount.Direction = ParameterDirection.Output
-            cmd.Parameters.Add(prmDiscount)
+                Dim prmDays As New SqlParameter("@Days", SqlDbType.SmallInt, 0)
+                prmDays.Direction = ParameterDirection.Output
+                cmd.Parameters.Add(prmDays)
 
-            Dim prmDiscountDays As New SqlParameter("@DiscountDays", SqlDbType.SmallInt, 0)
-            prmDiscountDays.Direction = ParameterDirection.Output
-            cmd.Parameters.Add(prmDiscountDays)
+                Dim prmDiscount As New SqlParameter("@Discount", SqlDbType.SmallInt, 0)
+                prmDiscount.Direction = ParameterDirection.Output
+                cmd.Parameters.Add(prmDiscount)
 
-            cmd.Parameters.Add(New SqlParameter("@TermCode", Code))
+                Dim prmDiscountDays As New SqlParameter("@DiscountDays", SqlDbType.SmallInt, 0)
+                prmDiscountDays.Direction = ParameterDirection.Output
+                cmd.Parameters.Add(prmDiscountDays)
 
-            ' Execute against the database
-            cmd.ExecuteNonQuery()
+                cmd.Parameters.Add(New SqlParameter("@TermCode", Code))
 
-            ' Set the return fields
-            _Days = prmDays.Value
-            _Discount = (prmDiscount.Value / 10000)
-            _DiscountDays = prmDiscountDays.Value
+                ' Execute against the database
+                cmd.ExecuteNonQuery()
 
-            ' If it makes it here, set the return value to true
-            rtnVal = True
+                ' Set the return fields
+                _Days = prmDays.Value
+                _Discount = (prmDiscount.Value / 10000)
+                _DiscountDays = prmDiscountDays.Value
 
-        Catch ex As Exception
-            rtnVal = False
-        Finally
-            ' Close the max connection
-            CloseMaxConnection()
-        End Try
+                ' If it makes it here, set the return value to true
+                rtnVal = True
+            End Using
+        End Using
 
         Return rtnVal
     End Function
 
     Public Function GetTermCodebyValues(ByVal _days As String, ByVal _disc As Decimal) As String
+        Dim rtnVal As String = ""
+
         Dim discount As Decimal = _disc * 100
-        Dim strSQL As String = "select CODE_36 as Code " & _
-                        "from ""Code_Master"" " & _
-                        "where CDEKEY_36 = 'TERM' " & _
-                        "AND DAYS_36 = '" & _days & "' " & _
+        Dim strSQL As String = "select CODE_36 as Code " &
+                        "from Code_Master with (nolock) " &
+                        "where CDEKEY_36 = 'TERM' " &
+                        "AND DAYS_36 = '" & _days & "' " &
                         "AND DISC_36 = " & discount.ToString()
 
-        OpenMaxConnection()
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim code As Object
-        code = cmd.ExecuteScalar()
-        CloseMaxConnection()
+        Using MaxConnection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
 
-        Return code.ToString()
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                cmd.CommandType = CommandType.Text
 
+                rtnVal = cmd.ExecuteScalar().ToSting().Trim()
+            End Using
+        End Using
+
+        Return rtnVal
     End Function
 End Class

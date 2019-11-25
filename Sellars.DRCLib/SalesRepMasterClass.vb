@@ -28,53 +28,31 @@ Public Class SalesRepMasterClass
 
     Private Sub Read(ByVal Source As DataSource, ByVal ID As String)
 
-        If Source = DataSource.Sellars Then
-            ' Declare the SQL data layer class
-            Dim oSQL As New SqlService(ConnectionString)
+        ' Declare necessary local variables and initialize them
+        Dim CustomerPrice As Decimal = 0
+        Dim strSQL As String = "Select SLSNME_26 " &
+                                "From Sales_Rep_Master with (nolock) " &
+                                "Where SLSREP_26 = '" & ID.Trim & "' "
 
-            ' Add the parameters to the command object
-            oSQL.AddParameter("@ID", SqlDbType.NVarChar, 4, ID, ParameterDirection.Input)
+        Using MaxConnection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
 
-            Dim dr As SqlDataReader = oSQL.RunProcReader("GetMaxSalesRepMaster")
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                cmd.CommandType = CommandType.Text
 
-            ' Assign the variables from the database to properties
-            If dr.Read() Then
-                If IsDBNull(dr("Name")) Then
-                    _Name = ""
-                Else
-                    _Name = dr("Name")
-                End If
-            End If
-
-            dr.Close()
-            dr = Nothing
-        Else
-            ' try to open another connection to the max database
-            OpenMaxConnection()
-
-            ' Declare necessary local variables and initialize them
-            Dim CustomerPrice As Decimal = 0
-            Dim strSQL As String = "Select SLSNME_26 " & _
-                                   "From ""Sales_Rep_Master"" " & _
-                                   "Where SLSREP_26 = '" & ID.Trim & "' "
-
-            ' Set up the new Sql command and retrieve the data from the database
-            Dim cmd As New SqlCommand(strSQL, MaxConnection)
-            Dim SalesRepMasterReader As SqlDataReader = cmd.ExecuteReader()
-            If SalesRepMasterReader.Read() Then
-                If IsDBNull(SalesRepMasterReader("SLSNME_26")) Then
-                    _Name = ""
-                Else
-                    _Name = SalesRepMasterReader("SLSNME_26")
-                End If
-            Else
-                _Name = ""
-            End If
-            SalesRepMasterReader.Close()
-            SalesRepMasterReader = Nothing
-            CloseMaxConnection()
-        End If
-
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
+                        If IsDBNull(dr("SLSNME_26")) Then
+                            _Name = ""
+                        Else
+                            _Name = dr("SLSNME_26").ToString().Trim()
+                        End If
+                    Else
+                        _Name = ""
+                    End If
+                End Using
+            End Using
+        End Using
     End Sub
 
 End Class

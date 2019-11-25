@@ -56,97 +56,54 @@ Public Class CodeMasterClass
         _CodeKey = CodeKey
         _Code = Code
 
-        If Source = ClassBase.DataSource.Sellars Then
-            ReadSellars(CodeKey, Code)
-        Else
-            ReadMax(CodeKey, Code)
-        End If
+        Read(CodeKey, Code)
     End Sub
 
-    Private Sub ReadSellars(ByVal CodeKey As String, ByVal Code As String)
+    Private Sub Read(ByVal CodeKey As String, ByVal Code As String)
 
-        ' Declare the SQL data layer class
-        Dim oSQL As New SqlService(ConnectionString)
-
-        ' Add the parameters to the command object
-        oSQL.AddParameter("@CodeKey", SqlDbType.NVarChar, 4, CodeKey, ParameterDirection.Input)
-        oSQL.AddParameter("@Code", SqlDbType.NVarChar, 2, Code, ParameterDirection.Input)
-
-        ' Run the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCodeMasterRecord")
-
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            If IsDBNull(dr("DESC_36")) Then
-                _Description = ""
-            Else
-                _Description = dr("DESC_36")
-            End If
-            If IsDBNull(dr("DAYS_36")) Then
-                _TermDays = ""
-            Else
-                _TermDays = dr("DAYS_36")
-            End If
-            If IsDBNull(dr("DISC_36")) Then
-                _DiscountPercent = 0
-            Else
-                _DiscountPercent = dr("DISC_36")
-            End If
-            If IsDBNull(dr("DISCDY_36")) Then
-                _DiscountDays = 0
-            Else
-                _DiscountDays = dr("DISCDY_36")
-            End If
-        Else
-            Throw New RecordNotOnDatabaseException("codekey: " & CodeKey & ", Code: " & Code, "CodeMaster")
-        End If
-
-        ' Close the datareader object and free up memory
-        dr.Close()
-        dr = Nothing
-    End Sub
-
-    Private Sub ReadMax(ByVal CodeKey As String, ByVal Code As String)
-
-        Dim strSQL As String = "select * " & _
-                               "From ""Code_Master"" " & _
-                               "Where CDEKEY_36 = '" & CodeKey.Trim & "' " & _
+        Dim strSQL As String = "select * " &
+                               "From Code_Master with (nolock) " &
+                               "Where CDEKEY_36 = '" & CodeKey.Trim & "' " &
                                "and CODE_36 = '" & Code.Trim & "'"
 
         ' Set up the new Sql command
-        OpenMaxConnection()
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim dr As SqlDataReader = cmd.ExecuteReader()
 
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            If IsDBNull(dr("DESC_36")) Then
-                _Description = ""
-            Else
-                _Description = dr("DESC_36")
-            End If
-            If IsDBNull(dr("DAYS_36")) Then
-                _TermDays = ""
-            Else
-                _TermDays = dr("DAYS_36")
-            End If
-            If IsDBNull(dr("DISC_36")) Then
-                _DiscountPercent = 0
-            Else
-                _DiscountPercent = dr("DISC_36")
-            End If
-            If IsDBNull(dr("DISCDY_36")) Then
-                _DiscountDays = 0
-            Else
-                _DiscountDays = dr("DISCDY_36")
-            End If
-        Else
-            Throw New RecordNotOnDatabaseException("codekey: " & CodeKey & ", Code: " & Code, "CodeMaster")
-        End If
+        Using MaxConnection = New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
 
-        ' Close the datareader object and free up memory
-        dr.Close()
-        dr = Nothing
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+
+                    ' Assign the variables from the database to properties
+                    If dr.Read() Then
+                        If IsDBNull(dr("DESC_36")) Then
+                            _Description = ""
+                        Else
+                            _Description = dr("DESC_36")
+                        End If
+                        If IsDBNull(dr("DAYS_36")) Then
+                            _TermDays = ""
+                        Else
+                            _TermDays = dr("DAYS_36")
+                        End If
+                        If IsDBNull(dr("DISC_36")) Then
+                            _DiscountPercent = 0
+                        Else
+                            _DiscountPercent = dr("DISC_36")
+                        End If
+                        If IsDBNull(dr("DISCDY_36")) Then
+                            _DiscountDays = 0
+                        Else
+                            _DiscountDays = dr("DISCDY_36")
+                        End If
+                    Else
+                        Throw New RecordNotOnDatabaseException("codekey: " & CodeKey & ", Code: " & Code, "CodeMaster")
+                    End If
+                End Using
+            End Using
+        End Using
+
     End Sub
 
 End Class

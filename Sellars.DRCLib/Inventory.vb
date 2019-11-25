@@ -604,42 +604,24 @@ Public Class Inventory
     Private Function GetOnPendingTransfer(ByVal STK As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
 
-        ' Set up a new SQL connection string
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-        Try
+        Dim strSQL As String = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td with (nolock) join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
+
+        ' Set up a new SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
+
             ' Open the SQL connection
             Conn.Open()
 
             ' We need to get all transfer orders that are in status two, waiting for the carrier to be assigned, sent to Unisource, and acknowledged.
-            Dim command As String = "SELECT @Quantity = isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-            cmd.Parameters.Add(New SqlParameter("@STK", STK))
+            Using cmd As New SqlCommand(strSQL, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                cmd.Parameters.Add(New SqlParameter("@STK", STK))
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
-
-            'Perform the update to the database
-            Try
-                cmd.ExecuteNonQuery()
-                rtnQty = parmQty.Value.ToString()
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = Data.ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+                ' Execute the query, and return the results
+                rtnQty = Convert.ToInt32(cmd.ExecuteScalar())
+            End Using
+        End Using
 
         Return rtnQty
     End Function
@@ -648,54 +630,33 @@ Public Class Inventory
     Private Function GetOnPendingTransfer(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
 
+        Dim strSQl As String = ""
+
+        If UseStage Then
+            strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td with (nolock) join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and FromSTK = @STK"
+        Else
+            strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td with (nolock) join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
+        End If
+
         ' Set up a new SQL connection string
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-        Try
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
+
             ' Open the SQL connection
             Conn.Open()
 
-            ' We need to get all transfer orders that are in status two, waiting for the carrier to be assigned, sent to Unisource, and acknowledged.
-            Dim command As String = ""
+            Using cmd As New SqlCommand(strSQl, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
 
-            If UseStage Then
-                command = "SELECT @Quantity = isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and FromSTK = @STK"
-            Else
-                command = "SELECT @Quantity = isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
-            End If
+                If UseStage Then
+                    cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
+                Else
+                    cmd.Parameters.Add(New SqlParameter("@STK", Warehouse))
+                End If
 
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-
-            If UseStage Then
-                cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
-            Else
-                cmd.Parameters.Add(New SqlParameter("@STK", Warehouse))
-            End If
-
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
-
-            'Perform the update to the database
-            Try
-                cmd.ExecuteNonQuery()
-                rtnQty = parmQty.Value.ToString()
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = Data.ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+                rtnQty = Convert.ToInt32(cmd.ExecuteScalar())
+            End Using
+        End Using
 
         Return rtnQty
     End Function
@@ -914,77 +875,52 @@ Public Class Inventory
     Private Function CheckCustomerExcludes(ByVal CUSTID As String) As Boolean
         Dim rtnData As Boolean = False
 
-        Try
-            Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
+        Dim strSQL As String = "SELECT isnull(CUSTID, '') from RoundRobinCustomerExcludes with (nolock) where CUSTID = @CUSTID"
 
-                ' Open the SQL connection
-                Conn.Open()
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
-                Dim command As String = "SELECT @OUTCUSTID = isnull(CUSTID, '') from RoundRobinCustomerExcludes where CUSTID = @CUSTID"
+            ' Open the SQL connection
+            Conn.Open()
 
-                Using cmd As New SqlCommand(command, Conn)
-                    cmd.CommandType = CommandType.Text
+            Using cmd As New SqlCommand(strSQL, Conn)
+                cmd.CommandType = CommandType.Text
 
-                    cmd.Parameters.Add(New System.Data.SqlClient.SqlParameter("@CUSTID", CUSTID))
+                cmd.Parameters.Add(New System.Data.SqlClient.SqlParameter("@CUSTID", CUSTID))
 
-                    Dim prmOut As New SqlParameter("@OUTCUSTID", SqlDbType.NVarChar, 25)
-                    prmOut.Direction = ParameterDirection.Output
-                    cmd.Parameters.Add(prmOut)
-
-                    ' Run the stored procedure
-                    cmd.ExecuteNonQuery()
-
-                    ' Get the customer id returned from the sql call
-                    If prmOut.Value.ToString.Trim() <> "" Then
-                        rtnData = True
-                    End If
-                End Using
+                ' Get the customer id returned from the sql call
+                If cmd.ExecuteScalar().ToString().Trim() <> "" Then
+                    rtnData = True
+                End If
             End Using
-        Catch ex As Exception
-            Dim msg As String = ex.Message
-            rtnData = False
-        End Try
+        End Using
 
     End Function
 
     Private Function GetFGWarehouses() As BlockingCollection(Of WarehouseData)
         Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
-        Try
+        Dim strSQL As String = "SELECT STK, GeoLoc from Warehouses with (nolock) where FGWarehouse = 1 and Active = 1"
+
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
+
             ' Open the SQL connection
             Conn.Open()
 
-            Dim command As String = "SELECT STK, GeoLoc from Warehouses where FGWarehouse = 1 and Active = 1"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
+            Using cmd As New SqlCommand(strSQL, Conn)
+                cmd.CommandType = CommandType.Text
 
-            'Perform the update to the database
-            Try
-                Dim dr As SqlDataReader = cmd.ExecuteReader()
+                Using dr As SqlDataReader = cmd.ExecuteReader()
 
-                While dr.Read()
-                    Dim whseSecondary As New WarehouseData
-                    whseSecondary.Warehouse = dr("STK")
-                    whseSecondary.GeoLoc = DirectCast(dr("GeoLoc"), SqlGeography)
-                    whseSecondary.GeoCoord = New Location.GeoCoordinate(whseSecondary.GeoLoc.Lat, whseSecondary.GeoLoc.Long)
-                    rtnWarehouses.Add(whseSecondary)
-                End While
-            Catch ex As Exception
-                ' do nothing
-                Dim msg As String = ex.Message
-            Finally
-                ' Close the SQL connection object
-                If Conn.State = ConnectionState.Open Then
-                    Conn.Close()
-                End If
-                Conn.Dispose()
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        End Try
+                    While dr.Read()
+                        Dim whseSecondary As New WarehouseData
+                        whseSecondary.Warehouse = dr("STK")
+                        whseSecondary.GeoLoc = DirectCast(dr("GeoLoc"), SqlGeography)
+                        whseSecondary.GeoCoord = New Location.GeoCoordinate(whseSecondary.GeoLoc.Lat, whseSecondary.GeoLoc.Long)
+                        rtnWarehouses.Add(whseSecondary)
+                    End While
+                End Using
+            End Using
+        End Using
 
         Return rtnWarehouses
     End Function

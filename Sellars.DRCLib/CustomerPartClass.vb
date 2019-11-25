@@ -66,95 +66,61 @@ Public Class CustomerPartClass
     Public Sub New(ByVal value As DataSource, ByVal passCustomer As String, ByVal passPart As String)
         _Customer = passCustomer
         _Part = passPart
-        ' If the data source says max check the max customer part table, otherwise check the
-        ' sql version of the tables
-        If value = ClassBase.DataSource.Max Then
-            ReadMax(passCustomer, passPart)
-        Else
-            ReadSellars(passCustomer, passPart)
-        End If
+
+        ' Read the Max Customer Part table
+        Read(passCustomer, passPart)
     End Sub
 
     Public Sub New(ByVal value As DataSource, ByVal passCustomer As String, ByVal passPart As String, ByVal passWidth As Decimal)
         _Customer = passCustomer
         _Part = passPart
-        ' If the data source says max check the max customer part table, otherwise check the
-        ' sql version of the tables
-        If value = ClassBase.DataSource.Max Then
-            ReadMax(passCustomer, passPart)
-        Else
-            ReadSellars(passCustomer, passPart)
-        End If
+
+        ' Always check Max, as we are phasing out the Sellars tables
+        Read(passCustomer, passPart)
 
         ' If no part was found yet, then check the slit width customer part table
         If Not _Found Then
-            ReadSellars(passCustomer, passPart, passWidth)
+            Read(passCustomer, passPart, passWidth)
         End If
     End Sub
 
-    Private Sub ReadMax(ByVal passCustomer As String, ByVal passPart As String)
-        OpenMaxConnection()
-        Dim strSQL As String = "Select * " & _
-                               "From ""Customer_Part_Data"" " & _
-                               "Where CUSTID_103 = '" & passCustomer & "' " & _
+    Private Sub Read(ByVal passCustomer As String, ByVal passPart As String)
+        Dim strSQL As String = "Select * " &
+                               "From Customer_Part_Data with (nolock) " &
+                               "Where CUSTID_103 = '" & passCustomer & "' " &
                                "and PRTNUM_103 = '" & passPart & "'"
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim myReader As SqlDataReader = cmd.ExecuteReader()
 
-        If myReader.Read() Then
-            _Found = True
-            _CustomerPart = myReader("CUSTPRT_103")
-            _Description1 = myReader("PRTDESC1_103")
-            _Description2 = myReader("PRTDESC2_103")
-            _Description3 = myReader("PRTDESC3_103")
-            _Description4 = myReader("PRTDESC4_103")
-        Else
-            _Found = False
-            _CustomerPart = ""
-            _Description1 = ""
-            _Description2 = ""
-            _Description3 = ""
-            _Description4 = ""
-        End If
-        myReader.Close()
-        myReader = Nothing
-        cmd = Nothing
-        CloseMaxConnection()
+        ' try to open another connection to the max database
+        Using MaxConnection = New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
+
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                cmd.CommandType = CommandType.Text
+
+                Using myReader As SqlDataReader = cmd.ExecuteReader()
+
+                    If myReader.Read() Then
+                        _Found = True
+                        _CustomerPart = myReader("CUSTPRT_103")
+                        _Description1 = myReader("PRTDESC1_103")
+                        _Description2 = myReader("PRTDESC2_103")
+                        _Description3 = myReader("PRTDESC3_103")
+                        _Description4 = myReader("PRTDESC4_103")
+                    Else
+                        _Found = False
+                        _CustomerPart = ""
+                        _Description1 = ""
+                        _Description2 = ""
+                        _Description3 = ""
+                        _Description4 = ""
+                    End If
+
+                End Using
+            End Using
+        End Using
     End Sub
 
-    Private Sub ReadSellars(ByVal passCustomer As String, ByVal passPart As String)
-        ' Declare the SQL data layer class
-        Dim oSQL As New SqlService(ConnectionString)
-
-        ' Add the parameter to the command object
-        oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, passCustomer, ParameterDirection.Input)
-        oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passPart, ParameterDirection.Input)
-
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerPart")
-
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            _Found = True
-            _CustomerPart = dr("CUSTPRT")
-            _Description1 = dr("PRTDESC1")
-            _Description2 = dr("PRTDESC2")
-            _Description3 = dr("PRTDESC3")
-            _Description4 = dr("PRTDESC4")
-        Else
-            _Found = False
-            _CustomerPart = ""
-            _Description1 = ""
-            _Description2 = ""
-            _Description3 = ""
-            _Description4 = ""
-        End If
-
-        dr.Close()
-        dr = Nothing
-
-    End Sub
-
-    Private Sub ReadSellars(ByVal passCustomer As String, ByVal passPart As String, ByVal passWidth As Decimal, Optional ByVal passOD As Decimal = 0)
+    Private Sub Read(ByVal passCustomer As String, ByVal passPart As String, ByVal passWidth As Decimal, Optional ByVal passOD As Decimal = 0)
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
 

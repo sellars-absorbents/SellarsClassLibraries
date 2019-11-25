@@ -246,6 +246,7 @@
     <Compile Include="PaymentTermsClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PaymentTermsData.vb" />
     <Compile Include="PriceBreakClass.vb">
       <SubType>Code</SubType>
     </Compile>
