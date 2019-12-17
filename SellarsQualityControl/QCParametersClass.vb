@@ -1461,14 +1461,14 @@ Public Class QCParametersClass
         oSQL.RunProc("UpdateQCParameters")
     End Sub
 
-    Public Sub LoadParameters(ByVal Grade As Integer, ByRef QCSpecifications() As QCSpecificationsStructure)
+    Public Sub LoadParameters(ByVal Grade As Integer, ByRef QCSpecifications() As QCSpecificationsStructure, ByRef BasisAdjustment As Decimal)
 
         Read(Grade)
 
         QCSpecifications(FieldTypeEnum.Weight).GraphMin = WeightGraphMin
         QCSpecifications(FieldTypeEnum.Weight).LRL = WeightLRL
         QCSpecifications(FieldTypeEnum.Weight).LCL = WeightLCL
-        QCSpecifications(FieldTypeEnum.Weight).UCL = WeightUCL
+        QCSpecifications(FieldTypeEnum.Weight).UCL = WeightUCL + BasisAdjustment
         QCSpecifications(FieldTypeEnum.Weight).URL = WeightURL
         QCSpecifications(FieldTypeEnum.Weight).GraphMax = WeightGraphMax
         QCSpecifications(FieldTypeEnum.Weight).Objective = WeightObjective

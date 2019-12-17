@@ -604,7 +604,7 @@ Public Class Inventory
     Private Function GetOnPendingTransfer(ByVal STK As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
 
-        Dim strSQL As String = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td with (nolock) join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
+        Dim strSQL As String = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
 
         ' Set up a new SQL connection
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
@@ -633,9 +633,9 @@ Public Class Inventory
         Dim strSQl As String = ""
 
         If UseStage Then
-            strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td with (nolock) join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and FromSTK = @STK"
+            strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and FromSTK = @STK"
         Else
-            strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td with (nolock) join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
+            strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
         End If
 
         ' Set up a new SQL connection string
@@ -875,7 +875,7 @@ Public Class Inventory
     Private Function CheckCustomerExcludes(ByVal CUSTID As String) As Boolean
         Dim rtnData As Boolean = False
 
-        Dim strSQL As String = "SELECT isnull(CUSTID, '') from RoundRobinCustomerExcludes with (nolock) where CUSTID = @CUSTID"
+        Dim strSQL As String = "SELECT isnull(CUSTID, '') from RoundRobinCustomerExcludes where CUSTID = @CUSTID"
 
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
@@ -899,7 +899,7 @@ Public Class Inventory
     Private Function GetFGWarehouses() As BlockingCollection(Of WarehouseData)
         Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
 
-        Dim strSQL As String = "SELECT STK, GeoLoc from Warehouses with (nolock) where FGWarehouse = 1 and Active = 1"
+        Dim strSQL As String = "SELECT STK, GeoLoc from Warehouses where FGWarehouse = 1 and Active = 1"
 
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
