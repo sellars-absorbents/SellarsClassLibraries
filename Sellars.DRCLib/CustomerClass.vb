@@ -371,154 +371,183 @@ Public Class CustomerClass
                                "Where CUSTID_23 = '" & passcustomer.Trim & "'"
 
         ' Set up the new Sql command
-        OpenMaxConnection()
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim dr As SqlDataReader = cmd.ExecuteReader()
-        dr.Read()
+        Using MaxConnection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
 
-        If IsDBNull(dr("NAME_23")) Then
-            _Name = ""
-        Else
-            _Name = dr("NAME_23")
-        End If
-        If IsDBNull(dr("STATUS_23")) Then
-            _Status = ""
-        Else
-            _Status = dr("STATUS_23")
-        End If
-        If IsDBNull(dr("CNTCT_23")) Then
-            _Contact = ""
-        Else
-            _Contact = dr("CNTCT_23")
-        End If
-        If IsDBNull(dr("COMNT1_23")) Then
-            _Comment1 = ""
-        Else
-            _Comment1 = dr("COMNT1_23")
-        End If
-        If IsDBNull(dr("COMNT2_23")) Then
-            _Comment2 = ""
-        Else
-            _Comment2 = dr("COMNT2_23")
-        End If
-        ' If the credit limit is a zero, then 
-        ' set it to max value to reflect that zero means 
-        ' unlimited credit
-        If IsDBNull(dr("CLIMIT_23")) Then
-            _CreditLimit = _CreditLimit.MaxValue
-        Else
-            If dr("CLIMIT_23") = 0 Then
-                _CreditLimit = _CreditLimit.MaxValue
-            Else
-                _CreditLimit = dr("CLIMIT_23")
-            End If
-        End If
-        If IsDBNull(dr("ADDR1_23")) Then
-            _Addr1 = ""
-        Else
-            _Addr1 = dr("ADDR1_23")
-        End If
-        If IsDBNull(dr("ADDR2_23")) Then
-            _Addr2 = ""
-        Else
-            _Addr2 = dr("ADDR2_23")
-        End If
-        If IsDBNull(dr("ADDR3_23")) Then
-            _Addr3 = ""
-        Else
-            _Addr3 = dr("ADDR3_23")
-        End If
-        If IsDBNull(dr("CITY_23")) Then
-            _City = ""
-        Else
-            _City = dr("CITY_23")
-        End If
-        If IsDBNull(dr("STATE_23")) Then
-            _State = ""
-        Else
-            _State = dr("STATE_23")
-        End If
-        If IsDBNull(dr("ZIPCD_23")) Then
-            _ZipCode = ""
-        Else
-            _ZipCode = dr("ZIPCD_23")
-        End If
-        If IsDBNull(dr("CNTRY_23")) Then
-            _Country = ""
-        Else
-            _Country = dr("CNTRY_23")
-        End If
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
 
-        _MailingAddress = FullAddress()
+                        If IsDBNull(dr("NAME_23")) Then
+                            _Name = ""
+                        Else
+                            _Name = dr("NAME_23")
+                        End If
+                        If IsDBNull(dr("STATUS_23")) Then
+                            _Status = ""
+                        Else
+                            _Status = dr("STATUS_23")
+                        End If
+                        If IsDBNull(dr("CNTCT_23")) Then
+                            _Contact = ""
+                        Else
+                            _Contact = dr("CNTCT_23")
+                        End If
+                        If IsDBNull(dr("COMNT1_23")) Then
+                            _Comment1 = ""
+                        Else
+                            _Comment1 = dr("COMNT1_23")
+                        End If
+                        If IsDBNull(dr("COMNT2_23")) Then
+                            _Comment2 = ""
+                        Else
+                            _Comment2 = dr("COMNT2_23")
+                        End If
+                        ' If the credit limit is a zero, then 
+                        ' set it to max value to reflect that zero means 
+                        ' unlimited credit
+                        If IsDBNull(dr("CLIMIT_23")) Then
+                            _CreditLimit = _CreditLimit.MaxValue
+                        Else
+                            If dr("CLIMIT_23") = 0 Then
+                                _CreditLimit = _CreditLimit.MaxValue
+                            Else
+                                _CreditLimit = dr("CLIMIT_23")
+                            End If
+                        End If
+                        If IsDBNull(dr("ADDR1_23")) Then
+                            _Addr1 = ""
+                        Else
+                            _Addr1 = dr("ADDR1_23")
+                        End If
+                        If IsDBNull(dr("ADDR2_23")) Then
+                            _Addr2 = ""
+                        Else
+                            _Addr2 = dr("ADDR2_23")
+                        End If
+                        If IsDBNull(dr("ADDR3_23")) Then
+                            _Addr3 = ""
+                        Else
+                            _Addr3 = dr("ADDR3_23")
+                        End If
+                        If IsDBNull(dr("CITY_23")) Then
+                            _City = ""
+                        Else
+                            _City = dr("CITY_23")
+                        End If
+                        If IsDBNull(dr("STATE_23")) Then
+                            _State = ""
+                        Else
+                            _State = dr("STATE_23")
+                        End If
+                        If IsDBNull(dr("ZIPCD_23")) Then
+                            _ZipCode = ""
+                        Else
+                            _ZipCode = dr("ZIPCD_23")
+                        End If
+                        If IsDBNull(dr("CNTRY_23")) Then
+                            _Country = ""
+                        Else
+                            _Country = dr("CNTRY_23")
+                        End If
 
-        If IsDBNull(dr("FOB_23")) Then
-            _FOB = ""
-        Else
-            _FOB = Trim(dr("FOB_23"))
-        End If
-        If IsDBNull(dr("SHPCDE_23")) Then
-            _ShipCode = ""
-        Else
-            _ShipCode = dr("SHPCDE_23")
-        End If
-        If IsDBNull(dr("SHPVIA_23")) Then
-            _ShipVia = "-1"
-        Else
-            _ShipVia = dr("SHPVIA_23")
-        End If
-        If IsDBNull(dr("TAXABL_23")) Then
-            _Taxable = "N"
-        Else
-            _Taxable = dr("TAXABL_23")
-        End If
-        If IsDBNull(dr("TXCDE1_23")) Then
-            _TaxCode1 = ""
-        Else
-            _TaxCode1 = dr("TXCDE1_23")
-        End If
-        If IsDBNull(dr("TXCDE2_23")) Then
-            _TaxCode2 = ""
-        Else
-            _TaxCode2 = dr("TXCDE2_23")
-        End If
-        If IsDBNull(dr("TXCDE3_23")) Then
-            _TaxCode3 = ""
-        Else
-            _TaxCode3 = dr("TXCDE3_23")
-        End If
+                        _MailingAddress = FullAddress()
 
-        If IsDBNull(dr("SLSREP_23")) Then
-            _SalesRep = ""
-            _SalesRepName = "Unknown"
-        Else
-            _SalesRep = dr("SLSREP_23")
-            Dim SRM As New SalesRepMasterClass(SalesRepMasterClass.DataSource.Max, SalesRep)
-            _SalesRepName = SRM.Name
-            SRM = Nothing
-        End If
+                        If IsDBNull(dr("FOB_23")) Then
+                            _FOB = ""
+                        Else
+                            _FOB = Trim(dr("FOB_23"))
+                        End If
+                        If IsDBNull(dr("SHPCDE_23")) Then
+                            _ShipCode = ""
+                        Else
+                            _ShipCode = dr("SHPCDE_23")
+                        End If
+                        If IsDBNull(dr("SHPVIA_23")) Then
+                            _ShipVia = "-1"
+                        Else
+                            _ShipVia = dr("SHPVIA_23")
+                        End If
+                        If IsDBNull(dr("TAXABL_23")) Then
+                            _Taxable = "N"
+                        Else
+                            _Taxable = dr("TAXABL_23")
+                        End If
+                        If IsDBNull(dr("TXCDE1_23")) Then
+                            _TaxCode1 = ""
+                        Else
+                            _TaxCode1 = dr("TXCDE1_23")
+                        End If
+                        If IsDBNull(dr("TXCDE2_23")) Then
+                            _TaxCode2 = ""
+                        Else
+                            _TaxCode2 = dr("TXCDE2_23")
+                        End If
+                        If IsDBNull(dr("TXCDE3_23")) Then
+                            _TaxCode3 = ""
+                        Else
+                            _TaxCode3 = dr("TXCDE3_23")
+                        End If
 
-        If IsDBNull(dr("TERMS_23")) Then
-            _TermCode = "-1"
-        Else
-            _TermCode = dr("TERMS_23")
-        End If
+                        If IsDBNull(dr("SLSREP_23")) Then
+                            _SalesRep = ""
+                            _SalesRepName = "Unknown"
+                        Else
+                            _SalesRep = dr("SLSREP_23")
+                            Dim SRM As New SalesRepMasterClass(SalesRepMasterClass.DataSource.Max, SalesRep)
+                            _SalesRepName = SRM.Name
+                            SRM = Nothing
+                        End If
 
-        If IsDBNull(dr("CUSTYP_23")) Then
-            _CusTyp = ""
-        Else
-            _CusTyp = dr("CUSTYP_23")
-        End If
-        If IsDBNull(dr("PHONE_23")) Then
-            _Phone = ""
-        Else
-            _Phone = dr("PHONE_23")
-        End If
+                        If IsDBNull(dr("TERMS_23")) Then
+                            _TermCode = "-1"
+                        Else
+                            _TermCode = dr("TERMS_23")
+                        End If
 
-        Terms = New CodeMasterClass(ClassBase.DataSource.Max, "TERM", _TermCode)
+                        If IsDBNull(dr("CUSTYP_23")) Then
+                            _CusTyp = ""
+                        Else
+                            _CusTyp = dr("CUSTYP_23")
+                        End If
+                        If IsDBNull(dr("PHONE_23")) Then
+                            _Phone = ""
+                        Else
+                            _Phone = dr("PHONE_23")
+                        End If
 
-        dr.Close()
-        dr = Nothing
-        CloseMaxConnection()
+                        Terms = New CodeMasterClass(ClassBase.DataSource.Max, "TERM", _TermCode)
+                    Else
+                        _Name = ""
+                        _Status = ""
+                        _Contact = ""
+                        _Comment1 = ""
+                        _Comment2 = ""
+                        _CreditLimit = _CreditLimit.MaxValue
+                        _Addr1 = ""
+                        _Addr2 = ""
+                        _Addr3 = ""
+                        _City = ""
+                        _State = ""
+                        _ZipCode = ""
+                        _Country = ""
+                        _FOB = ""
+                        _ShipCode = ""
+                        _ShipVia = "-1"
+                        _Taxable = "N"
+                        _TaxCode1 = ""
+                        _TaxCode2 = ""
+                        _TaxCode3 = ""
+                        _SalesRep = ""
+                        _SalesRepName = ""
+                        _TermCode = "-1"
+                        _CusTyp = ""
+                        _Phone = ""
+                    End If
+
+                End Using
+            End Using
+        End Using
     End Sub
 
     Private Function ReadMaxOpenOrderTotal(ByVal passcustomer As String, ByVal passType As String) As Decimal
