@@ -795,7 +795,7 @@ Public Class SOMasterExtClass
         oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, ORDNUM, ParameterDirection.Input)
         oSQL.AddParameter("@Notes", SqlDbType.NText, -1, Notes, ParameterDirection.Input)
         oSQL.AddParameter("@LocationCodeQualifier", SqlDbType.NVarChar, 10, LocationCodeQualifier, ParameterDirection.Input)
-        oSQL.AddParameter("@AddressLocationNumber", SqlDbType.NVarChar, 10, AddressLocationNumber, ParameterDirection.Input)
+        oSQL.AddParameter("@AddressLocationNumber", SqlDbType.NVarChar, 100, AddressLocationNumber, ParameterDirection.Input)
         oSQL.AddParameter("@RDCDescription", SqlDbType.NVarChar, 100, RDCDescription, ParameterDirection.Input)
         oSQL.AddParameter("@CarrierAlphaCode", SqlDbType.NVarChar, 100, CarrierAlphaCode, ParameterDirection.Input)
         oSQL.AddParameter("@CarrierRouting", SqlDbType.NVarChar, 100, CarrierRouting, ParameterDirection.Input)
