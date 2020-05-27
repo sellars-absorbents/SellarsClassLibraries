@@ -1048,7 +1048,7 @@ Public Class SalesOrderMasterClass
         oSQL.RunProc("AddSalesOrderMaster")
     End Sub
 
-    Public Function Clone(ByVal MaxProcess As Integer, ByVal pOrder As String) As String
+    Public Function Clone(ByVal pOrder As String) As String
         Dim blanks As String = ""
 
         ' Read in the existing order
@@ -1078,7 +1078,7 @@ Public Class SalesOrderMasterClass
         Return RetOrder
     End Function
 
-    Public Sub Delete(ByVal MaxProcess As Integer, ByVal pOrder As String)
+    Public Sub Delete(ByVal pOrder As String)
         'delete the Sales Order Detail record via MAX Update
         Dim retValue As Short = ClassBase.MAXUpdate.DeleteSalesOrderXML(pOrder)
 
@@ -1135,6 +1135,8 @@ Public Class SalesOrderMasterClass
         Dim strSQL As String = "select @Count = count(LINNUM_28) from SO_Detail join Part_Master on PRTNUM_01 = PRTNUM_28 where ORDNUM_28 = @ORDNUM and PLANID_01 in (select PlanId from ShopfloorControl..OrderTypePlanIds where OrderType = @OrderType); select @ItemsCount = count(*) from SO_Detail where ORDNUM_28  = @ORDNUM; select @SType = STYPE_27 from SO_Master where ORDNUM_27 = @ORDNUM; select @ItemMasterCount = count(*) from SO_Detail join Part_Master on PRTNUM_01 = PRTNUM_28 where ORDNUM_28 = @ORDNUM;"
 
         Using connection = New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            connection.open()
+
             Using cmd As New SqlCommand(strSQL, connection)
                 cmd.CommandType = CommandType.Text
                 cmd.CommandTimeout = 0
@@ -1183,6 +1185,8 @@ Public Class SalesOrderMasterClass
                                "Where ORDNUM_27 = '" & passorder.Trim & "' "
 
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            connection.Open()
+
             Using cmd As New SqlCommand(strSQL, connection)
                 Using OrderMasterReader As SqlDataReader = cmd.ExecuteReader()
                     _ORDNUM = passorder
@@ -1611,7 +1615,7 @@ Public Class SalesOrderMasterClass
     End Sub
 
     ' Function used to update any updateable line item field
-    Public Sub Update(ByVal MaxProcess As Integer, ByVal value As DataSource, ByVal pORDNUM As String, ByVal pADDR1 As String, ByVal pADDR2 As String, ByVal pADDR3 As String, ByVal pCity As String, ByVal pCountry As String, ByVal pCustomerName As String, ByVal pCUSTPO As String, ByVal pFOB As String, ByVal pOrderDate As Date, ByVal pOrderedBy As String, ByVal pShipCode As String, ByVal pSHPVIA As String, ByVal pState As String, ByVal pTAXCD1 As String, ByVal pTAXCD2 As String, ByVal pTAXCD3 As String, ByVal pTerms As String, ByVal pZIPCD As String)
+    Public Sub Update(ByVal value As DataSource, ByVal pORDNUM As String, ByVal pADDR1 As String, ByVal pADDR2 As String, ByVal pADDR3 As String, ByVal pCity As String, ByVal pCountry As String, ByVal pCustomerName As String, ByVal pCUSTPO As String, ByVal pFOB As String, ByVal pOrderDate As Date, ByVal pOrderedBy As String, ByVal pShipCode As String, ByVal pSHPVIA As String, ByVal pState As String, ByVal pTAXCD1 As String, ByVal pTAXCD2 As String, ByVal pTAXCD3 As String, ByVal pTerms As String, ByVal pZIPCD As String)
         ' Add is only currently available for the max datasource
         If value = DataSource.Sellars Then
             Exit Sub
@@ -1668,7 +1672,7 @@ Public Class SalesOrderMasterClass
 
     End Sub
     ' Function used to update any updateable line item field
-    Public Sub UpdateFOB(ByVal MaxProcess As Integer, ByVal value As DataSource, ByVal pORDNUM As String, ByVal FOB As String)
+    Public Sub UpdateFOB(ByVal value As DataSource, ByVal pORDNUM As String, ByVal FOB As String)
         ' Add is only currently available for the max datasource
         If value = DataSource.Sellars Then
             Exit Sub
@@ -1725,7 +1729,7 @@ Public Class SalesOrderMasterClass
     End Sub
 
     ' Function used to update any updateable line item field
-    Public Sub UpdateTotalTax(ByVal MaxProcess As Integer, ByVal value As DataSource, ByVal pORDNUM As String)
+    Public Sub UpdateTotalTax(ByVal value As DataSource, ByVal pORDNUM As String)
         ' Add is only currently available for the max datasource
         If value = DataSource.Sellars Then
             Exit Sub
@@ -1736,8 +1740,8 @@ Public Class SalesOrderMasterClass
 
         ' Declare necessary local variables and initialize them
         Dim tmpTotalTax As Decimal = 0
-        Dim strSQL As String = "Select sum(TAX1_28) as TAX1, Sum(TAX2_28) as TAX2, Sum(TAX3_28) as TAX3 " & _
-                               "From ""SO_Detail"" " & _
+        Dim strSQL As String = "Select sum(TAX1_28) as TAX1, Sum(TAX2_28) as TAX2, Sum(TAX3_28) as TAX3 " &
+                               "From ""SO_Detail"" " &
                                "Where ORDNUM_28 = '" & pORDNUM.Trim & "' "
 
         ' Set up the new Sql command
@@ -1865,6 +1869,8 @@ Public Class SalesOrderMasterClass
                                "and ORDNUM_27 <> '" & passOrder.Trim & "'"
 
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            connection.Open()
+
             Using cmd As New SqlCommand(strSQL, connection)
                 Using dr As SqlDataReader = cmd.ExecuteReader()
                     If dr.Read() Then
