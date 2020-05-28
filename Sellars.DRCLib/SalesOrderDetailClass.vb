@@ -834,7 +834,7 @@ Public Class SalesOrderDetailClass
         Return Open
     End Function
 
-    Public Sub Add(ByVal MaxProcess As Integer, ByVal value As DataSource, ByVal Order As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal PRTNUM As String, ByVal Quantity As Decimal, ByVal Price As Decimal, ByVal CusDue As Date, ByVal CurDue As Date, ByVal Pallets As Boolean, ByVal CustID As String, ByVal Type As String, ByVal Taxabl As String, ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal, ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal, ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal, ByVal GLCode As String, ByVal SLSUOM As String, ByVal StockCode As String)
+    Public Sub Add(ByVal value As DataSource, ByVal Order As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal PRTNUM As String, ByVal Quantity As Decimal, ByVal Price As Decimal, ByVal CusDue As Date, ByVal CurDue As Date, ByVal Pallets As Boolean, ByVal CustID As String, ByVal Type As String, ByVal Taxabl As String, ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal, ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal, ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal, ByVal GLCode As String, ByVal SLSUOM As String, ByVal StockCode As String)
         ' Add is only currently available for the max datasource
         If value = DataSource.Sellars Then
             Exit Sub
@@ -843,7 +843,7 @@ Public Class SalesOrderDetailClass
         AddMax(Order, LINNUM, DELNUM, PRTNUM, Quantity, Price, CusDue, CurDue, Pallets, CustID, Type, Taxabl, TaxCode1, TaxRate1, TaxCode2, TaxRate2, TaxCode3, TaxRate3, GLCode, SLSUOM, StockCode)
     End Sub
 
-    Public Sub Add(ByVal MaxProcess As Integer, ByVal value As DataSource)
+    Public Sub Add(ByVal value As DataSource)
         ' Add is only currently available for the max datasource
         If value = DataSource.Sellars Then
             Exit Sub
@@ -2516,7 +2516,7 @@ Public Class SalesOrderDetailClass
     End Sub
 
     ' Function used to update the line item price
-    Public Sub UpdatePrice(ByVal MaxProcess As Integer, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pPrice As Decimal, ByVal pQuantity As Decimal)
+    Public Sub UpdatePrice(ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pPrice As Decimal, ByVal pQuantity As Decimal)
         ' Read the requested sales order detail record
         _ErrorDescription = "Line Item Read Max"
         Read(pORDNUM, pLINNUM, pDELNUM)
@@ -2559,7 +2559,7 @@ Public Class SalesOrderDetailClass
         End Select
     End Sub
 
-    Public Sub Update(ByVal MaxProcess As Integer, ByVal value As DataSource, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pQuantity As Decimal, ByVal pPrice As Decimal, ByVal pCusDue As Date, ByVal pCurDue As Date, ByVal pGLCode As String, ByVal pStockCode As String,
+    Public Sub Update(ByVal value As DataSource, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pQuantity As Decimal, ByVal pPrice As Decimal, ByVal pCusDue As Date, ByVal pCurDue As Date, ByVal pGLCode As String, ByVal pStockCode As String,
                       ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal,
                       ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal,
                       ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal,
@@ -2627,7 +2627,7 @@ Public Class SalesOrderDetailClass
         End Select
     End Sub
 
-    Public Sub UpdateTaxDetails(ByVal MaxProcess As Integer, ByVal value As DataSource, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String,
+    Public Sub UpdateTaxDetails(ByVal value As DataSource, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String,
                   ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal,
                   ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal,
                   ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal,
