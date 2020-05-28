@@ -281,7 +281,6 @@
     <Compile Include="SONotesClass.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StockAdjustment.vb" />
     <Compile Include="StockMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>

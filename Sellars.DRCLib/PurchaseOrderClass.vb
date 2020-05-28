@@ -8,8 +8,6 @@ Imports System.Text
 Imports System.Xml
 Imports System.Xml.Linq
 
-Imports MaxUpdateXML
-
 Public Class PurchaseOrderClass
     Inherits ClassBase
 
@@ -1235,12 +1233,11 @@ Public Class PurchaseOrderClass
 
     Private Sub UpdateOrder(ByVal Connection As String, ByVal CompanyName As String, ByVal LicensePath As String, ByVal LogPath As String)
         Dim sXML As New StringBuilder
-        Dim objMaxUpdateWrapper As New MaxUpdateXML.XMLWrapper
 
-        objMaxUpdateWrapper.Initialize(Connection, CompanyName, LicensePath, LogPath, False)
+        ClassBase.Initialize(Connection, CompanyName, LicensePath, LogPath, False)
 
         ' Create the XML document to update the Shop Order
-        Dim docPO As XDocument = _
+        Dim docPO As XDocument =
             <?xml version="1.0" encoding="utf-8"?>
             <eMAXExact>
                 <Order_Master_Table>
@@ -1330,25 +1327,16 @@ Public Class PurchaseOrderClass
                 </Order_Master_Table>
             </eMAXExact>
 
-        ' Turn off visual error reporting
-        Dim erResult As Integer = objMaxUpdateWrapper.SetVisualErrorReportingXML(0)
-
         'Add Sales Order Detail record via MAX Update
-        Dim result As Short = objMaxUpdateWrapper.ChangePurchaseOrderLineItemXML(docPO.ToString, False)
+        Dim result As Short = ClassBase.MAXUpdate.ChangePurchaseOrderLineItemXML(docPO.ToString, False)
 
         Select Case result
             Case 0
-                objMaxUpdateWrapper.GetErrorStringXML()
-
                 'failed - make a new order number
                 Dim msg As String = "Purchase Order Update failed using order number " & ORDNUM
             Case Else
                 'succeeded
                 Dim msg As String = "Purchase Order Update succeeded."
         End Select
-
-        objMaxUpdateWrapper = Nothing
     End Sub
-
-
 End Class

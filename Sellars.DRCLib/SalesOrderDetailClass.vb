@@ -6,7 +6,6 @@ Imports System.Data.SqlClient
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Threading.Tasks
-Imports MaxUpdateXML
 Imports System.Xml.Linq
 
 Public Class SalesOrderDetailClass
