@@ -1862,11 +1862,35 @@ Public Class SalesOrderMasterClass
 
     Public Function IsDuplicatePO(ByVal passCustomer As String, ByVal passOrder As String, ByVal passPO As String) As Boolean
         Dim isDuplicate As Boolean
-        Dim strSQL As String = "select CUSTPO_27 " & _
-                               "From ""SO_Master"" " & _
-                               "Where CUSTID_27 = '" & passCustomer.Trim & "' " & _
-                               "and CUSTPO_27 = '" & passPO.Trim & "' " & _
+        Dim strSQL As String = "select CUSTPO_27 " &
+                               "From ""SO_Master"" " &
+                               "Where CUSTID_27 = '" & passCustomer.Trim & "' " &
+                               "and CUSTPO_27 = '" & passPO.Trim & "' " &
                                "and ORDNUM_27 <> '" & passOrder.Trim & "'"
+
+        Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            connection.Open()
+
+            Using cmd As New SqlCommand(strSQL, connection)
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
+                        isDuplicate = True
+                    Else
+                        isDuplicate = False
+                    End If
+                End Using
+            End Using
+        End Using
+
+        Return isDuplicate
+    End Function
+
+    Public Function IsDuplicatePO(ByVal passCustomer As String, ByVal passPO As String) As Boolean
+        Dim isDuplicate As Boolean
+        Dim strSQL As String = "select CUSTPO_27 " &
+                               "From ""SO_Master"" " &
+                               "Where CUSTID_27 = '" & passCustomer.Trim & "' " &
+                               "and CUSTPO_27 = '" & passPO.Trim & "' "
 
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             connection.Open()
