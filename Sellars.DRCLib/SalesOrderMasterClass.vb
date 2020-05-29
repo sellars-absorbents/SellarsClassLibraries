@@ -923,7 +923,7 @@ Public Class SalesOrderMasterClass
                         <STATUS_27><%= Convert.ToString(OrderStatus.Open) %></STATUS_27>
                         <CUSTPO_27><%= CUSTPO.Trim() %></CUSTPO_27>
                         <ORDID_27><%= OrderedBy.Trim() %></ORDID_27>
-                        <ORDDTE_27><%= MakeDate(Year(Now()), Month(Now()), Day(Now())) %></ORDDTE_27>
+                        <ORDDTE_27><%= MakeDate(Now()) %></ORDDTE_27>
                         <FILL01A_27></FILL01A_27>
                         <FILL01_27></FILL01_27>
                         <SHPCDE_27><%= SHPCDE.Trim() %></SHPCDE_27>
@@ -1595,7 +1595,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Element("TAXCD3_27").Value = pTAXCD3
         salesOrderXML.Element("CUSTPO_27").Value = pCUSTPO
         salesOrderXML.Element("FOB_27").Value = pFOB
-        salesOrderXML.Element("ORDDTE_27").Value = MakeDate(pOrderDate.Year, pOrderDate.Month, pOrderDate.Day)
+        salesOrderXML.Element("ORDDTE_27").Value = MakeDate(pOrderDate)
         salesOrderXML.Element("ORDID_27").Value = pOrderedBy
         salesOrderXML.Element("SHPVIA_27").Value = pSHPVIA
         salesOrderXML.Element("TERMS_27").Value = pTerms
@@ -1653,7 +1653,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Element("TAXCD3_27").Value = pTAXCD3
         salesOrderXML.Element("CUSTPO_27").Value = pCUSTPO
         salesOrderXML.Element("FOB_27").Value = pFOB
-        salesOrderXML.Element("ORDDTE_27").Value = MakeDate(pOrderDate.Year, pOrderDate.Month, pOrderDate.Day)
+        salesOrderXML.Element("ORDDTE_27").Value = MakeDate(pOrderDate)
         salesOrderXML.Element("ORDID_27").Value = pOrderedBy
         salesOrderXML.Element("SHPVIA_27").Value = pSHPVIA
         salesOrderXML.Element("TERMS_27").Value = pTerms
@@ -1790,7 +1790,7 @@ Public Class SalesOrderMasterClass
                         <STATUS_27><%= Convert.ToString(OrderStatus.Open) %></STATUS_27>
                         <CUSTPO_27><%= _CUSTPO.GetFixedLengthString(25) %></CUSTPO_27>
                         <ORDID_27><%= _ORDID.GetFixedLengthString(20) %></ORDID_27>
-                        <ORDDTE_27><%= MakeDate(Year(Now()), Month(Now()), Day(Now())) %></ORDDTE_27>
+                        <ORDDTE_27><%= MakeDate(Now()) %></ORDDTE_27>
                         <FILL01A_27><%= "" %></FILL01A_27>
                         <FILL01_27><%= "" %></FILL01_27>
                         <SHPCDE_27><%= _SHPCDE.GetFixedLengthString(10) %></SHPCDE_27>
@@ -1830,7 +1830,7 @@ Public Class SalesOrderMasterClass
                         <EXCRTE_27><%= _EXCRTE %></EXCRTE_27>
                         <FIXVAR_27><%= _FIXVAR.GetFixedLengthString(1) %></FIXVAR_27>
                         <CURR_27><%= _CURR.GetFixedLengthString(3) %></CURR_27>
-                        <RCLDTE_27><%= IIf(_RCLDTE = DefaultDate, 0, MakeDate(Year(_RCLDTE), Month(_RCLDTE), Day(_RCLDTE))) %></RCLDTE_27>
+                        <RCLDTE_27><%= IIf(_RCLDTE = DefaultDate, 0, MakeDate(_RCLDTE)) %></RCLDTE_27>
                         <FILL02_27></FILL02_27>
                         <TTAX_27><%= _TTAX %></TTAX_27>
                         <LNETAX_27><%= _LNETAX.GetFixedLengthString(1) %></LNETAX_27>
@@ -1846,13 +1846,13 @@ Public Class SalesOrderMasterClass
                         <XDFINT_27><%= _XDFINT %></XDFINT_27>
                         <XDFFLT_27><%= _XDFFLT %></XDFFLT_27>
                         <XDFBOL_27><%= _XDFBOL.GetFixedLengthString(1) %></XDFBOL_27>
-                        <XDFDTE_27><%= IIf(_XDFDTE = DefaultDate, 0, MakeDate(Year(_XDFDTE), Month(_XDFDTE), Day(_XDFDTE))) %></XDFDTE_27>
+                        <XDFDTE_27><%= IIf(_XDFDTE = DefaultDate, 0, MakeDate(_XDFDTE)) %></XDFDTE_27>
                         <XDFTXT_27><%= _XDFTXT.GetFixedLengthString(100) %></XDFTXT_27>
                         <FILLER_27></FILLER_27>
                         <CreatedBy><%= _CREATEDBY.GetFixedLengthString(100) %></CreatedBy>
-                        <CreationDate><%= IIf(_CREATIONDATE = DefaultDate, 0, MakeDate(Year(_CREATIONDATE), Month(_CREATIONDATE), Day(_CREATIONDATE))) %></CreationDate>
+                        <CreationDate><%= IIf(_CREATIONDATE = DefaultDate, 0, MakeDate(_CREATIONDATE)) %></CreationDate>
                         <ModifiedBy><%= _MODIFIEDBY.GetFixedLengthString(100) %></ModifiedBy>
-                        <ModificationDate><%= IIf(_MODIFICATIONDATE = DefaultDate, 0, MakeDate(Year(_MODIFICATIONDATE), Month(_MODIFICATIONDATE), Day(_MODIFICATIONDATE))) %></ModificationDate>
+                        <ModificationDate><%= IIf(_MODIFICATIONDATE = DefaultDate, 0, MakeDate(_MODIFICATIONDATE)) %></ModificationDate>
                     </SO_Master>
                 </SO_Master_Table>
             </eMAXExact>

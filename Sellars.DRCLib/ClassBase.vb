@@ -93,8 +93,8 @@ Public MustInherit Class ClassBase
     ' ==== the following are functions necessary for maxupdate
 
     ' Routine to set the date correctly for maxupdate routines
-    Protected Function MakeDate(ByVal piYear As Short, ByVal piMon As Short, ByVal piDay As Short) As String
-        Return piYear.ToString() + "-" + piMon.ToString().PadLeft(2, "0"c) + "-" + piDay.ToString().PadLeft(2, "0"c)
+    Protected Function MakeDate(ByVal maxDate As Date) As String
+        Return maxDate.ToString("yyyy-MM-dd") ' piYear.ToString() + "-" + piMon.ToString().PadLeft(2, "0"c) + "-" + piDay.ToString().PadLeft(2, "0"c)
     End Function
 
 End Class

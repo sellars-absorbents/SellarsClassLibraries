@@ -225,6 +225,7 @@
     <Compile Include="MaxCompanies.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAXTransaction.vb" />
     <Compile Include="MTSOverstockPriceList.vb" />
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>

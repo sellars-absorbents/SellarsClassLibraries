@@ -877,11 +877,11 @@ Public Class SalesOrderDetailClass
                         <EDILIN_28></EDILIN_28>
                         <TAXABL_28><%= Taxable %></TAXABL_28>
                         <GLXREF_28><%= GLCode.ToUpper %></GLXREF_28>
-                        <CURDUE_28><%= MakeDate(Year(CusDue), Month(CusDue), Day(CusDue)) %></CURDUE_28>
+                        <CURDUE_28><%= MakeDate(CusDue) %></CURDUE_28>
                         <QTLINE_28></QTLINE_28>
-                        <ORGDUE_28><%= MakeDate(Year(CurDue), Month(CurDue), Day(CurDue)) %></ORGDUE_28>
+                        <ORGDUE_28><%= MakeDate(CurDue) %></ORGDUE_28>
                         <QTDEL_28></QTDEL_28>
-                        <CUSDUE_28><%= MakeDate(Year(CurDue), Month(CurDue), Day(CurDue)) %></CUSDUE_28>
+                        <CUSDUE_28><%= MakeDate(CurDue) %></CUSDUE_28>
                         <PROBAB_28><%= 0 %></PROBAB_28>
                         <SHPDTE_28/>
                         <FILL04_28></FILL04_28>
@@ -928,9 +928,9 @@ Public Class SalesOrderDetailClass
                         <XDFTXT_28></XDFTXT_28>
                         <FILLER_28></FILLER_28>
                         <CreatedBy></CreatedBy>
-                        <CreationDate><%= MakeDate(Year(Date.Now), Month(Date.Now), Day(Date.Now)) %></CreationDate>
+                        <CreationDate><%= MakeDate(Date.Now) %></CreationDate>
                         <ModifiedBy></ModifiedBy>
-                        <ModificationDate><%= MakeDate(Year(Date.Now), Month(Date.Now), Day(Date.Now)) %></ModificationDate>
+                        <ModificationDate><%= MakeDate(Date.Now) %></ModificationDate>
                         <BOKDTE_28></BOKDTE_28>
                         <DBKDTE_28></DBKDTE_28>
                         <REVLEV_28></REVLEV_28>
@@ -964,7 +964,7 @@ Public Class SalesOrderDetailClass
         Dim salesOrderDetailXML As XDocument = FillStructure()
 
         salesOrderDetailXML.Element("STATUS_28").Value = Convert.ToString(LineStatus.Open)
-        salesOrderDetailXML.Element("ORGDUE_28").Value = MakeDate(Year(_CURDUE), Month(_CURDUE), Day(_CURDUE))
+        salesOrderDetailXML.Element("ORGDUE_28").Value = MakeDate(_CURDUE)
 
         If _TAXABL = "Y" Then
             Dim forcur As Double = Double.Parse(salesOrderDetailXML.Element("FORCUR_28").Value)
@@ -1055,20 +1055,20 @@ Public Class SalesOrderDetailClass
             ' data to the original data record, and then modifying the fields that have changed
             salesOrderDetailXML.Element("ORDNUM_28").Value = newORDNUM
             salesOrderDetailXML.Element("LINNUM_28").Value = newLineNumber.ToString.PadLeft(2, "0")
-            salesOrderDetailXML.Element("CURDUE_28").Value = MakeDate(Year(ScheduleDate), Month(ScheduleDate), Day(ScheduleDate))
-            salesOrderDetailXML.Element("CUSDUE_28").Value = MakeDate(Year(ScheduleDate), Month(ScheduleDate), Day(ScheduleDate))
-            salesOrderDetailXML.Element("ORGDUE_28").Value = MakeDate(Year(ScheduleDate), Month(ScheduleDate), Day(ScheduleDate))
+            salesOrderDetailXML.Element("CURDUE_28").Value = MakeDate(ScheduleDate)
+            salesOrderDetailXML.Element("CUSDUE_28").Value = MakeDate(ScheduleDate)
+            salesOrderDetailXML.Element("ORGDUE_28").Value = MakeDate(ScheduleDate)
             salesOrderDetailXML.Element("SHPQTY_28").Value = 0
             salesOrderDetailXML.Element("INVQTY_28").Value = 0
             salesOrderDetailXML.Element("BCKQTY_28").Value = 0
             salesOrderDetailXML.Element("DUEQTY_28").Value = salesOrderDetailXML.Element("CURQTY_28").Value
             salesOrderDetailXML.Element("CURSHP_28").Value = 0
             salesOrderDetailXML.Element("STATUS_28").Value = Convert.ToString(LineStatus.Open)
-            salesOrderDetailXML.Element("XDFDTE_28").Value = MakeDate(Year(DefaultDate), Month(DefaultDate), Day(DefaultDate))
-            salesOrderDetailXML.Element("MODIFICATIONDATE_28").Value = MakeDate(Year(Now()), Month(Now()), Day(Now()))
-            salesOrderDetailXML.Element("CREATIONDATE_28").Value = MakeDate(Year(Now()), Month(Now()), Day(Now()))
-            salesOrderDetailXML.Element("BOKDTE_28").Value = MakeDate(Year(DefaultDate), Month(DefaultDate), Day(DefaultDate))
-            salesOrderDetailXML.Element("DBKDTE_28").Value = MakeDate(Year(DefaultDate), Month(DefaultDate), Day(DefaultDate))
+            salesOrderDetailXML.Element("XDFDTE_28").Value = MakeDate(DefaultDate)
+            salesOrderDetailXML.Element("MODIFICATIONDATE_28").Value = MakeDate(Now())
+            salesOrderDetailXML.Element("CREATIONDATE_28").Value = MakeDate(Now())
+            salesOrderDetailXML.Element("BOKDTE_28").Value = MakeDate(DefaultDate)
+            salesOrderDetailXML.Element("DBKDTE_28").Value = MakeDate(DefaultDate)
             salesOrderDetailXML.Element("SHPDTE_28").Value = "0001-01-01" '<-- null date in MAX
 
             'Add Sales Order Detail record via MAX Update
@@ -2413,8 +2413,8 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("CURDUE_28").Value = MakeDate(Year(pCurDue), Month(pCurDue), Day(pCurDue))
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(Year(pCusDue), Month(pCusDue), Day(pCusDue))
+        newSODXML.Element("CURDUE_28").Value = MakeDate(pCurDue)
+        newSODXML.Element("CUSDUE_28").Value = MakeDate(pCusDue)
 
         'Update the Sales Order Detail record via MAX Update
         Dim retryCount As Integer = 0
@@ -2449,8 +2449,8 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("CURDUE_28").Value = MakeDate(Year(pDueDate), Month(pDueDate), Day(pDueDate))
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(Year(pDueDate), Month(pDueDate), Day(pDueDate))
+        newSODXML.Element("CURDUE_28").Value = MakeDate(pDueDate)
+        newSODXML.Element("CUSDUE_28").Value = MakeDate(pDueDate)
         newSODXML.Element("GLXREF_28").Value = GLCode.ToUpper.PadRight(32)
 
         'Update the Sales Order Detail record via MAX Update
@@ -2486,8 +2486,8 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("CURDUE_28").Value = MakeDate(Year(pDueDate), Month(pDueDate), Day(pDueDate))
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(Year(pDueDate), Month(pDueDate), Day(pDueDate))
+        newSODXML.Element("CURDUE_28").Value = MakeDate(pDueDate)
+        newSODXML.Element("CUSDUE_28").Value = MakeDate(pDueDate)
         newSODXML.Element("STK_28").Value = pStockCode.ToUpper.PadRight(8)
         newSODXML.Element("GLXREF_28").Value = GLCode.ToUpper.PadRight(32)
 
@@ -2573,8 +2573,8 @@ Public Class SalesOrderDetailClass
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
         newSODXML.Element("GLXREF_28").Value = pGLCode.ToUpper.PadRight(32)
-        newSODXML.Element("CURDUE_28").Value = MakeDate(Year(pCurDue), Month(pCurDue), Day(pCurDue))
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(Year(pCusDue), Month(pCusDue), Day(pCusDue))
+        newSODXML.Element("CURDUE_28").Value = MakeDate(pCurDue)
+        newSODXML.Element("CUSDUE_28").Value = MakeDate(pCusDue)
         newSODXML.Element("PRICE_28").Value = pPrice
         newSODXML.Element("FORCUR_28").Value = pPrice
         newSODXML.Element("CURQTY_28").Value = pQuantity
@@ -2916,14 +2916,14 @@ Public Class SalesOrderDetailClass
                         <EDILIN_28><%= EDILIN.PadRight(6) %></EDILIN_28>
                         <TAXABL_28><%= TAXABL.PadRight(1) %></TAXABL_28>
                         <GLXREF_28><%= GLXREF.PadRight(32) %></GLXREF_28>
-                        <CURDUE_28><%= MakeDate(Year(CURDUE), Month(CURDUE), Day(CURDUE)) %></CURDUE_28>
+                        <CURDUE_28><%= MakeDate(CURDUE) %></CURDUE_28>
                         <CURDUE_28></CURDUE_28>
                         <QTLINE_28><%= QTLINE.PadLeft(2, "0") %></QTLINE_28>
-                        <ORGDUE_28><%= MakeDate(Year(ORGDUE), Month(ORGDUE), Day(ORGDUE)) %></ORGDUE_28>
+                        <ORGDUE_28><%= MakeDate(ORGDUE) %></ORGDUE_28>
                         <QTDEL_28><%= QTDEL.PadLeft(2, "0") %></QTDEL_28>
-                        <CUSDUE_28><%= MakeDate(Year(CUSDUE), Month(CUSDUE), Day(CUSDUE)) %></CUSDUE_28>
+                        <CUSDUE_28><%= MakeDate(CUSDUE) %></CUSDUE_28>
                         <PROBAB_28><%= PROBAB %></PROBAB_28>
-                        <SHPDTE_28><%= IIf(SHPDTE = DefaultDate, 0, MakeDate(Year(SHPDTE), Month(SHPDTE), Day(SHPDTE))) %></SHPDTE_28>
+                        <SHPDTE_28><%= IIf(SHPDTE = DefaultDate, 0, MakeDate(SHPDTE)) %></SHPDTE_28>
                         <FILL04_28><%= FILL04.PadRight(2) %></FILL04_28>
                         <SLSUOM_28><%= SLSUOM.PadRight(2) %></SLSUOM_28>
                         <REFRNC_28><%= REFRNC.PadRight(25) %></REFRNC_28>
@@ -2964,15 +2964,15 @@ Public Class SalesOrderDetailClass
                         <XDFINT_28><%= XDFINT %></XDFINT_28>
                         <XDFFLT_28><%= XDFFLT %></XDFFLT_28>
                         <XDFBOL_28><%= XDFBOL.PadRight(1) %></XDFBOL_28>
-                        <XDFDTE_28><%= MakeDate(Year(XDFDTE), Month(XDFDTE), Day(XDFDTE)) %></XDFDTE_28>
+                        <XDFDTE_28><%= MakeDate(XDFDTE) %></XDFDTE_28>
                         <XDFTXT_28><%= XDFTXT.PadRight(100) %></XDFTXT_28>
                         <FILLER_28><%= FILLER.PadRight(50) %></FILLER_28>
                         <CreatedBy><%= CREATEDBY.PadRight(100) %></CreatedBy>
-                        <CreationDate><%= MakeDate(Year(CREATIONDATE), Month(CREATIONDATE), Day(CREATIONDATE)) %></CreationDate>
+                        <CreationDate><%= MakeDate(CREATIONDATE) %></CreationDate>
                         <ModifiedBy><%= MODIFIEDBY.PadRight(100) %></ModifiedBy>
-                        <ModificationDate><%= MakeDate(Year(MODIFICATIONDATE), Month(MODIFICATIONDATE), Day(MODIFICATIONDATE)) %></ModificationDate>
-                        <BOKDTE_28><%= MakeDate(Year(BOKDTE), Month(BOKDTE), Day(BOKDTE)) %></BOKDTE_28>
-                        <DBKDTE_28><%= MakeDate(Year(DBKDTE), Month(DBKDTE), Day(DBKDTE)) %></DBKDTE_28>
+                        <ModificationDate><%= MakeDate(MODIFICATIONDATE) %></ModificationDate>
+                        <BOKDTE_28><%= MakeDate(BOKDTE) %></BOKDTE_28>
+                        <DBKDTE_28><%= MakeDate(DBKDTE) %></DBKDTE_28>
                         <REVLEV_28><%= REVLEV.PadLeft(3) %></REVLEV_28>
                         <MANPRC_28></MANPRC_28>
                         <ORGPRC_28></ORGPRC_28>
