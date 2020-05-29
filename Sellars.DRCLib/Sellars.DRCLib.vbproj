@@ -302,8 +302,27 @@
     <Compile Include="ZonePriceList.vb" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Third Party\MaxUpdateXML.dll" />
-    <Content Include="Third Party\Sellars.SQL.dll" />
+    <Content Include="Third Party\ERMRemCl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\EXACTRMEnc.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MAXEXEC2.DLL">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MaxOrdr2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MaxTran2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MaxUpdateXML.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\Sellars.SQL.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
