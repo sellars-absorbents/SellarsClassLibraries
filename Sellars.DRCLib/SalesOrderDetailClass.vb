@@ -3118,7 +3118,7 @@ Public Class SalesOrderDetailClass
     End Sub
 
     Protected Overridable Function AddSalesOrderLineItemXML(ByVal xml As String) As Integer
-        Return ClassBase.MAXUpdate.AddSalesOrderLineItemXML(xml)
+        Return ClassBase.MAXUpdate.AddSOLineItemXML(xml, False)
     End Function
 
     Protected Overridable Function DeleteSalesOrderLineItemXML(ByVal xml As String) As Integer
