@@ -226,6 +226,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MAXTransaction.vb" />
+    <Compile Include="MAXTransactionASP.vb" />
     <Compile Include="MTSOverstockPriceList.vb" />
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -255,15 +256,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PurchaseOrderClass.vb" />
+    <Compile Include="PurchaseOrderClassASP.vb" />
     <Compile Include="SalesOrderClass.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SalesOrderDetailClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SalesOrderDetailClassASP.vb" />
     <Compile Include="SalesOrderMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SalesOrderMasterClassASP.vb" />
     <Compile Include="SalesOrderPromotionCodes.vb" />
     <Compile Include="SalesRepMasterClass.vb">
       <SubType>Code</SubType>
@@ -275,6 +279,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ShopOrderMasterClass.vb" />
+    <Compile Include="ShopOrderMasterClassASP.vb" />
     <Compile Include="SODetailExtClass.vb">
       <SubType>Code</SubType>
     </Compile>

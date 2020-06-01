@@ -949,7 +949,7 @@ Public Class SalesOrderDetailClass
             </eMAXExact>
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Short = ClassBase.MAXUpdate.AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
+        Dim retValue As Short = AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
 
         Select Case retValue
             Case 0
@@ -980,7 +980,7 @@ Public Class SalesOrderDetailClass
         End If
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Short = ClassBase.MAXUpdate.AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
+        Dim retValue As Short = AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1072,7 +1072,7 @@ Public Class SalesOrderDetailClass
             salesOrderDetailXML.Descendants("SHPDTE_28").First().Value = "0001-01-01" '<-- null date in MAX
 
             'Add Sales Order Detail record via MAX Update
-            Dim retValue As Short = ClassBase.MAXUpdate.AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
+            Dim retValue As Short = AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
 
             Select Case retValue
                 Case 0
@@ -1121,7 +1121,7 @@ Public Class SalesOrderDetailClass
         salesOrderDetailXML.Descendants("FORCUR_28").First().Value = 0
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Short = ClassBase.MAXUpdate.AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
+        Dim retValue As Short = AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1189,7 +1189,7 @@ Public Class SalesOrderDetailClass
         Dim salesOrderDetailXML As XDocument = FillStructure()
 
         'delete the Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.DeleteSalesOrderLineItemXML(salesOrderDetailXML.ToString())
+        Dim retValue As Integer = DeleteSalesOrderLineItemXML(salesOrderDetailXML.ToString())
 
         Select Case retValue
             Case 0
@@ -2331,7 +2331,7 @@ Public Class SalesOrderDetailClass
         newSODXML.Descendants("STATUS_28").First().Value = Status
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
         Select Case retValue
             Case 0
@@ -2357,7 +2357,7 @@ Public Class SalesOrderDetailClass
         newSODXML.Descendants("STK_28").First().Value = STK.ToUpper.PadRight(8)
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
         Select Case retValue
             Case 0
@@ -2388,7 +2388,7 @@ Public Class SalesOrderDetailClass
             retryCount += 1
 
             ' call the change sales order line item
-            retValue = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+            retValue = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
             ' If the update call was successul, then exit the while loop
             If retValue <> 0 Then
@@ -2425,7 +2425,7 @@ Public Class SalesOrderDetailClass
             retryCount += 1
 
             ' call the change sales order line item
-            retValue = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+            retValue = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
             ' If the update call was successul, then exit the while loop
             If retValue <> 0 Then
@@ -2462,7 +2462,7 @@ Public Class SalesOrderDetailClass
             retryCount += 1
 
             ' call the change sales order line item
-            retValue = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+            retValue = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
             ' If the update call was successul, then exit the while loop
             If retValue <> 0 Then
@@ -2500,7 +2500,7 @@ Public Class SalesOrderDetailClass
             retryCount += 1
 
             ' call the change sales order line item
-            retValue = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+            retValue = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
             ' If the update call was successul, then exit the while loop
             If retValue <> 0 Then
@@ -2550,7 +2550,7 @@ Public Class SalesOrderDetailClass
         End If
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
         Select Case retValue
             Case 0
@@ -2616,7 +2616,7 @@ Public Class SalesOrderDetailClass
         End If
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
         Select Case retValue
             Case 0
@@ -2658,7 +2658,7 @@ Public Class SalesOrderDetailClass
                         oldSODXML.Descendants("TAX3_28").First().Value <> newSODXML.Descendants("TAX3_28").First().Value
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
 
         Select Case retValue
             Case 0
@@ -3116,4 +3116,16 @@ Public Class SalesOrderDetailClass
             End Using
         End Using
     End Sub
+
+    Protected Overridable Function AddSalesOrderLineItemXML(ByVal xml As String) As Integer
+        Return ClassBase.MAXUpdate.AddSalesOrderLineItemXML(xml)
+    End Function
+
+    Protected Overridable Function DeleteSalesOrderLineItemXML(ByVal xml As String) As Integer
+        Return ClassBase.MAXUpdate.DeleteSalesOrderLineItemXML(xml)
+    End Function
+
+    Protected Overridable Function ChangeSalesOrderLineItemXML(ByVal newSODXML As String, ByVal oldSODXML As String) As Integer
+        Return ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML, oldSODXML)
+    End Function
 End Class

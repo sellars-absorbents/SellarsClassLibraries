@@ -27,6 +27,26 @@ Public MustInherit Class ClassBase
             _maxUpdate.SetVisualErrorReportingXML(0)
         End If
     End Sub
+
+    Private Shared _maxUpdateASP As ASPXMLWrapper
+
+    Protected Shared ReadOnly Property MAXUpdateASP As XMLWrapper
+        Get
+            If _maxUpdateASP Is Nothing Then
+                Throw New Exception("MAXUpdateASP must be Initialized before being used")
+            End If
+
+            Return _maxUpdateASP
+        End Get
+    End Property
+
+    Protected Shared Sub InitializeASP(ByVal connectionString As String, ByVal companyName As String, ByVal licensePath As String, ByVal logPath As String, ByVal errorReport As Boolean)
+        If _maxUpdateASP Is Nothing Then
+            _maxUpdateASP = New ASPXMLWrapper()
+            _maxUpdateASP.InitASPXMLWrapper(connectionString, companyName, licensePath, logPath, errorReport)
+            _maxUpdateASP.SetVisualErrorReportingXML(0)
+        End If
+    End Sub
 #End Region
 
     ' Declare varible to hold the database connection string

@@ -50,7 +50,7 @@ Public Class MAXTransaction
     Public Sub GenericTransaction()
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.ProcessTransXML(transaction.ToString(), errorMessage)
+        Dim retValue As Integer = ProcessTransXML(transaction.ToString(), errorMessage)
 
         If retValue = 0 Then
             Throw New ApplicationException("There was an error processing the transaction for order number " + ORDNUM_39 + ". Error: " + errorMessage)
@@ -64,7 +64,7 @@ Public Class MAXTransaction
 
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.ProcessTransXML(transaction.ToString(), errorMessage)
+        Dim retValue As Integer = ProcessTransXML(transaction.ToString(), errorMessage)
 
         If retValue = 0 Then
             Throw New ApplicationException("There was an error processing the ship transaction for order number " + ORDNUM_39 + ". Error: " + errorMessage)
@@ -78,7 +78,7 @@ Public Class MAXTransaction
 
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.ProcessTransXML(transaction.ToString(), errorMessage)
+        Dim retValue As Integer = ProcessTransXML(transaction.ToString(), errorMessage)
 
         If retValue = 0 Then
             Throw New ApplicationException("There was an error processing the stock transfer transaction for part " + PRTNUM_39 + ". Error: " + errorMessage)
@@ -92,7 +92,7 @@ Public Class MAXTransaction
 
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.ProcessTransXML(transaction.ToString(), errorMessage)
+        Dim retValue As Integer = ProcessTransXML(transaction.ToString(), errorMessage)
 
         If retValue = 0 Then
             Throw New ApplicationException("There was an error processing the receipt transaction for order number " + ORDNUM_39 + ". Error: " + errorMessage)
@@ -106,7 +106,7 @@ Public Class MAXTransaction
 
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.ProcessTransXML(transaction.ToString(), errorMessage)
+        Dim retValue As Integer = ProcessTransXML(transaction.ToString(), errorMessage)
 
         If retValue = 0 Then
             Throw New ApplicationException("There was an error processing the adjustment transaction for part " + PRTNUM_39 + ". Error: " + errorMessage)
@@ -167,9 +167,13 @@ Public Class MAXTransaction
     End Function
 
     ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
-    Public Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
+    Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
         ClassBase.Initialize(connStr, comName, licPath, logPath, log)
     End Sub
+
+    Protected Overridable Function ProcessTransXML(ByVal xml As String, ByVal showErrorMessages As Boolean) As Integer
+        Return ClassBase.MAXUpdate.ProcessTransXML(xml, showErrorMessages)
+    End Function
 #End Region
 
 End Class

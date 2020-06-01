@@ -985,7 +985,7 @@ Public Class SalesOrderMasterClass
             </eMAXExact>
 
         Dim RetOrder As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.AddSOXML(salesOrderXML.ToString(), False)
+        Dim retValue As Integer = AddSOXML(salesOrderXML.ToString(), False)
 
         If retValue <= 0 Then
             Throw New System.Exception("Error creating sales order master record. Error " & retValue.ToString & " was returned from AddSalesOrder.")
@@ -1004,7 +1004,7 @@ Public Class SalesOrderMasterClass
     Private Function AddMax() As String
         Dim salesOrderXML As XDocument = FillStructure()
         Dim RetOrder As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.AddSOXML(salesOrderXML.ToString(), False)
+        Dim retValue As Integer = AddSOXML(salesOrderXML.ToString(), False)
 
         If retValue <= 0 Then
             Throw New System.Exception("Error creating sales order master record. Error " & retValue.ToString & " was returned from AddSalesOrder.")
@@ -1060,7 +1060,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("APPINV_27").First().Value = blanks.GetFixedLengthString(6)
 
         Dim RetOrder As String = ""
-        Dim retValue As Integer = ClassBase.MAXUpdate.AddSOXML(salesOrderXML.ToString(), False)
+        Dim retValue As Integer = AddSOXML(salesOrderXML.ToString(), False)
 
         If retValue = 0 Then
             ' Throws a new exception.
@@ -1080,7 +1080,7 @@ Public Class SalesOrderMasterClass
 
     Public Sub Delete(ByVal pOrder As String)
         'delete the Sales Order Detail record via MAX Update
-        Dim retValue As Short = ClassBase.MAXUpdate.DeleteSalesOrderXML(pOrder)
+        Dim retValue As Short = DeleteSalesOrderXML(pOrder)
 
         Select Case retValue
             Case 0
@@ -1449,7 +1449,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("STATUS_27").First().Value = newStatus
 
         'Call the MAXUPDATE ChangeSalesOrder function
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1477,7 +1477,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("CUSTID_27").First().Value = CustID.GetFixedLengthString(20)
 
         'Call the MAXUPDATE ChangeSalesOrder function
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1503,7 +1503,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("COMNT3_27").First().Value = pCOMNT3.Trim.PadRight(30)
 
         'Change the sales order master via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1601,7 +1601,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("TERMS_27").First().Value = pTerms
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1659,7 +1659,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("TERMS_27").First().Value = pTerms
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1692,7 +1692,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("FOB_27").First().Value = FOB
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
         Select Case retValue
             Case 0
                 ' Throws a new exception.
@@ -1768,7 +1768,7 @@ Public Class SalesOrderMasterClass
         salesOrderXML.Descendants("TTAX_27").First().Value = tmpTotalTax
 
         'Add Sales Order Detail record via MAX Update
-        Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
+        Dim retValue As Integer = ChangeSalesOrderXML(salesOrderXML.ToString())
 
         Select Case retValue
             Case 0
@@ -1911,7 +1911,19 @@ Public Class SalesOrderMasterClass
     End Function
 
     ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
-    Public Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
+    Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
         ClassBase.Initialize(connStr, comName, licPath, logPath, log)
     End Sub
+
+    Protected Overridable Function AddSOXML(ByVal xml As String, ByVal showMessages As Boolean) As Integer
+        Return ClassBase.MAXUpdate.AddSOXML(xml, showMessages)
+    End Function
+
+    Protected Overridable Function DeleteSalesOrderXML(ByVal pOrder As String) As Integer
+        Return ClassBase.MAXUpdate.DeleteSalesOrderXML(pOrder)
+    End Function
+
+    Protected Overridable Function ChangeSalesOrderXML(ByVal xml As String) As Integer
+        Return ClassBase.MAXUpdate.ChangeSalesOrderXML(xml)
+    End Function
 End Class

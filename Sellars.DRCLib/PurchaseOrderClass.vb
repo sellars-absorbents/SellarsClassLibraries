@@ -1234,7 +1234,7 @@ Public Class PurchaseOrderClass
     Private Sub UpdateOrder(ByVal Connection As String, ByVal CompanyName As String, ByVal LicensePath As String, ByVal LogPath As String)
         Dim sXML As New StringBuilder
 
-        ClassBase.Initialize(Connection, CompanyName, LicensePath, LogPath, False)
+        Initialize(Connection, CompanyName, LicensePath, LogPath, False)
 
         ' Create the XML document to update the Shop Order
         Dim docPO As XDocument =
@@ -1328,7 +1328,7 @@ Public Class PurchaseOrderClass
             </eMAXExact>
 
         'Add Sales Order Detail record via MAX Update
-        Dim result As Short = ClassBase.MAXUpdate.ChangePurchaseOrderLineItemXML(docPO.ToString, False)
+        Dim result As Short = ChangePurchaseOrderLineItemXML(docPO.ToString, False)
 
         Select Case result
             Case 0
@@ -1339,4 +1339,12 @@ Public Class PurchaseOrderClass
                 Dim msg As String = "Purchase Order Update succeeded."
         End Select
     End Sub
+
+    Protected Overridable Sub Initialize(ByVal Connection As String, ByVal CompanyName As String, ByVal LicensePath As String, ByVal LogPath As String, ByVal showErrorMessages As Boolean)
+        ClassBase.Initialize(Connection, CompanyName, LicensePath, LogPath, showErrorMessages)
+    End Sub
+
+    Protected Overridable Function ChangePurchaseOrderLineItemXML(ByVal xml As String, ByVal showErrorMessages As Boolean) As Short
+        Return ClassBase.MAXUpdate.ChangePurchaseOrderLineItemXML(xml, showErrorMessages)
+    End Function
 End Class

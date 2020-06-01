@@ -1209,7 +1209,7 @@ Public Class ShopOrderMasterClass
     Private Sub UpdateShopOrder(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String)
         Dim sXML As New StringBuilder
 
-        ClassBase.Initialize(connStr, comName, licPath, logPath, True)
+        InitializeMax(connStr, comName, licPath, logPath, True)
 
         ' Create the XML document to update the Shop Order
         Dim docSO As XDocument = _
@@ -1242,7 +1242,7 @@ Public Class ShopOrderMasterClass
             </eMAXExact>
 
         'Add Sales Order Detail record via MAX Update
-        Dim result As Short = ClassBase.MAXUpdate.AddUpdateShopOrderXML(docSO.ToString)
+        Dim result As Short = AddUpdateShopOrderXML(docSO.ToString)
 
         Select Case result
             Case 0
@@ -1287,7 +1287,11 @@ Public Class ShopOrderMasterClass
     End Function
 
     ' This function is the initialization routine that needs to be called before any MAXORDR2 function is called
-    Public Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
+    Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
         ClassBase.Initialize(connStr, comName, licPath, logPath, False)
     End Sub
+
+    Protected Overridable Function AddUpdateShopOrderXML(ByVal xml As String) As Short
+        Return ClassBase.MAXUpdate.AddUpdateShopOrderXML(xml)
+    End Function
 End Class
