@@ -963,20 +963,20 @@ Public Class SalesOrderDetailClass
     Private Sub AddMax()
         Dim salesOrderDetailXML As XDocument = FillStructure()
 
-        salesOrderDetailXML.Element("STATUS_28").Value = Convert.ToString(LineStatus.Open)
-        salesOrderDetailXML.Element("ORGDUE_28").Value = MakeDate(_CURDUE)
+        salesOrderDetailXML.Descendants("STATUS_28").First().Value = Convert.ToString(LineStatus.Open)
+        salesOrderDetailXML.Descendants("ORGDUE_28").First().Value = MakeDate(_CURDUE)
 
         If _TAXABL = "Y" Then
-            Dim forcur As Double = Double.Parse(salesOrderDetailXML.Element("FORCUR_28").Value)
-            Dim curqty As Double = Double.Parse(salesOrderDetailXML.Element("CURQTY_28").Value)
+            Dim forcur As Double = Double.Parse(salesOrderDetailXML.Descendants("FORCUR_28").First().Value)
+            Dim curqty As Double = Double.Parse(salesOrderDetailXML.Descendants("CURQTY_28").First().Value)
 
-            salesOrderDetailXML.Element("TAX1_28").Value = Math.Round(_TAX1 * (forcur * curqty), 2)
-            salesOrderDetailXML.Element("TAX2_28").Value = Math.Round(_TAX2 * (forcur * curqty), 2)
-            salesOrderDetailXML.Element("TAX3_28").Value = Math.Round(_TAX3 * (forcur * curqty), 2)
+            salesOrderDetailXML.Descendants("TAX1_28").First().Value = Math.Round(_TAX1 * (forcur * curqty), 2)
+            salesOrderDetailXML.Descendants("TAX2_28").First().Value = Math.Round(_TAX2 * (forcur * curqty), 2)
+            salesOrderDetailXML.Descendants("TAX3_28").First().Value = Math.Round(_TAX3 * (forcur * curqty), 2)
         Else
-            salesOrderDetailXML.Element("TAX1_28").Value = 0
-            salesOrderDetailXML.Element("TAX2_28").Value = 0
-            salesOrderDetailXML.Element("TAX3_28").Value = 0
+            salesOrderDetailXML.Descendants("TAX1_28").First().Value = 0
+            salesOrderDetailXML.Descendants("TAX2_28").First().Value = 0
+            salesOrderDetailXML.Descendants("TAX3_28").First().Value = 0
         End If
 
         'Add Sales Order Detail record via MAX Update
@@ -988,19 +988,19 @@ Public Class SalesOrderDetailClass
                 Throw New System.Exception("Error creating sales order detail.")
             Case Else
                 ' add the record to the Sellars SQL sales order detail table
-                AddSellars(salesOrderDetailXML.Element("ORDNUM_28").Value,
-                           salesOrderDetailXML.Element("LINNUM_28").Value,
-                           salesOrderDetailXML.Element("DELNUM_28").Value,
-                           salesOrderDetailXML.Element("STATUS_28").Value,
-                           salesOrderDetailXML.Element("CUSTID_28").Value,
-                           salesOrderDetailXML.Element("PRTNUM_28").Value,
-                           DateTime.Parse(salesOrderDetailXML.Element("CURDUE_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("CURQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("DUEQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("INVQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("SHPQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("CURSHP_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("ORGQTY_28").Value))
+                AddSellars(salesOrderDetailXML.Descendants("ORDNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("LINNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("DELNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("STATUS_28").First().Value,
+                           salesOrderDetailXML.Descendants("CUSTID_28").First().Value,
+                           salesOrderDetailXML.Descendants("PRTNUM_28").First().Value,
+                           DateTime.Parse(salesOrderDetailXML.Descendants("CURDUE_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("CURQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("DUEQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("INVQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("SHPQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("CURSHP_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("ORGQTY_28").First().Value))
         End Select
     End Sub
 
@@ -1053,23 +1053,23 @@ Public Class SalesOrderDetailClass
 
             ' Fill in the change functions new data structure by first setting the 
             ' data to the original data record, and then modifying the fields that have changed
-            salesOrderDetailXML.Element("ORDNUM_28").Value = newORDNUM
-            salesOrderDetailXML.Element("LINNUM_28").Value = newLineNumber.ToString.PadLeft(2, "0")
-            salesOrderDetailXML.Element("CURDUE_28").Value = MakeDate(ScheduleDate)
-            salesOrderDetailXML.Element("CUSDUE_28").Value = MakeDate(ScheduleDate)
-            salesOrderDetailXML.Element("ORGDUE_28").Value = MakeDate(ScheduleDate)
-            salesOrderDetailXML.Element("SHPQTY_28").Value = 0
-            salesOrderDetailXML.Element("INVQTY_28").Value = 0
-            salesOrderDetailXML.Element("BCKQTY_28").Value = 0
-            salesOrderDetailXML.Element("DUEQTY_28").Value = salesOrderDetailXML.Element("CURQTY_28").Value
-            salesOrderDetailXML.Element("CURSHP_28").Value = 0
-            salesOrderDetailXML.Element("STATUS_28").Value = Convert.ToString(LineStatus.Open)
-            salesOrderDetailXML.Element("XDFDTE_28").Value = MakeDate(DefaultDate)
-            salesOrderDetailXML.Element("MODIFICATIONDATE_28").Value = MakeDate(Now())
-            salesOrderDetailXML.Element("CREATIONDATE_28").Value = MakeDate(Now())
-            salesOrderDetailXML.Element("BOKDTE_28").Value = MakeDate(DefaultDate)
-            salesOrderDetailXML.Element("DBKDTE_28").Value = MakeDate(DefaultDate)
-            salesOrderDetailXML.Element("SHPDTE_28").Value = "0001-01-01" '<-- null date in MAX
+            salesOrderDetailXML.Descendants("ORDNUM_28").First().Value = newORDNUM
+            salesOrderDetailXML.Descendants("LINNUM_28").First().Value = newLineNumber.ToString.PadLeft(2, "0")
+            salesOrderDetailXML.Descendants("CURDUE_28").First().Value = MakeDate(ScheduleDate)
+            salesOrderDetailXML.Descendants("CUSDUE_28").First().Value = MakeDate(ScheduleDate)
+            salesOrderDetailXML.Descendants("ORGDUE_28").First().Value = MakeDate(ScheduleDate)
+            salesOrderDetailXML.Descendants("SHPQTY_28").First().Value = 0
+            salesOrderDetailXML.Descendants("INVQTY_28").First().Value = 0
+            salesOrderDetailXML.Descendants("BCKQTY_28").First().Value = 0
+            salesOrderDetailXML.Descendants("DUEQTY_28").First().Value = salesOrderDetailXML.Descendants("CURQTY_28").First().Value
+            salesOrderDetailXML.Descendants("CURSHP_28").First().Value = 0
+            salesOrderDetailXML.Descendants("STATUS_28").First().Value = Convert.ToString(LineStatus.Open)
+            salesOrderDetailXML.Descendants("XDFDTE_28").First().Value = MakeDate(DefaultDate)
+            salesOrderDetailXML.Descendants("MODIFICATIONDATE_28").First().Value = MakeDate(Now())
+            salesOrderDetailXML.Descendants("CREATIONDATE_28").First().Value = MakeDate(Now())
+            salesOrderDetailXML.Descendants("BOKDTE_28").First().Value = MakeDate(DefaultDate)
+            salesOrderDetailXML.Descendants("DBKDTE_28").First().Value = MakeDate(DefaultDate)
+            salesOrderDetailXML.Descendants("SHPDTE_28").First().Value = "0001-01-01" '<-- null date in MAX
 
             'Add Sales Order Detail record via MAX Update
             Dim retValue As Short = ClassBase.MAXUpdate.AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
@@ -1079,19 +1079,19 @@ Public Class SalesOrderDetailClass
                     Throw New System.Exception("Error creating sales order detail.")
                 Case Else
                     ' add the record to the Sellars SQL sales order detail table
-                    AddSellars(salesOrderDetailXML.Element("ORDNUM_28").Value,
-                           salesOrderDetailXML.Element("LINNUM_28").Value,
-                           salesOrderDetailXML.Element("DELNUM_28").Value,
-                           salesOrderDetailXML.Element("STATUS_28").Value,
-                           salesOrderDetailXML.Element("CUSTID_28").Value,
-                           salesOrderDetailXML.Element("PRTNUM_28").Value,
-                           DateTime.Parse(salesOrderDetailXML.Element("CURDUE_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("CURQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("DUEQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("INVQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("SHPQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("CURSHP_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("ORGQTY_28").Value))
+                    AddSellars(salesOrderDetailXML.Descendants("ORDNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("LINNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("DELNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("STATUS_28").First().Value,
+                           salesOrderDetailXML.Descendants("CUSTID_28").First().Value,
+                           salesOrderDetailXML.Descendants("PRTNUM_28").First().Value,
+                           DateTime.Parse(salesOrderDetailXML.Descendants("CURDUE_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("CURQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("DUEQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("INVQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("SHPQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("CURSHP_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("ORGQTY_28").First().Value))
             End Select
         Next
     End Sub
@@ -1115,10 +1115,10 @@ Public Class SalesOrderDetailClass
 
         ' Fill in the change functions new data structure by first setting the 
         ' data to the original data record, and then modifying the fields that have changed
-        salesOrderDetailXML.Element("STATUS_28").Value = Status
-        salesOrderDetailXML.Element("LINNUM_28").Value = pToLINNUM
-        salesOrderDetailXML.Element("PRICE_28").Value = 0
-        salesOrderDetailXML.Element("FORCUR_28").Value = 0
+        salesOrderDetailXML.Descendants("STATUS_28").First().Value = Status
+        salesOrderDetailXML.Descendants("LINNUM_28").First().Value = pToLINNUM
+        salesOrderDetailXML.Descendants("PRICE_28").First().Value = 0
+        salesOrderDetailXML.Descendants("FORCUR_28").First().Value = 0
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Short = ClassBase.MAXUpdate.AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
@@ -1128,19 +1128,19 @@ Public Class SalesOrderDetailClass
                 Throw New System.Exception("Error creating sales order detail.")
             Case Else
                 ' add the record to the Sellars SQL sales order detail table
-                AddSellars(salesOrderDetailXML.Element("ORDNUM_28").Value,
-                           salesOrderDetailXML.Element("LINNUM_28").Value,
-                           salesOrderDetailXML.Element("DELNUM_28").Value,
-                           salesOrderDetailXML.Element("STATUS_28").Value,
-                           salesOrderDetailXML.Element("CUSTID_28").Value,
-                           salesOrderDetailXML.Element("PRTNUM_28").Value,
-                           DateTime.Parse(salesOrderDetailXML.Element("CURDUE_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("CURQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("DUEQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("INVQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("SHPQTY_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("CURSHP_28").Value),
-                           Decimal.Parse(salesOrderDetailXML.Element("ORGQTY_28").Value))
+                AddSellars(salesOrderDetailXML.Descendants("ORDNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("LINNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("DELNUM_28").First().Value,
+                           salesOrderDetailXML.Descendants("STATUS_28").First().Value,
+                           salesOrderDetailXML.Descendants("CUSTID_28").First().Value,
+                           salesOrderDetailXML.Descendants("PRTNUM_28").First().Value,
+                           DateTime.Parse(salesOrderDetailXML.Descendants("CURDUE_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("CURQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("DUEQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("INVQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("SHPQTY_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("CURSHP_28").First().Value),
+                           Decimal.Parse(salesOrderDetailXML.Descendants("ORGQTY_28").First().Value))
         End Select
     End Sub
 
@@ -1201,15 +1201,15 @@ Public Class SalesOrderDetailClass
                 Dim oSQL As New SqlService(ConnectionString)
 
                 ' Add the parameters to the command object
-                oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, salesOrderDetailXML.Element("ORDNUM_28").Value, ParameterDirection.Input)
-                oSQL.AddParameter("@LINNUM", SqlDbType.NVarChar, 2, salesOrderDetailXML.Element("LINNUM_28").Value, ParameterDirection.Input)
-                oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, salesOrderDetailXML.Element("DELNUM_28").Value, ParameterDirection.Input)
+                oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, salesOrderDetailXML.Descendants("ORDNUM_28").First().Value, ParameterDirection.Input)
+                oSQL.AddParameter("@LINNUM", SqlDbType.NVarChar, 2, salesOrderDetailXML.Descendants("LINNUM_28").First().Value, ParameterDirection.Input)
+                oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, salesOrderDetailXML.Descendants("DELNUM_28").First().Value, ParameterDirection.Input)
 
                 ' Run the stored procedure
                 oSQL.RunProc("DeleteSalesOrderDetail")
 
                 Dim SODE As New SODetailExtClass
-                SODE.Delete(salesOrderDetailXML.Element("ORDNUM_28").Value, salesOrderDetailXML.Element("LINNUM_28").Value, salesOrderDetailXML.Element("DELNUM_28").Value)
+                SODE.Delete(salesOrderDetailXML.Descendants("ORDNUM_28").First().Value, salesOrderDetailXML.Descendants("LINNUM_28").First().Value, salesOrderDetailXML.Descendants("DELNUM_28").First().Value)
                 SODE = Nothing
         End Select
     End Sub
@@ -2328,7 +2328,7 @@ Public Class SalesOrderDetailClass
 
         ' Fill in the change functions new data structure by first setting the 
         ' data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("STATUS_28").Value = Status
+        newSODXML.Descendants("STATUS_28").First().Value = Status
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
@@ -2353,8 +2353,8 @@ Public Class SalesOrderDetailClass
 
         ' Fill in the change functions new data structure by first setting the 
         ' data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("PRTNUM_28").Value = PartNumber.PadRight(30)
-        newSODXML.Element("STK_28").Value = STK.ToUpper.PadRight(8)
+        newSODXML.Descendants("PRTNUM_28").First().Value = PartNumber.PadRight(30)
+        newSODXML.Descendants("STK_28").First().Value = STK.ToUpper.PadRight(8)
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())
@@ -2377,7 +2377,7 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("STK_28").Value = pStockCode.ToUpper.PadRight(8)
+        newSODXML.Descendants("STK_28").First().Value = pStockCode.ToUpper.PadRight(8)
 
         'Update the Sales Order Detail record via MAX Update
         Dim retryCount As Integer = 0
@@ -2413,8 +2413,8 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("CURDUE_28").Value = MakeDate(pCurDue)
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(pCusDue)
+        newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pCurDue)
+        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pCusDue)
 
         'Update the Sales Order Detail record via MAX Update
         Dim retryCount As Integer = 0
@@ -2449,9 +2449,9 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("CURDUE_28").Value = MakeDate(pDueDate)
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(pDueDate)
-        newSODXML.Element("GLXREF_28").Value = GLCode.ToUpper.PadRight(32)
+        newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pDueDate)
+        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pDueDate)
+        newSODXML.Descendants("GLXREF_28").First().Value = GLCode.ToUpper.PadRight(32)
 
         'Update the Sales Order Detail record via MAX Update
         Dim retryCount As Integer = 0
@@ -2486,10 +2486,10 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("CURDUE_28").Value = MakeDate(pDueDate)
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(pDueDate)
-        newSODXML.Element("STK_28").Value = pStockCode.ToUpper.PadRight(8)
-        newSODXML.Element("GLXREF_28").Value = GLCode.ToUpper.PadRight(32)
+        newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pDueDate)
+        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pDueDate)
+        newSODXML.Descendants("STK_28").First().Value = pStockCode.ToUpper.PadRight(8)
+        newSODXML.Descendants("GLXREF_28").First().Value = GLCode.ToUpper.PadRight(32)
 
         'Update the Sales Order Detail record via MAX Update
         Dim retryCount As Integer = 0
@@ -2526,25 +2526,25 @@ Public Class SalesOrderDetailClass
 
         ' Fill in the change functions new data structure by first setting the 
         ' data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("PRICE_28").Value = pPrice
-        newSODXML.Element("FORCUR_28").Value = pPrice
-        newSODXML.Element("CURQTY_28").Value = pQuantity
+        newSODXML.Descendants("PRICE_28").First().Value = pPrice
+        newSODXML.Descendants("FORCUR_28").First().Value = pPrice
+        newSODXML.Descendants("CURQTY_28").First().Value = pQuantity
 
         ' Adjust the DUEQTY appropriately based on changes to the current order qty
-        Dim newCurQty As Integer = Integer.Parse(newSODXML.Element("CURQTY_28").Value)
-        Dim oldCurQty As Integer = Integer.Parse(oldSODXML.Element("CURQTY_28").Value)
-        Dim oldDueQty As Integer = Integer.Parse(oldSODXML.Element("DUEQTY_28").Value)
+        Dim newCurQty As Integer = Integer.Parse(newSODXML.Descendants("CURQTY_28").First().Value)
+        Dim oldCurQty As Integer = Integer.Parse(oldSODXML.Descendants("CURQTY_28").First().Value)
+        Dim oldDueQty As Integer = Integer.Parse(oldSODXML.Descendants("DUEQTY_28").First().Value)
 
         If newCurQty > oldCurQty Then
-            newSODXML.Element("DUEQTY_28").Value = oldDueQty + (newCurQty - oldCurQty)
+            newSODXML.Descendants("DUEQTY_28").First().Value = oldDueQty + (newCurQty - oldCurQty)
         Else
             If newCurQty < oldCurQty Then
                 Dim newDueQty As Integer = oldDueQty - (oldCurQty - newCurQty)
 
                 If newDueQty < 0 Then
-                    newSODXML.Element("DUEQTY_28").Value = 0
+                    newSODXML.Descendants("DUEQTY_28").First().Value = 0
                 Else
-                    newSODXML.Element("DUEQTY_28").Value = newDueQty
+                    newSODXML.Descendants("DUEQTY_28").First().Value = newDueQty
                 End If
             End If
         End If
@@ -2572,45 +2572,45 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("GLXREF_28").Value = pGLCode.ToUpper.PadRight(32)
-        newSODXML.Element("CURDUE_28").Value = MakeDate(pCurDue)
-        newSODXML.Element("CUSDUE_28").Value = MakeDate(pCusDue)
-        newSODXML.Element("PRICE_28").Value = pPrice
-        newSODXML.Element("FORCUR_28").Value = pPrice
-        newSODXML.Element("CURQTY_28").Value = pQuantity
-        newSODXML.Element("STK_28").Value = pStockCode.ToUpper.PadRight(8)
-        newSODXML.Element("TAXCDE1_28").Value = TaxCode1.PadRight(7)
-        newSODXML.Element("TAXCDE2_28").Value = TaxCode2.PadRight(7)
-        newSODXML.Element("TAXCDE3_28").Value = TaxCode3.PadRight(7)
+        newSODXML.Descendants("GLXREF_28").First().Value = pGLCode.ToUpper.PadRight(32)
+        newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pCurDue)
+        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pCusDue)
+        newSODXML.Descendants("PRICE_28").First().Value = pPrice
+        newSODXML.Descendants("FORCUR_28").First().Value = pPrice
+        newSODXML.Descendants("CURQTY_28").First().Value = pQuantity
+        newSODXML.Descendants("STK_28").First().Value = pStockCode.ToUpper.PadRight(8)
+        newSODXML.Descendants("TAXCDE1_28").First().Value = TaxCode1.PadRight(7)
+        newSODXML.Descendants("TAXCDE2_28").First().Value = TaxCode2.PadRight(7)
+        newSODXML.Descendants("TAXCDE3_28").First().Value = TaxCode3.PadRight(7)
 
-        Dim forcur As Double = Double.Parse(newSODXML.Element("FORCUR_28").Value)
-        Dim curqty As Double = Double.Parse(newSODXML.Element("CURQTY_28").Value)
+        Dim forcur As Double = Double.Parse(newSODXML.Descendants("FORCUR_28").First().Value)
+        Dim curqty As Double = Double.Parse(newSODXML.Descendants("CURQTY_28").First().Value)
 
-        If newSODXML.Element("TAXABL_28").Value = "Y" Then
-            newSODXML.Element("TAX1_28").Value = Math.Round(TaxRate1 * (forcur * curqty), 2)
-            newSODXML.Element("TAX2_28").Value = Math.Round(TaxRate2 * (forcur * curqty), 2)
-            newSODXML.Element("TAX3_28").Value = Math.Round(TaxRate3 * (forcur * curqty), 2)
+        If newSODXML.Descendants("TAXABL_28").First().Value = "Y" Then
+            newSODXML.Descendants("TAX1_28").First().Value = Math.Round(TaxRate1 * (forcur * curqty), 2)
+            newSODXML.Descendants("TAX2_28").First().Value = Math.Round(TaxRate2 * (forcur * curqty), 2)
+            newSODXML.Descendants("TAX3_28").First().Value = Math.Round(TaxRate3 * (forcur * curqty), 2)
         End If
 
-        taxAmtChanged = oldSODXML.Element("TAX1_28").Value <> newSODXML.Element("TAX1_28").Value OrElse
-                        oldSODXML.Element("TAX2_28").Value <> newSODXML.Element("TAX2_28").Value OrElse
-                        oldSODXML.Element("TAX3_28").Value <> newSODXML.Element("TAX3_28").Value
+        taxAmtChanged = oldSODXML.Descendants("TAX1_28").First().Value <> newSODXML.Descendants("TAX1_28").First().Value OrElse
+                        oldSODXML.Descendants("TAX2_28").First().Value <> newSODXML.Descendants("TAX2_28").First().Value OrElse
+                        oldSODXML.Descendants("TAX3_28").First().Value <> newSODXML.Descendants("TAX3_28").First().Value
 
         ' Adjust the DUEQTY appropriately based on changes to the current order qty
-        Dim newCurQty As Integer = Integer.Parse(newSODXML.Element("CURQTY_28").Value)
-        Dim oldCurQty As Integer = Integer.Parse(oldSODXML.Element("CURQTY_28").Value)
-        Dim oldDueQty As Integer = Integer.Parse(oldSODXML.Element("DUEQTY_28").Value)
+        Dim newCurQty As Integer = Integer.Parse(newSODXML.Descendants("CURQTY_28").First().Value)
+        Dim oldCurQty As Integer = Integer.Parse(oldSODXML.Descendants("CURQTY_28").First().Value)
+        Dim oldDueQty As Integer = Integer.Parse(oldSODXML.Descendants("DUEQTY_28").First().Value)
 
         If newCurQty > oldCurQty Then
-            newSODXML.Element("DUEQTY_28").Value = oldDueQty + (newCurQty - oldCurQty)
+            newSODXML.Descendants("DUEQTY_28").First().Value = oldDueQty + (newCurQty - oldCurQty)
         Else
             If newCurQty < oldCurQty Then
                 Dim newDueQty As Integer = oldDueQty - (oldCurQty - newCurQty)
 
                 If newDueQty < 0 Then
-                    newSODXML.Element("DUEQTY_28").Value = 0
+                    newSODXML.Descendants("DUEQTY_28").First().Value = 0
                 Else
-                    newSODXML.Element("DUEQTY_28").Value = newDueQty
+                    newSODXML.Descendants("DUEQTY_28").First().Value = newDueQty
                 End If
             End If
         End If
@@ -2623,7 +2623,7 @@ Public Class SalesOrderDetailClass
                 Throw New System.Exception("Error updating sales order detail.")
             Case Else
                 ' update the Sellars SQL sales order detail table right away as well
-                UpdateSellars(pORDNUM, pLINNUM, pDELNUM, Decimal.Parse(newSODXML.Element("CURQTY_28").Value), Decimal.Parse(newSODXML.Element("DUEQTY_28").Value), pCurDue)
+                UpdateSellars(pORDNUM, pLINNUM, pDELNUM, Decimal.Parse(newSODXML.Descendants("CURQTY_28").First().Value), Decimal.Parse(newSODXML.Descendants("DUEQTY_28").First().Value), pCurDue)
         End Select
     End Sub
 
@@ -2640,22 +2640,22 @@ Public Class SalesOrderDetailClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        newSODXML.Element("TAXCDE1_28").Value = TaxCode1.PadRight(7)
-        newSODXML.Element("TAXCDE2_28").Value = TaxCode2.PadRight(7)
-        newSODXML.Element("TAXCDE3_28").Value = TaxCode3.PadRight(7)
+        newSODXML.Descendants("TAXCDE1_28").First().Value = TaxCode1.PadRight(7)
+        newSODXML.Descendants("TAXCDE2_28").First().Value = TaxCode2.PadRight(7)
+        newSODXML.Descendants("TAXCDE3_28").First().Value = TaxCode3.PadRight(7)
 
-        Dim forcur As Double = Double.Parse(newSODXML.Element("FORCUR_28").Value)
-        Dim curqty As Double = Double.Parse(newSODXML.Element("CURQTY_28").Value)
+        Dim forcur As Double = Double.Parse(newSODXML.Descendants("FORCUR_28").First().Value)
+        Dim curqty As Double = Double.Parse(newSODXML.Descendants("CURQTY_28").First().Value)
 
-        If newSODXML.Element("TAXABL_28").Value = "Y" Then
-            newSODXML.Element("TAX1_28").Value = Math.Round(TaxRate1 * (forcur * curqty), 2)
-            newSODXML.Element("TAX2_28").Value = Math.Round(TaxRate2 * (forcur * curqty), 2)
-            newSODXML.Element("TAX3_28").Value = Math.Round(TaxRate3 * (forcur * curqty), 2)
+        If newSODXML.Descendants("TAXABL_28").First().Value = "Y" Then
+            newSODXML.Descendants("TAX1_28").First().Value = Math.Round(TaxRate1 * (forcur * curqty), 2)
+            newSODXML.Descendants("TAX2_28").First().Value = Math.Round(TaxRate2 * (forcur * curqty), 2)
+            newSODXML.Descendants("TAX3_28").First().Value = Math.Round(TaxRate3 * (forcur * curqty), 2)
         End If
 
-        taxAmtChanged = oldSODXML.Element("TAX1_28").Value <> newSODXML.Element("TAX1_28").Value OrElse
-                        oldSODXML.Element("TAX2_28").Value <> newSODXML.Element("TAX2_28").Value OrElse
-                        oldSODXML.Element("TAX3_28").Value <> newSODXML.Element("TAX3_28").Value
+        taxAmtChanged = oldSODXML.Descendants("TAX1_28").First().Value <> newSODXML.Descendants("TAX1_28").First().Value OrElse
+                        oldSODXML.Descendants("TAX2_28").First().Value <> newSODXML.Descendants("TAX2_28").First().Value OrElse
+                        oldSODXML.Descendants("TAX3_28").First().Value <> newSODXML.Descendants("TAX3_28").First().Value
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderLineItemXML(newSODXML.ToString(), oldSODXML.ToString())

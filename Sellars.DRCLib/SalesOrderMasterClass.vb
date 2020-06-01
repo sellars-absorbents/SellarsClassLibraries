@@ -1056,8 +1056,8 @@ Public Class SalesOrderMasterClass
 
         Dim salesOrderXML As XDocument = FillStructure()
 
-        salesOrderXML.Element("INVCE_27").Value = "N"
-        salesOrderXML.Element("APPINV_27").Value = blanks.GetFixedLengthString(6)
+        salesOrderXML.Descendants("INVCE_27").First().Value = "N"
+        salesOrderXML.Descendants("APPINV_27").First().Value = blanks.GetFixedLengthString(6)
 
         Dim RetOrder As String = ""
         Dim retValue As Integer = ClassBase.MAXUpdate.AddSOXML(salesOrderXML.ToString(), False)
@@ -1102,8 +1102,8 @@ Public Class SalesOrderMasterClass
         OpenMaxConnection()
 
         ' Declare necessary local variables and initialize them
-        Dim strSQL As String = "Select ORDNUM_27 " & _
-                               "From ""SO_Master"" " & _
+        Dim strSQL As String = "Select ORDNUM_27 " &
+                               "From ""SO_Master"" " &
                                "Where ORDNUM_27 between '" & StartOrder.Trim & "' and '" & EndOrder.Trim & "'"
 
         ' Set up the new Sql command
@@ -1180,8 +1180,8 @@ Public Class SalesOrderMasterClass
 
     Public Sub Read(ByVal passorder As String)
         Dim CustomerPrice As Decimal = 0
-        Dim strSQL As String = "Select * " & _
-                               "From ""SO_Master"" " & _
+        Dim strSQL As String = "Select * " &
+                               "From ""SO_Master"" " &
                                "Where ORDNUM_27 = '" & passorder.Trim & "' "
 
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
@@ -1446,7 +1446,7 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed!
-        salesOrderXML.Element("STATUS_27").Value = newStatus
+        salesOrderXML.Descendants("STATUS_27").First().Value = newStatus
 
         'Call the MAXUPDATE ChangeSalesOrder function
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1474,7 +1474,7 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed!
-        salesOrderXML.Element("CUSTID_27").Value = CustID.GetFixedLengthString(20)
+        salesOrderXML.Descendants("CUSTID_27").First().Value = CustID.GetFixedLengthString(20)
 
         'Call the MAXUPDATE ChangeSalesOrder function
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1498,9 +1498,9 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed!
-        salesOrderXML.Element("COMNT1_27").Value = pCOMNT1.Trim.PadRight(30)
-        salesOrderXML.Element("COMNT2_27").Value = pCOMNT2.Trim.PadRight(30)
-        salesOrderXML.Element("COMNT3_27").Value = pCOMNT3.Trim.PadRight(30)
+        salesOrderXML.Descendants("COMNT1_27").First().Value = pCOMNT1.Trim.PadRight(30)
+        salesOrderXML.Descendants("COMNT2_27").First().Value = pCOMNT2.Trim.PadRight(30)
+        salesOrderXML.Descendants("COMNT3_27").First().Value = pCOMNT3.Trim.PadRight(30)
 
         'Change the sales order master via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1582,23 +1582,23 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        salesOrderXML.Element("SHPCDE_27").Value = newSHPCDE
-        salesOrderXML.Element("NAME_27").Value = pCustomerName
-        salesOrderXML.Element("ADDR1_27").Value = pADDR1
-        salesOrderXML.Element("ADDR2_27").Value = pADDR2
-        salesOrderXML.Element("CITY_27").Value = pCity
-        salesOrderXML.Element("STATE_27").Value = pState
-        salesOrderXML.Element("ZIPCD_27").Value = pZIPCD
-        salesOrderXML.Element("CNTRY_27").Value = pCountry
-        salesOrderXML.Element("TAXCD1_27").Value = pTAXCD1
-        salesOrderXML.Element("TAXCD2_27").Value = pTAXCD2
-        salesOrderXML.Element("TAXCD3_27").Value = pTAXCD3
-        salesOrderXML.Element("CUSTPO_27").Value = pCUSTPO
-        salesOrderXML.Element("FOB_27").Value = pFOB
-        salesOrderXML.Element("ORDDTE_27").Value = MakeDate(pOrderDate)
-        salesOrderXML.Element("ORDID_27").Value = pOrderedBy
-        salesOrderXML.Element("SHPVIA_27").Value = pSHPVIA
-        salesOrderXML.Element("TERMS_27").Value = pTerms
+        salesOrderXML.Descendants("SHPCDE_27").First().Value = newSHPCDE
+        salesOrderXML.Descendants("NAME_27").First().Value = pCustomerName
+        salesOrderXML.Descendants("ADDR1_27").First().Value = pADDR1
+        salesOrderXML.Descendants("ADDR2_27").First().Value = pADDR2
+        salesOrderXML.Descendants("CITY_27").First().Value = pCity
+        salesOrderXML.Descendants("STATE_27").First().Value = pState
+        salesOrderXML.Descendants("ZIPCD_27").First().Value = pZIPCD
+        salesOrderXML.Descendants("CNTRY_27").First().Value = pCountry
+        salesOrderXML.Descendants("TAXCD1_27").First().Value = pTAXCD1
+        salesOrderXML.Descendants("TAXCD2_27").First().Value = pTAXCD2
+        salesOrderXML.Descendants("TAXCD3_27").First().Value = pTAXCD3
+        salesOrderXML.Descendants("CUSTPO_27").First().Value = pCUSTPO
+        salesOrderXML.Descendants("FOB_27").First().Value = pFOB
+        salesOrderXML.Descendants("ORDDTE_27").First().Value = MakeDate(pOrderDate)
+        salesOrderXML.Descendants("ORDID_27").First().Value = pOrderedBy
+        salesOrderXML.Descendants("SHPVIA_27").First().Value = pSHPVIA
+        salesOrderXML.Descendants("TERMS_27").First().Value = pTerms
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1639,24 +1639,24 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        salesOrderXML.Element("SHPCDE_27").Value = newSHPCDE
-        salesOrderXML.Element("NAME_27").Value = pCustomerName
-        salesOrderXML.Element("ADDR1_27").Value = pADDR1
-        salesOrderXML.Element("ADDR2_27").Value = pADDR2
-        salesOrderXML.Element("ADDR3_27").Value = pADDR3
-        salesOrderXML.Element("CITY_27").Value = pCity
-        salesOrderXML.Element("STATE_27").Value = pState
-        salesOrderXML.Element("ZIPCD_27").Value = pZIPCD
-        salesOrderXML.Element("CNTRY_27").Value = pCountry
-        salesOrderXML.Element("TAXCD1_27").Value = pTAXCD1
-        salesOrderXML.Element("TAXCD2_27").Value = pTAXCD2
-        salesOrderXML.Element("TAXCD3_27").Value = pTAXCD3
-        salesOrderXML.Element("CUSTPO_27").Value = pCUSTPO
-        salesOrderXML.Element("FOB_27").Value = pFOB
-        salesOrderXML.Element("ORDDTE_27").Value = MakeDate(pOrderDate)
-        salesOrderXML.Element("ORDID_27").Value = pOrderedBy
-        salesOrderXML.Element("SHPVIA_27").Value = pSHPVIA
-        salesOrderXML.Element("TERMS_27").Value = pTerms
+        salesOrderXML.Descendants("SHPCDE_27").First().Value = newSHPCDE
+        salesOrderXML.Descendants("NAME_27").First().Value = pCustomerName
+        salesOrderXML.Descendants("ADDR1_27").First().Value = pADDR1
+        salesOrderXML.Descendants("ADDR2_27").First().Value = pADDR2
+        salesOrderXML.Descendants("ADDR3_27").First().Value = pADDR3
+        salesOrderXML.Descendants("CITY_27").First().Value = pCity
+        salesOrderXML.Descendants("STATE_27").First().Value = pState
+        salesOrderXML.Descendants("ZIPCD_27").First().Value = pZIPCD
+        salesOrderXML.Descendants("CNTRY_27").First().Value = pCountry
+        salesOrderXML.Descendants("TAXCD1_27").First().Value = pTAXCD1
+        salesOrderXML.Descendants("TAXCD2_27").First().Value = pTAXCD2
+        salesOrderXML.Descendants("TAXCD3_27").First().Value = pTAXCD3
+        salesOrderXML.Descendants("CUSTPO_27").First().Value = pCUSTPO
+        salesOrderXML.Descendants("FOB_27").First().Value = pFOB
+        salesOrderXML.Descendants("ORDDTE_27").First().Value = MakeDate(pOrderDate)
+        salesOrderXML.Descendants("ORDID_27").First().Value = pOrderedBy
+        salesOrderXML.Descendants("SHPVIA_27").First().Value = pSHPVIA
+        salesOrderXML.Descendants("TERMS_27").First().Value = pTerms
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1689,7 +1689,7 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        salesOrderXML.Element("FOB_27").Value = FOB
+        salesOrderXML.Descendants("FOB_27").First().Value = FOB
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1735,27 +1735,27 @@ Public Class SalesOrderMasterClass
             Exit Sub
         End If
 
-        ' try to open another connection to the max database
-        OpenMaxConnection()
-
-        ' Declare necessary local variables and initialize them
         Dim tmpTotalTax As Decimal = 0
-        Dim strSQL As String = "Select sum(TAX1_28) as TAX1, Sum(TAX2_28) as TAX2, Sum(TAX3_28) as TAX3 " &
-                               "From ""SO_Detail"" " &
-                               "Where ORDNUM_28 = '" & pORDNUM.Trim & "' "
 
-        ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim OrderMasterReader As SqlDataReader = cmd.ExecuteReader()
-        If OrderMasterReader.Read() Then
-            tmpTotalTax = OrderMasterReader("TAX1") + OrderMasterReader("TAX2") + OrderMasterReader("TAX3")
-        Else
-            tmpTotalTax = 0
-        End If
-        ' Free up memory and close open objects
-        OrderMasterReader.Close()
-        OrderMasterReader = Nothing
-        CloseMaxConnection()
+        ' try to open another connection to the max database
+        Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            connection.Open()
+
+            Dim strSQL As String = "Select sum(TAX1_28) as TAX1, Sum(TAX2_28) as TAX2, Sum(TAX3_28) as TAX3 " &
+                                   "From ""SO_Detail"" " &
+                                   "Where ORDNUM_28 = '" & pORDNUM.Trim & "' "
+
+            ' Set up the new Sql command
+            Using cmd As New SqlCommand(strSQL, connection)
+                Using OrderMasterReader As SqlDataReader = cmd.ExecuteReader()
+                    If OrderMasterReader.Read() Then
+                        tmpTotalTax = OrderMasterReader("TAX1") + OrderMasterReader("TAX2") + OrderMasterReader("TAX3")
+                    Else
+                        tmpTotalTax = 0
+                    End If
+                End Using
+            End Using
+        End Using
 
         ' Read the requested sales order detail record
         Read(pORDNUM)
@@ -1765,7 +1765,7 @@ Public Class SalesOrderMasterClass
 
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
-        salesOrderXML.Element("TTAX_27").Value = tmpTotalTax
+        salesOrderXML.Descendants("TTAX_27").First().Value = tmpTotalTax
 
         'Add Sales Order Detail record via MAX Update
         Dim retValue As Integer = ClassBase.MAXUpdate.ChangeSalesOrderXML(salesOrderXML.ToString())
@@ -1784,8 +1784,9 @@ Public Class SalesOrderMasterClass
             <eMAXExact>
                 <SO_Master_Table>
                     <SO_Master>
-                        <CUSTID_27><%= _CUSTID %></CUSTID_27>
-                        <GLXREF_27><%= _GLXREF %></GLXREF_27>
+                        <ORDNUM_27><%= _ORDNUM.GetFixedLengthString(8) %></ORDNUM_27>
+                        <CUSTID_27><%= _CUSTID.GetFixedLengthString(20) %></CUSTID_27>
+                        <GLXREF_27><%= _GLXREF.GetFixedLengthString(159) %></GLXREF_27>
                         <STYPE_27><%= _STYPE.GetFixedLengthString(2) %></STYPE_27>
                         <STATUS_27><%= Convert.ToString(OrderStatus.Open) %></STATUS_27>
                         <CUSTPO_27><%= _CUSTPO.GetFixedLengthString(25) %></CUSTPO_27>
