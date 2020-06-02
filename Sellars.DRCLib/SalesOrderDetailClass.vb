@@ -21,26 +21,26 @@ Public Class SalesOrderDetailClass
     Private _TotalPrice As Decimal
     Private _SlitWidth As Decimal
 
-    Private _ORDNUM As String
-    Private _LINNUM As String
-    Private _DELNUM As String
-    Private _STATUS As String
-    Private _CUSTID As String
-    Private _PRTNUM As String
-    Private _EDILIN As String
-    Private _TAXABL As String
-    Private _GLXREF As String
+    Private _ORDNUM As String = ""
+    Private _LINNUM As String = ""
+    Private _DELNUM As String = ""
+    Private _STATUS As String = ""
+    Private _CUSTID As String = ""
+    Private _PRTNUM As String = ""
+    Private _EDILIN As String = ""
+    Private _TAXABL As String = ""
+    Private _GLXREF As String = ""
     Private _CURDUE As Date
-    Private _FILL01 As String
+    Private _FILL01 As String = ""
     Private _ORGDUE As Date
     'Private _FILL02 As String
     Private _PROBAB As Integer
     Private _CUSDUE As Date
-    Private _FILL03 As String
+    Private _FILL03 As String = ""
     Private _SHPDTE As Date
-    Private _FILL04 As String
-    Private _SLSUOM As String
-    Private _REFRNC As String
+    Private _FILL04 As String = ""
+    Private _SLSUOM As String = ""
+    Private _REFRNC As String = ""
     Private _PRICE As Decimal
     Private _ORGQTY As Double
     Private _CURQTY As Double
@@ -50,32 +50,32 @@ Public Class SalesOrderDetailClass
     Private _DUEQTY As Double
     Private _INVQTY As Double
     Private _DISC As Single
-    Private _STYPE As String
-    Private _PRNT As String
-    Private _AKPRNT As String
-    Private _STK As String
-    Private _COCFLG As String
+    Private _STYPE As String = ""
+    Private _PRNT As String = ""
+    Private _AKPRNT As String = ""
+    Private _STK As String = ""
+    Private _COCFLG As String = ""
     Private _FORCUR As Double
-    Private _HSTAT As String
-    Private _SLSREP As String
+    Private _HSTAT As String = ""
+    Private _SLSREP As String = ""
     Private _COMMIS As Single
-    Private _DRPSHP As String
+    Private _DRPSHP As String = ""
     Private _QUMQTY As Single
-    Private _TAXCDE1 As String
+    Private _TAXCDE1 As String = ""
     Private _TAX1 As Double
-    Private _TAXCDE2 As String
+    Private _TAXCDE2 As String = ""
     Private _TAX2 As Double
-    Private _TAXCDE3 As String
+    Private _TAXCDE3 As String = ""
     Private _TAX3 As Double
-    Private _MCOMP As String
-    Private _MSITE As String
-    Private _QTDEL As String
-    Private _QTLINE As String
-    Private _UDFKEY As String
-    Private _UDFREF As String
-    Private _DEXPFLG As String
-    Private _FILLER As String
-    Private _OrderPolicy As String
+    Private _MCOMP As String = ""
+    Private _MSITE As String = ""
+    Private _QTDEL As String = ""
+    Private _QTLINE As String = ""
+    Private _UDFKEY As String = ""
+    Private _UDFREF As String = ""
+    Private _DEXPFLG As String = ""
+    Private _FILLER As String = ""
+    Private _OrderPolicy As String = ""
 
     'new fields in max 5
     Private _COST As Double
@@ -84,16 +84,16 @@ Public Class SalesOrderDetailClass
 
     Private _XDFINT As Integer
     Private _XDFFLT As Double
-    Private _XDFBOL As String
+    Private _XDFBOL As String = ""
     Private _XDFDTE As Date
-    Private _XDFTXT As String
-    Private _CREATEDBY As String
+    Private _XDFTXT As String = ""
+    Private _CREATEDBY As String = ""
     Private _CREATIONDATE As Date
-    Private _MODIFIEDBY As String
+    Private _MODIFIEDBY As String = ""
     Private _MODIFICATIONDATE As Date
     Private _BOKDTE As Date
     Private _DBKDTE As Date
-    Private _REVLEV As String
+    Private _REVLEV As String = ""
 
     Public Enum LineStatus
         Closed = 4

@@ -30,7 +30,7 @@ Public MustInherit Class ClassBase
 
     Private Shared _maxUpdateASP As ASPXMLWrapper
 
-    Protected Shared ReadOnly Property MAXUpdateASP As XMLWrapper
+    Protected Shared ReadOnly Property MAXUpdateASP As ASPXMLWrapper
         Get
             If _maxUpdateASP Is Nothing Then
                 Throw New Exception("MAXUpdateASP must be Initialized before being used")
