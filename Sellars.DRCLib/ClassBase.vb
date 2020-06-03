@@ -41,11 +41,9 @@ Public MustInherit Class ClassBase
     End Property
 
     Protected Shared Sub InitializeASP(ByVal connectionString As String, ByVal companyName As String, ByVal licensePath As String, ByVal logPath As String, ByVal errorReport As Boolean)
-        If _maxUpdateASP Is Nothing Then
-            _maxUpdateASP = New ASPXMLWrapper()
-            _maxUpdateASP.InitASPXMLWrapper(connectionString, companyName, licensePath, logPath, errorReport)
-            _maxUpdateASP.SetVisualErrorReportingXML(0)
-        End If
+        _maxUpdateASP = New ASPXMLWrapper()
+        _maxUpdateASP.InitASPXMLWrapper(connectionString, companyName, licensePath, logPath, errorReport)
+        _maxUpdateASP.SetVisualErrorReportingXML(0)
     End Sub
 #End Region
 
