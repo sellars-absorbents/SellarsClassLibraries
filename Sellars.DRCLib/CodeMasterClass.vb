@@ -60,7 +60,6 @@ Public Class CodeMasterClass
     End Sub
 
     Private Sub Read(ByVal CodeKey As String, ByVal Code As String)
-
         Dim strSQL As String = "select * " &
                                "From Code_Master with (nolock) " &
                                "Where CDEKEY_36 = '" & CodeKey.Trim & "' " &

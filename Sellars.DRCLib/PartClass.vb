@@ -240,164 +240,152 @@ Public Class PartClass
         ' try to open another connection to the max database
         OpenMaxConnection()
 
-        ' Declare necessary local variables and initialize them
-        'Dim strSQL_Original As String = "Select ACTTYP_01, BOMUOM_01, PMDES1_01, PMDES2_01, REVLEV_01, PLANID_01, COST_01, ONHAND_01, WGT_01, DELSTK_01, STAENG_01 " & _
-        '                       "From ""Part Master"" " & _
-        '                       "Where PRTNUM_01 = '" & passpart.Trim & "'"
-
         Dim strSQL As String = "Select ACTTYP_01, BOMUOM_01, PMDES1_01, PMDES2_01, REVLEV_01, PLANID_01, COST_01, ONHAND_01, WGT_01, DELSTK_01, STAENG_01" & _
                                ", ORDPOL_01, PMDES1_29, PMDES2_29, QTYCOM_29, SLSUOM_29, SLSCNV_29 " & _
                                " From ""Part_Master"", ""PART_SALES""" & _
                                " Where PRTNUM_01 = '" & passpart.Trim & "'" & _
                                " AND PRTNUM_01 = PRTNUM_29"
 
-        ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim PartMasterReader As SqlDataReader = cmd.ExecuteReader()
-        If PartMasterReader.Read() Then
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using PartMasterReader As SqlDataReader = cmd.ExecuteReader()
+                If PartMasterReader.Read() Then
 
-            If IsDBNull(PartMasterReader("ACTTYP_01")) Then
-                _Acttyp = ""
-            Else
-                _Acttyp = PartMasterReader("ACTTYP_01")
-            End If
+                    If IsDBNull(PartMasterReader("ACTTYP_01")) Then
+                        _Acttyp = ""
+                    Else
+                        _Acttyp = PartMasterReader("ACTTYP_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("BOMUOM_01")) Then
-                _BOMUOM = ""
-            Else
-                _BOMUOM = PartMasterReader("BOMUOM_01")
-            End If
+                    If IsDBNull(PartMasterReader("BOMUOM_01")) Then
+                        _BOMUOM = ""
+                    Else
+                        _BOMUOM = PartMasterReader("BOMUOM_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("SLSUOM_29")) Then
-                _SLSUOM = ""
-            Else
-                _SLSUOM = PartMasterReader("SLSUOM_29")
-            End If
+                    If IsDBNull(PartMasterReader("SLSUOM_29")) Then
+                        _SLSUOM = ""
+                    Else
+                        _SLSUOM = PartMasterReader("SLSUOM_29")
+                    End If
 
-            If IsDBNull(PartMasterReader("PMDES1_29")) Then
-                _Description = ""
-            Else
-                '_Description = PartMasterReader("PMDES1_01")
-                _Description = PartMasterReader("PMDES1_29")
-            End If
+                    If IsDBNull(PartMasterReader("PMDES1_29")) Then
+                        _Description = ""
+                    Else
+                        '_Description = PartMasterReader("PMDES1_01")
+                        _Description = PartMasterReader("PMDES1_29")
+                    End If
 
-            If IsDBNull(PartMasterReader("PMDES2_29")) Then
-                _Description2 = ""
-            Else
-                '_Description2 = PartMasterReader("PMDES2_01")
-                _Description2 = PartMasterReader("PMDES2_29")
-            End If
+                    If IsDBNull(PartMasterReader("PMDES2_29")) Then
+                        _Description2 = ""
+                    Else
+                        '_Description2 = PartMasterReader("PMDES2_01")
+                        _Description2 = PartMasterReader("PMDES2_29")
+                    End If
 
-            If IsDBNull(PartMasterReader("REVLEV_01")) Then
-                _REVLEV = ""
-            Else
-                _REVLEV = PartMasterReader("REVLEV_01")
-            End If
+                    If IsDBNull(PartMasterReader("REVLEV_01")) Then
+                        _REVLEV = ""
+                    Else
+                        _REVLEV = PartMasterReader("REVLEV_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("PLANID_01")) Then
-                _PLANID = ""
-            Else
-                _PLANID = PartMasterReader("PLANID_01")
-            End If
+                    If IsDBNull(PartMasterReader("PLANID_01")) Then
+                        _PLANID = ""
+                    Else
+                        _PLANID = PartMasterReader("PLANID_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("COST_01")) Then
-                _Cost = 0
-            Else
-                _Cost = PartMasterReader("COST_01")
-            End If
+                    If IsDBNull(PartMasterReader("COST_01")) Then
+                        _Cost = 0
+                    Else
+                        _Cost = PartMasterReader("COST_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("ONHAND_01")) Then
-                _OnHand = 0
-            Else
-                _OnHand = PartMasterReader("ONHAND_01")
-            End If
+                    If IsDBNull(PartMasterReader("ONHAND_01")) Then
+                        _OnHand = 0
+                    Else
+                        _OnHand = PartMasterReader("ONHAND_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("WGT_01")) Then
-                _PoundsPerSalesUnit = 0
-            Else
-                _PoundsPerSalesUnit = PartMasterReader("WGT_01")
-            End If
+                    If IsDBNull(PartMasterReader("WGT_01")) Then
+                        _PoundsPerSalesUnit = 0
+                    Else
+                        _PoundsPerSalesUnit = PartMasterReader("WGT_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("DELSTK_01")) Then
-                _StockCode = ""
-            Else
-                _StockCode = PartMasterReader("DELSTK_01")
-            End If
+                    If IsDBNull(PartMasterReader("DELSTK_01")) Then
+                        _StockCode = ""
+                    Else
+                        _StockCode = PartMasterReader("DELSTK_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("STAENG_01")) Then
-                _STAENG = ""
-            Else
-                _STAENG = PartMasterReader("STAENG_01")
-            End If
+                    If IsDBNull(PartMasterReader("STAENG_01")) Then
+                        _STAENG = ""
+                    Else
+                        _STAENG = PartMasterReader("STAENG_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("ORDPOL_01")) Then
-                _OrderPolicy = ""
-            Else
-                _OrderPolicy = PartMasterReader("ORDPOL_01")
-            End If
+                    If IsDBNull(PartMasterReader("ORDPOL_01")) Then
+                        _OrderPolicy = ""
+                    Else
+                        _OrderPolicy = PartMasterReader("ORDPOL_01")
+                    End If
 
-            If IsDBNull(PartMasterReader("QTYCOM_29")) Then
-                _QuantityCommitted = 0
-            Else
-                _QuantityCommitted = PartMasterReader("QTYCOM_29")
-            End If
+                    If IsDBNull(PartMasterReader("QTYCOM_29")) Then
+                        _QuantityCommitted = 0
+                    Else
+                        _QuantityCommitted = PartMasterReader("QTYCOM_29")
+                    End If
 
-            If IsDBNull(PartMasterReader("SLSCNV_29")) Then
-                _SLSCNV = 0
-            Else
-                _SLSCNV = PartMasterReader("SLSCNV_29")
-            End If
-        Else
-            _Acttyp = ""
-            _BOMUOM = ""
-            _Description = ""
-            _Description2 = ""
-            _REVLEV = ""
-            _PLANID = ""
-            _Cost = 0
-            _OnHand = 0
-            _PoundsPerSalesUnit = 0
-            _StockCode = ""
-            _STAENG = ""
-            _OrderPolicy = ""
-        End If
+                    If IsDBNull(PartMasterReader("SLSCNV_29")) Then
+                        _SLSCNV = 0
+                    Else
+                        _SLSCNV = PartMasterReader("SLSCNV_29")
+                    End If
+                Else
+                    _Acttyp = ""
+                    _BOMUOM = ""
+                    _Description = ""
+                    _Description2 = ""
+                    _REVLEV = ""
+                    _PLANID = ""
+                    _Cost = 0
+                    _OnHand = 0
+                    _PoundsPerSalesUnit = 0
+                    _StockCode = ""
+                    _STAENG = ""
+                    _OrderPolicy = ""
+                End If
+            End Using
+        End Using
 
-        PartMasterReader.Close()
-        PartMasterReader = Nothing
         CloseMaxConnection()
     End Sub
 
     Private Sub ReadSellarsPart(ByVal passpart As String)
-        ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
 
-        ' Add the parameters to the command object
         oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passpart, ParameterDirection.Input)
 
-        ' Get the datareader that contains the results
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadPartRecord")
-
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            _BOMUOM = dr("BOMUOM_01")
-            _Description = dr("PMDES1_01")
-            _Description2 = dr("PMDES2_01")
-            _REVLEV = dr("REVLEV_01")
-            _PLANID = dr("PLANID_01")
-            _Cost = dr("COST_01")
-            _OnHand = dr("ONHAND_01")
-            _Committed = dr("QTYCOM_29")
-            _PoundsPerSalesUnit = dr("WGT_01")
-        Else
-            Throw New RecordNotOnDatabaseException(passpart, "PartMaster SQL")
-        End If
-
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadPartRecord")
+            If dr.Read() Then
+                _BOMUOM = dr("BOMUOM_01")
+                _Description = dr("PMDES1_01")
+                _Description2 = dr("PMDES2_01")
+                _REVLEV = dr("REVLEV_01")
+                _PLANID = dr("PLANID_01")
+                _Cost = dr("COST_01")
+                _OnHand = dr("ONHAND_01")
+                _Committed = dr("QTYCOM_29")
+                _PoundsPerSalesUnit = dr("WGT_01")
+            Else
+                Throw New RecordNotOnDatabaseException(passpart, "PartMaster SQL")
+            End If
+        End Using
     End Sub
 
     Public Function Valid(ByVal PlanId As String, ByVal OrderType As OrderTypes) As Boolean
         Dim rtnVal As Boolean = False
+
         Try
             Using Conn As New SqlConnection(ConnectionString)
                 Conn.Open()
@@ -405,7 +393,6 @@ Public Class PartClass
                 Dim strSQL As String = "select @Count = count(PlanId) from OrderTypePlanIds where PlanId = @PlanId and OrderType = @OrderType"
 
                 Using Cmd As New SqlCommand(strSQL, Conn)
-
                     Cmd.CommandType = CommandType.Text
                     Cmd.Parameters.Add(New SqlParameter("@PlanId", PlanId))
                     Cmd.Parameters.Add(New SqlParameter("@OrderType", OrderType))
@@ -422,7 +409,6 @@ Public Class PartClass
                     If Convert.ToInt16(prmCount.Value) > 0 Then
                         rtnVal = True
                     End If
-
                 End Using
             End Using
         Catch ex As Exception
@@ -431,5 +417,4 @@ Public Class PartClass
 
         Return rtnVal
     End Function
-
 End Class

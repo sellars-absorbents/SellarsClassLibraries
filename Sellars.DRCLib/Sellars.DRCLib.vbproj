@@ -132,6 +132,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.MaxUpdateXML">
+      <HintPath>Third Party\Interop.MaxUpdateXML.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="Sellars.SQL, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -313,6 +317,7 @@
     <Content Include="Third Party\EXACTRMEnc.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Third Party\Interop.MaxUpdateXML.dll" />
     <Content Include="Third Party\MAXEXEC2.DLL">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -511,17 +516,6 @@
     <PackageReference Include="Microsoft.SqlServer.Types">
       <Version>14.0.1016.290</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="MaxUpdateXML">
-      <Guid>{7113270C-F76B-4BD7-8E86-28C074336F90}</Guid>
-      <VersionMajor>4</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

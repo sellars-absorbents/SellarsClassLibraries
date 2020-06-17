@@ -143,7 +143,6 @@ Public Class LineConfigurationClass
         Else
             Return ReelCount.Value
         End If
-
     End Function
 
     Public Function DecrementReelCount(ByVal LocationID As Integer, ByVal LineID As Integer) As Integer
@@ -170,7 +169,6 @@ Public Class LineConfigurationClass
         Else
             Return ReelCount.Value
         End If
-
     End Function
 
     '*********************************************************************
@@ -239,5 +237,4 @@ Public Class LineConfigurationClass
         ' Run the stored procedure and return a datareader
         Return oSQL.RunProcReader("GetWidths")
     End Function
-
 End Class

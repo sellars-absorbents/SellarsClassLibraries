@@ -52,16 +52,12 @@ Module ExtensionMethods
             'Get the matching property from the target
             Dim toProp As PropertyInfo = If((targetType Is sourceType), propInfo, targetType.GetProperty(propInfo.Name))
 
-            Try
-                'If it exists and it's writeable
-                If toProp IsNot Nothing AndAlso toProp.CanWrite Then
-                    'Copy the value from the source to the target
-                    Dim value As [Object] = propInfo.GetValue(from, Nothing)
-                    toProp.SetValue([to], value, Nothing)
-                End If
-            Catch ex As Exception
-                Dim strmsg As String = ex.Message
-            End Try
+            'If it exists and it's writeable
+            If toProp IsNot Nothing AndAlso toProp.CanWrite Then
+                'Copy the value from the source to the target
+                Dim value As [Object] = propInfo.GetValue(from, Nothing)
+                toProp.SetValue([to], value, Nothing)
+            End If
         Next
     End Sub
 

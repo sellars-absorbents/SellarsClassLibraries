@@ -152,8 +152,10 @@ Public Class ShippingMasterClass
 
         Dim strSQL As String = "Insert into ""Shipping_Master"" (CUSTID_24, SHPCDE_24, NAME_24, ADDR1_24, ADDR2_24, CITY_24, STATE_24, ZIPCD_24, CNTRY_24, TXCDE1_24, TXCDE2_24, TXCDE3_24, TAXABL_24, TXEXEM_24, TAXPRV_24, TRNTME_24, ADDR3_24, ADDR4_24, ADDR5_24, ADDR6_24, MCOMP_24, MSITE_24, UDFKEY_24, UDFREF_24, FILLER_24) " & _
                                "values ('" & CustID & "','" & ShipCode.ToUpper.Trim & "','" & Name & "','" & Addr1 & "','" & Addr2 & "','" & City & "','" & State & "','" & Zip & "','" & Country & "','" & TaxCode1 & "','" & TaxCode2 & "','" & TaxCode3 & "','" & TaxAbl & "','" & TxExem & "','" & TaxPrv & "','" & TrnTme & "','" & Addr3 & "','" & Addr4 & "','" & Addr5 & "','" & Addr6 & "','" & Mcomp & "','" & Msite & "','" & UdfKey & "','" & UdfRef & "','" & Filler & "')"
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.ExecuteNonQuery()
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.ExecuteNonQuery()
+        End Using
+
         CloseMaxConnection()
     End Function
 
@@ -183,8 +185,10 @@ Public Class ShippingMasterClass
 
         Dim strSQL As String = "Insert into ""Shipping_Master"" (CUSTID_24, SHPCDE_24, NAME_24, ADDR1_24, ADDR2_24, CITY_24, STATE_24, ZIPCD_24, CNTRY_24, TXCDE1_24, TXCDE2_24, TXCDE3_24, TAXABL_24, TXEXEM_24, TAXPRV_24, TRNTME_24, ADDR3_24, ADDR4_24, ADDR5_24, ADDR6_24, MCOMP_24, MSITE_24, UDFKEY_24, UDFREF_24, FILLER_24) " & _
                                "values ('" & CustID & "','" & ShipCode.ToUpper.Trim & "','" & Name & "','" & Addr1 & "','" & Addr2 & "','" & City & "','" & State & "','" & Zip & "','" & Country & "','" & TaxCode1 & "','" & TaxCode2 & "','" & TaxCode3 & "','" & TaxAbl & "','" & TxExem & "','" & TaxPrv & "','" & TrnTme & "','" & Addr3 & "','" & Addr4 & "','" & Addr5 & "','" & Addr6 & "','" & Mcomp & "','" & Msite & "','" & UdfKey & "','" & UdfRef & "','" & Filler & "')"
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.ExecuteNonQuery()
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.ExecuteNonQuery()
+        End Using
+
         CloseMaxConnection()
     End Function
 
@@ -218,8 +222,6 @@ Public Class ShippingMasterClass
                     _State = x.State
                     _ZipCode = x.ZipCode
                     _MailingAddress = x.FullAddress
-
-                    ' Exit the for loop
                     Exit For
                 End If
             Next
@@ -232,19 +234,23 @@ Public Class ShippingMasterClass
         OpenMaxConnection()
 
         ' Get the default address from the customer master record
-        Dim strSQL As String = "Select 'Default' as Code, NAME_23 as Name, ADDR1_23 as Address1, ADDR2_23 as Address2, ADDR3_23 as Address3, CITY_23 as City, CNTRY_23 as Country, STATE_23 as State, ZIPCD_23 as ZipCode, TXCDE1_23 as TaxCode1, TXCDE2_23 as TaxCode2, TXCDE3_23 as TaxCode3, '' as UserDefKey " & _
-                              "From ""Customer_Master"" " & _
+        Dim strSQL As String = "Select 'Default' as Code, NAME_23 as Name, ADDR1_23 as Address1, ADDR2_23 as Address2, ADDR3_23 as Address3, CITY_23 as City, CNTRY_23 as Country, STATE_23 as State, ZIPCD_23 as ZipCode, TXCDE1_23 as TaxCode1, TXCDE2_23 as TaxCode2, TXCDE3_23 as TaxCode3, '' as UserDefKey " &
+                              "From ""Customer_Master"" " &
                               "Where CUSTID_23 = '" & CustomerCode.Trim & "'"
-        Dim da1 As New SqlDataAdapter(strSQL.ToString, MaxConnection)
-        Dim ds As New DataSet
-        da1.Fill(ds, "ShipVias")
 
-        ' Get the shipping addresses from the shipping master table
-        strSQL = "Select SHPCDE_24 as Code, NAME_24 as Name, ADDR1_24 as Address1, ADDR2_24 as Address2, ADDR3_24 as Address3, CITY_24 as City, CNTRY_24 as Country, STATE_24 as State, ZIPCD_24 as ZipCode, TXCDE1_24 as TaxCode1, TXCDE2_24 as TaxCode2, TXCDE3_24 as TaxCode3, COALESCE(UDFKEY_24, '') as UsrDefKey " & _
-                              "From ""Shipping_Master"" " & _
-                              "Where CUSTID_24 = '" & CustomerCode.Trim & "'"
-        Dim da As New SqlDataAdapter(strSQL.ToString, MaxConnection)
-        da.Fill(ds, "ShipVias")
+        Dim ds As New DataSet
+
+        Using da1 As New SqlDataAdapter(strSQL.ToString, MaxConnection)
+            da1.Fill(ds, "ShipVias")
+            ' Get the shipping addresses from the shipping master table
+            strSQL = "Select SHPCDE_24 as Code, NAME_24 as Name, ADDR1_24 as Address1, ADDR2_24 as Address2, ADDR3_24 as Address3, CITY_24 as City, CNTRY_24 as Country, STATE_24 as State, ZIPCD_24 as ZipCode, TXCDE1_24 as TaxCode1, TXCDE2_24 as TaxCode2, TXCDE3_24 as TaxCode3, COALESCE(UDFKEY_24, '') as UsrDefKey " &
+                                  "From ""Shipping_Master"" " &
+                                  "Where CUSTID_24 = '" & CustomerCode.Trim & "'"
+
+            Using da As New SqlDataAdapter(strSQL.ToString, MaxConnection)
+                da.Fill(ds, "ShipVias")
+            End Using
+        End Using
 
         CloseMaxConnection()
 
@@ -252,95 +258,94 @@ Public Class ShippingMasterClass
     End Function
 
     Private Sub ReadMaxShipTo(ByVal CustomerCode As String, ByVal passShipCode As String)
-
         ' try to open another connection to the max database
         OpenMaxConnection()
 
         ' Declare necessary local variables and initialize them
-        Dim strSQL As String = "Select Name_24, ADDR1_24, ADDR2_24, ADDR3_24, CITY_24, CNTRY_24, STATE_24, ZIPCD_24, TXCDE1_24, TXCDE2_24, TXCDE3_24, UDFKEY_24 as UsrDefKey " & _
-                               "From ""Shipping_Master"" " & _
+        Dim strSQL As String = "Select Name_24, ADDR1_24, ADDR2_24, ADDR3_24, CITY_24, CNTRY_24, STATE_24, ZIPCD_24, TXCDE1_24, TXCDE2_24, TXCDE3_24, UDFKEY_24 as UsrDefKey " &
+                               "From ""Shipping_Master"" " &
                                "Where CUSTID_24 = '" & CustomerCode.Trim & "' and SHPCDE_24 = '" & passShipCode & "'"
-        ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim ShipMasterReader As SqlDataReader = cmd.ExecuteReader()
-        ShipMasterReader.Read()
 
-        _ShipCode = passShipCode
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using ShipMasterReader As SqlDataReader = cmd.ExecuteReader()
+                ShipMasterReader.Read()
 
-        If IsDBNull(ShipMasterReader("ADDR1_24")) Then
-            _Addr1 = ""
-        Else
-            _Addr1 = ShipMasterReader("ADDR1_24")
-        End If
+                _ShipCode = passShipCode
 
-        If IsDBNull(ShipMasterReader("ADDR2_24")) Then
-            _Addr2 = ""
-        Else
-            _Addr2 = ShipMasterReader("ADDR2_24")
-        End If
+                If IsDBNull(ShipMasterReader("ADDR1_24")) Then
+                    _Addr1 = ""
+                Else
+                    _Addr1 = ShipMasterReader("ADDR1_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("ADDR3_24")) Then
-            _Addr3 = ""
-        Else
-            _Addr3 = ShipMasterReader("ADDR3_24")
-        End If
+                If IsDBNull(ShipMasterReader("ADDR2_24")) Then
+                    _Addr2 = ""
+                Else
+                    _Addr2 = ShipMasterReader("ADDR2_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("CITY_24")) Then
-            _City = ""
-        Else
-            _City = ShipMasterReader("CITY_24")
-        End If
+                If IsDBNull(ShipMasterReader("ADDR3_24")) Then
+                    _Addr3 = ""
+                Else
+                    _Addr3 = ShipMasterReader("ADDR3_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("STATE_24")) Then
-            _State = ""
-        Else
-            _State = ShipMasterReader("STATE_24")
-        End If
+                If IsDBNull(ShipMasterReader("CITY_24")) Then
+                    _City = ""
+                Else
+                    _City = ShipMasterReader("CITY_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("ZIPCD_24")) Then
-            _ZipCode = ""
-        Else
-            _ZipCode = ShipMasterReader("ZIPCD_24")
-        End If
+                If IsDBNull(ShipMasterReader("STATE_24")) Then
+                    _State = ""
+                Else
+                    _State = ShipMasterReader("STATE_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("CNTRY_24")) Then
-            _Country = ""
-        Else
-            _Country = ShipMasterReader("CNTRY_24")
-        End If
+                If IsDBNull(ShipMasterReader("ZIPCD_24")) Then
+                    _ZipCode = ""
+                Else
+                    _ZipCode = ShipMasterReader("ZIPCD_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("NAME_24")) Then
-            _Name = ""
-        Else
-            _Name = ShipMasterReader("NAME_24")
-        End If
+                If IsDBNull(ShipMasterReader("CNTRY_24")) Then
+                    _Country = ""
+                Else
+                    _Country = ShipMasterReader("CNTRY_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("TXCDE1_24")) Then
-            _TaxCode1 = ""
-        Else
-            _TaxCode1 = ShipMasterReader("TXCDE1_24")
-        End If
+                If IsDBNull(ShipMasterReader("NAME_24")) Then
+                    _Name = ""
+                Else
+                    _Name = ShipMasterReader("NAME_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("TXCDE2_24")) Then
-            _TaxCode2 = ""
-        Else
-            _TaxCode2 = ShipMasterReader("TXCDE2_24")
-        End If
+                If IsDBNull(ShipMasterReader("TXCDE1_24")) Then
+                    _TaxCode1 = ""
+                Else
+                    _TaxCode1 = ShipMasterReader("TXCDE1_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("TXCDE3_24")) Then
-            _TaxCode3 = ""
-        Else
-            _TaxCode3 = ShipMasterReader("TXCDE3_24")
-        End If
+                If IsDBNull(ShipMasterReader("TXCDE2_24")) Then
+                    _TaxCode2 = ""
+                Else
+                    _TaxCode2 = ShipMasterReader("TXCDE2_24")
+                End If
 
-        If IsDBNull(ShipMasterReader("UsrDefKey")) Then
-            _UsrDefKey = ""
-        Else
-            _UsrDefKey = ShipMasterReader("UsrDefKey").ToString()
-        End If
+                If IsDBNull(ShipMasterReader("TXCDE3_24")) Then
+                    _TaxCode3 = ""
+                Else
+                    _TaxCode3 = ShipMasterReader("TXCDE3_24")
+                End If
 
-        ShipMasterReader.Close()
-        ShipMasterReader = Nothing
+                If IsDBNull(ShipMasterReader("UsrDefKey")) Then
+                    _UsrDefKey = ""
+                Else
+                    _UsrDefKey = ShipMasterReader("UsrDefKey").ToString()
+                End If
+            End Using
+        End Using
+
         CloseMaxConnection()
     End Sub
 
@@ -355,22 +360,18 @@ Public Class ShippingMasterClass
         oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, CustomerCode, ParameterDirection.Input)
 
         ' Run the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerShippingMasterRecords")
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerShippingMasterRecords")
+            ' The first result set will return the bill to address
+            While dr.Read
+                ReadAddress(dr)
+            End While
 
-        ' The first result set will return the bill to address
-        While dr.Read
-            ReadAddress(dr)
-        End While
-
-        ' The second resultset will return all shipping addresses
-        dr.NextResult()
-        While dr.Read
-            ReadAddress(dr)
-        End While
-
-        ' Close the datareader, and free up memory
-        dr.Close()
-        dr = Nothing
+            ' The second resultset will return all shipping addresses
+            dr.NextResult()
+            While dr.Read
+                ReadAddress(dr)
+            End While
+        End Using
     End Sub
 
     Private Sub ReadAddress(ByVal dr As SqlDataReader)
@@ -468,8 +469,10 @@ Public Class ShippingMasterClass
                                "Where CUSTID_24 = '" & CustID.Trim & "' and SHPCDE_24 = '" & ShipCode & "'"
 
         ' Open up a connection, run the query and close the connection
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.ExecuteNonQuery()
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.ExecuteNonQuery()
+        End Using
+
         CloseMaxConnection()
     End Function
 
@@ -501,8 +504,10 @@ Public Class ShippingMasterClass
                                "Where CUSTID_24 = '" & CustID.Trim & "' and SHPCDE_24 = '" & ShipCode & "'"
 
         ' Open up a connection, run the query and close the connection
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.ExecuteNonQuery()
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.ExecuteNonQuery()
+        End Using
+
         CloseMaxConnection()
     End Function
 
@@ -624,5 +629,4 @@ Public Class AddressClass
 
         Return Address
     End Function
-
 End Class

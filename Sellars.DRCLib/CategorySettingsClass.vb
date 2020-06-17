@@ -92,14 +92,10 @@ Public Class CategorySettingsClass
         oSQL.AddParameter("@REVLEV", SqlDbType.NVarChar, 3, REVLEV, ParameterDirection.Input)
 
         ' Run the stored procedure and return a datareader
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCategorySettingsRecord")
-
-        ' Set the properties from the read
-        SetProperties(dr)
-
-        ' Close the dataset, connection and free up memory
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCategorySettingsRecord")
+            ' Set the properties from the read
+            SetProperties(dr)
+        End Using
     End Sub
 
     Private Sub Read(ByVal Customer As String, ByVal Invoice As String, ByVal Part As String)
@@ -112,14 +108,10 @@ Public Class CategorySettingsClass
         oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, Part, ParameterDirection.Input)
 
         ' Run the stored procedure and return a datareader
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCategorySettingsRecordByInvoice")
-
-        ' Set the properties from the read
-        SetProperties(dr)
-
-        ' Close the dataset, connection and free up memory
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCategorySettingsRecordByInvoice")
+            ' Set the properties from the read
+            SetProperties(dr)
+        End Using
     End Sub
 
     Private Sub Read(ByVal Customer As String, ByVal StartDate As Date, ByVal EndDate As Date, ByVal Part As String)
@@ -133,14 +125,10 @@ Public Class CategorySettingsClass
         oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, Part, ParameterDirection.Input)
 
         ' Run the stored procedure and return a datareader
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCategorySettingsRecordByDate")
-
-        ' Set the properties from the read
-        SetProperties(dr)
-
-        ' Close the dataset, connection and free up memory
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCategorySettingsRecordByDate")
+            ' Set the properties from the read
+            SetProperties(dr)
+        End Using
     End Sub
 
     Private Sub SetProperties(ByRef dr As SqlClient.SqlDataReader)
@@ -196,7 +184,6 @@ Public Class CategorySettingsClass
     End Sub
 
     Public Sub Update(ByVal PLANID As String, ByVal REVLEV As String, ByVal NascarDiscount As Decimal, ByVal TargetMargin As Decimal, ByVal Description As String, ByVal Commission As Decimal, ByVal FreightPerPound As Decimal)
-
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
 
@@ -212,5 +199,4 @@ Public Class CategorySettingsClass
         ' Run the stored procedure
         oSQL.RunProc("UpdateCategory")
     End Sub
-
 End Class

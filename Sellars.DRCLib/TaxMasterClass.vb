@@ -34,14 +34,12 @@ Public Class TaxMasterClass
                 cmd.CommandType = CommandType.Text
 
                 Using dr As SqlDataReader = cmd.ExecuteReader()
-
                     While dr.Read()
                         workRow = _TaxList.NewRow()
                         workRow("Code") = dr("Code").ToString().Trim()
                         workRow("Description") = dr("Description").ToString().Trim()
                         _TaxList.Rows.Add(workRow)
                     End While
-
                 End Using
             End Using
         End Using

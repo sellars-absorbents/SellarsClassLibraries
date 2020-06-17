@@ -1006,29 +1006,26 @@ Public Class SalesOrderDetailClass
 
     ' The following routine will add a sales order to the sellars SQL sales order table
     Private Sub AddSellars(ByVal SalesOrder As String, ByVal Line As String, ByVal Delivery As String, ByVal Status As String, ByVal CustomerID As String, ByVal Part As String, ByVal DueDate As Date, ByVal CurrentQuantity As Decimal, ByVal DueQuantity As Decimal, ByVal InvoicedQuantity As Decimal, ByVal ShippedQuantity As Decimal, ByVal CurrentShippedQuantity As Decimal, ByVal OriginalQuantity As Decimal)
-        Try
-            ' Declare the SQL data layer class
-            Dim oSQL As New SqlService(ConnectionString)
+        ' Declare the SQL data layer class
+        Dim oSQL As New SqlService(ConnectionString)
 
-            ' Add the parameters to the command object
-            oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, SalesOrder, ParameterDirection.Input)
-            oSQL.AddParameter("@LINNUM", SqlDbType.NVarChar, 2, Line, ParameterDirection.Input)
-            oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, Delivery, ParameterDirection.Input)
-            oSQL.AddParameter("@STATUS", SqlDbType.NVarChar, 1, Status, ParameterDirection.Input)
-            oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, CustomerID, ParameterDirection.Input)
-            oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, Part, ParameterDirection.Input)
-            oSQL.AddParameter("@CURDUE", SqlDbType.DateTime, 0, DueDate, ParameterDirection.Input)
-            oSQL.AddParameter("@CURQTY", SqlDbType.Float, 0, CurrentQuantity, ParameterDirection.Input)
-            oSQL.AddParameter("@DUEQTY", SqlDbType.Float, 0, DueQuantity, ParameterDirection.Input)
-            oSQL.AddParameter("@INVQTY", SqlDbType.Float, 0, InvoicedQuantity, ParameterDirection.Input)
-            oSQL.AddParameter("@SHPQTY", SqlDbType.Float, 0, ShippedQuantity, ParameterDirection.Input)
-            oSQL.AddParameter("@CURSHP", SqlDbType.Float, 0, CurrentShippedQuantity, ParameterDirection.Input)
-            oSQL.AddParameter("@ORGQTY", SqlDbType.Float, 0, OriginalQuantity, ParameterDirection.Input)
+        ' Add the parameters to the command object
+        oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, SalesOrder, ParameterDirection.Input)
+        oSQL.AddParameter("@LINNUM", SqlDbType.NVarChar, 2, Line, ParameterDirection.Input)
+        oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, Delivery, ParameterDirection.Input)
+        oSQL.AddParameter("@STATUS", SqlDbType.NVarChar, 1, Status, ParameterDirection.Input)
+        oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, CustomerID, ParameterDirection.Input)
+        oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, Part, ParameterDirection.Input)
+        oSQL.AddParameter("@CURDUE", SqlDbType.DateTime, 0, DueDate, ParameterDirection.Input)
+        oSQL.AddParameter("@CURQTY", SqlDbType.Float, 0, CurrentQuantity, ParameterDirection.Input)
+        oSQL.AddParameter("@DUEQTY", SqlDbType.Float, 0, DueQuantity, ParameterDirection.Input)
+        oSQL.AddParameter("@INVQTY", SqlDbType.Float, 0, InvoicedQuantity, ParameterDirection.Input)
+        oSQL.AddParameter("@SHPQTY", SqlDbType.Float, 0, ShippedQuantity, ParameterDirection.Input)
+        oSQL.AddParameter("@CURSHP", SqlDbType.Float, 0, CurrentShippedQuantity, ParameterDirection.Input)
+        oSQL.AddParameter("@ORGQTY", SqlDbType.Float, 0, OriginalQuantity, ParameterDirection.Input)
 
-            ' Run the stored procedure
-            oSQL.RunProc("AddSalesOrderDetail")
-        Catch
-        End Try
+        ' Run the stored procedure
+        oSQL.RunProc("AddSalesOrderDetail")
     End Sub
 
     ' Function used to update the line item status
@@ -1898,12 +1895,8 @@ Public Class SalesOrderDetailClass
                 parmUOM.Value = Nothing
                 cmd.Parameters.Add(parmUOM)
 
-                Try
-                    cmd.ExecuteNonQuery()
-                    rtnUOM = parmUOM.Value
-                Catch ex As Exception
-                    rtnUOM = ""
-                End Try
+                cmd.ExecuteNonQuery()
+                rtnUOM = parmUOM.Value
             End Using
         End Using
 
@@ -2013,14 +2006,12 @@ Public Class SalesOrderDetailClass
             oSQL.AddParameter("@Width", SqlDbType.Decimal, 0, passwidth, ParameterDirection.Input)
 
             ' Execute the stored procedure, and if it returned a record, then get the customer part
-            Dim dr As SqlClient.SqlDataReader = oSQL.RunProcReader("ReadCustomerSlitWidthPart")
-            If dr.Read Then
-                CustomerPart = dr("CUSTPRT")
-            End If
+            Using dr As SqlClient.SqlDataReader = oSQL.RunProcReader("ReadCustomerSlitWidthPart")
+                If dr.Read Then
+                    CustomerPart = dr("CUSTPRT")
+                End If
+            End Using
 
-            ' Close the dataset and free up memory
-            dr.Close()
-            dr = Nothing
             oSQL = Nothing
         End If
 
@@ -2811,7 +2802,6 @@ Public Class SalesOrderDetailClass
 
         ' Return the object which shows the errors
         Return vld
-
     End Function
 
     Public Class ValidateLineResults
@@ -3014,10 +3004,10 @@ Public Class SalesOrderDetailClass
 
     Private Sub CheckTransferOrders(ByVal Warehouse As String, ByVal PRTNUM As String, ByRef TransferNumber As String, ByRef TransferSubmitted As Date, ByRef TransferShipped As Date, ByRef TransferEstimatedDelivery As Date, ByRef TransferQuantity As Integer)
         Using connection As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-
             connection.Open()
 
             Dim command As String = "SELECT @OrderID = Min(isnull(tm.OrderID, '')), @Submitted = Min(isnull(SubmittedToFromWarehouse, '12/31/2050 00:00:00 AM')), @ShippedOn = Min(Isnull(ShippedOn, '12/31/2050 00:00:00 AM')), @EstimatedDelivery = Min(isnull(EstimatedDelivery, '12/31/2050 00:00:00 AM')), @Quantity = Sum(QuantityShipped) from TransferMaster tm join TransferDetail td on tm.ID = td.TMID where tm.Status in (3,4,5) and ToWarehouse = @Warehouse and PartNumber = @PRTNUM"
+
             Using cmd As New SqlCommand(command, connection)
                 cmd.CommandType = CommandType.Text
                 cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
@@ -3070,6 +3060,7 @@ Public Class SalesOrderDetailClass
             connection.Open()
 
             Dim command As String = "SELECT @Status = isnull(tm.Status, 0), @Submitted = isnull(SubmittedToFromWarehouse, '12/31/2050 00:00:00 AM'), @ShippedOn = Isnull(ShippedOn, '12/31/2050 00:00:00 AM'), @EstimatedDelivery = isnull(EstimatedDelivery, '12/31/2050 00:00:00 AM'), @Quantity = isnull(QuantityShipped, 0) from TransferMaster tm join TransferDetail td on tm.ID = td.TMID where OrderID = @OrderID and PartNumber = @PRTNUM"
+
             Using cmd As New SqlCommand(command, connection)
                 cmd.CommandType = CommandType.Text
                 cmd.Parameters.Add(New SqlParameter("@PRTNUM", PRTNUM))

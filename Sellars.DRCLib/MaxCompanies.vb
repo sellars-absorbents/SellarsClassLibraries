@@ -18,6 +18,7 @@ Public Class MaxCompanies
     End Function
 
     Public Function Read(ByVal Path As String) As String
+        Dim MaxCompany As String = ""
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
 
@@ -25,17 +26,12 @@ Public Class MaxCompanies
         oSQL.AddParameter("@Path", SqlDbType.NVarChar, 50, Path, ParameterDirection.Input)
 
         ' Run the stored procedure and return a datareader
-        Dim dr As SqlDataReader = oSQL.RunProcReader("GetMaxCompanyByPath")
+        Using dr As SqlDataReader = oSQL.RunProcReader("GetMaxCompanyByPath")
 
-        ' Set the properties from the read
-        Dim MaxCompany As String = ""
-        If dr.Read() Then
-            MaxCompany = dr("Name")
-        End If
-
-        ' Close the dataset, connection and free up memory
-        dr.Close()
-        dr = Nothing
+            If dr.Read() Then
+                MaxCompany = dr("Name")
+            End If
+        End Using
 
         ' Return the Company Name
         Return MaxCompany

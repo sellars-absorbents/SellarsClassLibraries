@@ -71,27 +71,23 @@ Public Class CustomerSettingsClass
         oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, CUSTID, ParameterDirection.Input)
 
         ' Get the data from the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerSettingsRecord")
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerSettingsRecord")
+            ' look at the first resultset to see how many records were
+            ' returned
+            dr.Read()
+            If dr("Count") = 0 Then
+                _ReadError = True
+            End If
 
-        ' look at the first resultset to see how many records were
-        ' returned
-        dr.Read()
-        If dr("Count") = 0 Then
-            _ReadError = True
-        End If
-
-        ' Set the properties from the data in the datareader if
-        ' there was no error reading the record
-        If Not ReadError Then
-            ' First move to the next resultset
-            dr.NextResult()
-            ' Go grab the variables
-            SetProperties(dr)
-        End If
-
-        ' Close up the data readers and free up memory
-        dr.Close()
-        dr = Nothing
+            ' Set the properties from the data in the datareader if
+            ' there was no error reading the record
+            If Not ReadError Then
+                ' First move to the next resultset
+                dr.NextResult()
+                ' Go grab the variables
+                SetProperties(dr)
+            End If
+        End Using
     End Sub
 
     Private Sub Read(ByVal CUSTID As String, ByVal Invoice As String, ByVal Part As String)
@@ -104,14 +100,10 @@ Public Class CustomerSettingsClass
         oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, Part, ParameterDirection.Input)
 
         ' Get the data from the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerSettingsRecordByInvoice")
-
-        ' Set the properties from the data in the datareader
-        SetProperties(dr)
-
-        ' Close up the data readers and free up memory
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerSettingsRecordByInvoice")
+            ' Set the properties from the data in the datareader
+            SetProperties(dr)
+        End Using
     End Sub
 
     Private Sub Read(ByVal CUSTID As String, ByVal StartDate As Date, ByVal EndDate As Date, ByVal Part As String)
@@ -125,14 +117,10 @@ Public Class CustomerSettingsClass
         oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, Part, ParameterDirection.Input)
 
         ' Get the data from the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerSettingsRecordByDate")
-
-        ' Set the properties from the data in the datareader
-        SetProperties(dr)
-
-        ' Close up the data readers and free up memory
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerSettingsRecordByDate")
+            ' Set the properties from the data in the datareader
+            SetProperties(dr)
+        End Using
     End Sub
 
     Private Sub SetProperties(ByRef dr As SqlClient.SqlDataReader)

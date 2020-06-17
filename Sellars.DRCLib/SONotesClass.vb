@@ -15,26 +15,27 @@ Public Class SONotesClass
 
         ' Get all the notes that match the criteria
         OpenMaxConnection()
-        Dim strSQL As String = "Select COMNT_30 " & _
-                               "From ""SO_Note"" " & _
-                               "Where ORDNUM_30 = '" & ORDNUM & "' " & _
-                               "and LINNUM_30 = '" & LINNUM & "' " & _
-                               "and DELNUM_30 = '" & DELNUM & "' " & _
-                               "and CODE_30 = '" & PrintType & "' " & _
-                               "order by COMNUM_30"
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim myReader As SqlDataReader = cmd.ExecuteReader()
 
-        While myReader.Read()
-            If Trim(myReader("COMNT_30")) = "" Then
-                strNote.Append(vbCrLf & vbCrLf)
-            Else
-                strNote.Append(Trim(myReader("COMNT_30")))
-            End If
-        End While
-        myReader.Close()
-        myReader = Nothing
-        cmd = Nothing
+        Dim strSQL As String = "Select COMNT_30 " &
+                               "From ""SO_Note"" " &
+                               "Where ORDNUM_30 = '" & ORDNUM & "' " &
+                               "and LINNUM_30 = '" & LINNUM & "' " &
+                               "and DELNUM_30 = '" & DELNUM & "' " &
+                               "and CODE_30 = '" & PrintType & "' " &
+                               "order by COMNUM_30"
+
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using myReader As SqlDataReader = cmd.ExecuteReader()
+                While myReader.Read()
+                    If Trim(myReader("COMNT_30")) = "" Then
+                        strNote.Append(vbCrLf & vbCrLf)
+                    Else
+                        strNote.Append(Trim(myReader("COMNT_30")))
+                    End If
+                End While
+            End Using
+        End Using
+
         CloseMaxConnection()
 
         ' Return the note string of all the notes read in
@@ -46,13 +47,14 @@ Public Class SONotesClass
         OpenMaxConnection()
 
         ' Delete all existing notes from the database
-        Dim strSQL As String = "Delete From ""SO_Note"" " & _
-                               "Where ORDNUM_30 = '" & ORDNUM & "' " & _
-                               "and LINNUM_30 = '" & LINNUM & "' " & _
+        Dim strSQL As String = "Delete From ""SO_Note"" " &
+                               "Where ORDNUM_30 = '" & ORDNUM & "' " &
+                               "and LINNUM_30 = '" & LINNUM & "' " &
                                "and DELNUM_30 = '" & DELNUM & "'"
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.ExecuteNonQuery()
-        cmd = Nothing
+
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.ExecuteNonQuery()
+        End Using
 
         ' Initialize the _NoteCount variable to zero
         _NoteCount = 0
@@ -117,11 +119,11 @@ Public Class SONotesClass
         _NoteCount += 1
 
         ' Insert the new note into the database
-        Dim strSQL As String = "insert into ""SO_Note"" (ORDNUM_30, LINNUM_30, DELNUM_30, COMNUM_30, CODE_30, COMNT_30, CUSTID_30, PIDCOD_30, MCOMP_30, MSITE_30, UDFKEY_30, UDFREF_30, XDFDTE_30, RECTYP_30) values (" & _
+        Dim strSQL As String = "insert into ""SO_Note"" (ORDNUM_30, LINNUM_30, DELNUM_30, COMNUM_30, CODE_30, COMNT_30, CUSTID_30, PIDCOD_30, MCOMP_30, MSITE_30, UDFKEY_30, UDFREF_30, XDFDTE_30, RECTYP_30) values (" &
                                "'" & ORDNUM & "','" & LINNUM & "','" & DELNUM & "','" & _NoteCount.ToString.PadLeft(2, "0") & "','" & Type & "','" & Note & "', '', '', '', '', '', '', GETDATE(), 'ST') "
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.ExecuteNonQuery()
-        cmd = Nothing
-    End Sub
 
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.ExecuteNonQuery()
+        End Using
+    End Sub
 End Class

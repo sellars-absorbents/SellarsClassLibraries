@@ -25,12 +25,13 @@ Public Class GeneralLedgerAcctClass
                                "and ACTTYP_19 = '" & passacttyp.Trim & "' "
 
         ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim glReader As SqlDataReader = cmd.ExecuteReader()
-        glReader.Read()
-        _GLAcct = glReader("GLACCT_19")
-        glReader.Close()
-        glReader = Nothing
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using glReader As SqlDataReader = cmd.ExecuteReader()
+                glReader.Read()
+                _GLAcct = glReader("GLACCT_19")
+            End Using
+        End Using
+
         CloseMaxConnection()
 
         ' Return the price from the Price Breaks table that is appropriate for the 
@@ -51,12 +52,13 @@ Public Class GeneralLedgerAcctClass
                                "and ACTTYP_19 = 'A' "
 
         ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim glReader As SqlDataReader = cmd.ExecuteReader()
-        glReader.Read()
-        _GLAcct = glReader("GLACCT_19")
-        glReader.Close()
-        glReader = Nothing
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using glReader As SqlDataReader = cmd.ExecuteReader()
+                glReader.Read()
+                _GLAcct = glReader("GLACCT_19")
+            End Using
+        End Using
+
         CloseMaxConnection()
 
         ' Return the price from the Price Breaks table that is appropriate for the 
@@ -70,21 +72,21 @@ Public Class GeneralLedgerAcctClass
 
         ' Declare necessary local variables and initialize them
         Dim bVerified As Boolean = False
-        Dim strSQL As String = "Select GLACCT_19 " & _
-                               "From ""General_Ledger_Acct"" " & _
+        Dim strSQL As String = "Select GLACCT_19 " &
+                               "From ""General_Ledger_Acct"" " &
                                "Where GLACCT_19 = '" & passact.Trim & "' "
 
         ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim glReader As SqlDataReader = cmd.ExecuteReader()
-        bVerified = glReader.HasRows
-        glReader.Close()
-        glReader = Nothing
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using glReader As SqlDataReader = cmd.ExecuteReader()
+                bVerified = glReader.HasRows
+            End Using
+        End Using
+
         CloseMaxConnection()
 
         ' Return the price from the Price Breaks table that is appropriate for the 
         ' item / customer type / quantity submitted
         Return bVerified
     End Function
-
 End Class

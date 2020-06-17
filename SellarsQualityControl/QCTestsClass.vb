@@ -293,46 +293,46 @@ Public Class QCTestsClass
         dt.Columns.Add("BPReelNo", Type.GetType("System.Decimal"))
 
         Dim drow As DataRow
-        Dim dr As SqlDataReader
 
-        dr = oSQL.RunProcReader("GetAllQCTestResults")
-        While dr.Read()
-            REM -- Add to DataSet ds
-            drow = dt.NewRow()
-            drow("ProductionTime") = dr("ProductionTime")
-            drow("Reel") = dr("ReelCount")
-            drow("TestTime") = dr("TestTime")
-            drow("Weight") = dr("Weight")
-            drow("OpSideBulk") = dr("OpSideBulk")
-            drow("DriveSideBulk") = dr("DriveSideBulk")
-            drow("MDT") = dr("MDT")
-            drow("MDTE") = dr("MDTE")
-            drow("CDTD") = dr("CDTD")
-            If dr("CDTD") = 0 Then
-                drow("MDCD") = 0
-            Else
-                drow("MDCD") = dr("MDT") / dr("CDTD")
-            End If
-            drow("TT") = dr("MDT") + dr("CDTD")
-            drow("CDTW") = dr("CDTW")
-            If dr("CDTD") = 0 Then
-                drow("CDTWD") = 0
-            Else
-                drow("CDTWD") = dr("CDTW") / dr("CDTD")
-            End If
-            drow("CDTC") = dr("CDTC")
-            If dr("CDTC") = 0 Then
-                drow("PercentCured") = 0
-            Else
-                drow("PercentCured") = dr("CDTW") / dr("CDTC")
-            End If
-            drow("ZPeel") = dr("ZPeel")
-            drow("Contamination") = dr("Contamination")
-            drow("TWA") = dr("TWA")
-            drow("BPDate") = dr("BPDate")
-            drow("BPReelNo") = dr("BPReelNo")
-            dt.Rows.Add(drow)
-        End While
+        Using dr As SqlDataReader = oSQL.RunProcReader("GetAllQCTestResults")
+            While dr.Read()
+                REM -- Add to DataSet ds
+                drow = dt.NewRow()
+                drow("ProductionTime") = dr("ProductionTime")
+                drow("Reel") = dr("ReelCount")
+                drow("TestTime") = dr("TestTime")
+                drow("Weight") = dr("Weight")
+                drow("OpSideBulk") = dr("OpSideBulk")
+                drow("DriveSideBulk") = dr("DriveSideBulk")
+                drow("MDT") = dr("MDT")
+                drow("MDTE") = dr("MDTE")
+                drow("CDTD") = dr("CDTD")
+                If dr("CDTD") = 0 Then
+                    drow("MDCD") = 0
+                Else
+                    drow("MDCD") = dr("MDT") / dr("CDTD")
+                End If
+                drow("TT") = dr("MDT") + dr("CDTD")
+                drow("CDTW") = dr("CDTW")
+                If dr("CDTD") = 0 Then
+                    drow("CDTWD") = 0
+                Else
+                    drow("CDTWD") = dr("CDTW") / dr("CDTD")
+                End If
+                drow("CDTC") = dr("CDTC")
+                If dr("CDTC") = 0 Then
+                    drow("PercentCured") = 0
+                Else
+                    drow("PercentCured") = dr("CDTW") / dr("CDTC")
+                End If
+                drow("ZPeel") = dr("ZPeel")
+                drow("Contamination") = dr("Contamination")
+                drow("TWA") = dr("TWA")
+                drow("BPDate") = dr("BPDate")
+                drow("BPReelNo") = dr("BPReelNo")
+                dt.Rows.Add(drow)
+            End While
+        End Using
 
         Return ds
     End Function
@@ -389,28 +389,27 @@ Public Class QCTestsClass
         oSQL.AddParameter("@ProductionTime", SqlDbType.SmallDateTime, 0, ProductionTime, ParameterDirection.Input)
         oSQL.AddParameter("@TestTime", SqlDbType.DateTime, 0, TestTime, ParameterDirection.Input)
 
-        Dim dr As SqlDataReader
-        dr = oSQL.RunProcReader("GetSpecificReelTestResults")
-
-        ' Read the record
-        While dr.Read()
-            _Color = dr("ColorID")
-            _Pattern = dr("PatternID")
-            _Grade = dr("GradeID")
-            _Weight = dr("Weight")
-            _OpSideBulk = dr("OpSideBulk")
-            _DriveSideBulk = dr("DriveSideBulk")
-            _MDT = dr("MDT")
-            _MDTE = dr("MDTE")
-            _CDTD = dr("CDTD")
-            _CDTW = dr("CDTW")
-            _CDTC = dr("CDTC")
-            _ZPeel = IIf(IsDBNull(dr("ZPeel")), 0, dr("ZPeel"))
-            _Contamination = dr("Contamination")
-            _TWA = dr("TWA")
-            _BPDate = IIf(IsDBNull(dr("BPDate")), "1/1/2000", dr("BPDate"))
-            _BPReelNo = IIf(IsDBNull(dr("BPReelNo")), 0, dr("BPReelNo"))
-        End While
+        Using dr As SqlDataReader = oSQL.RunProcReader("GetSpecificReelTestResults")
+            ' Read the record
+            While dr.Read()
+                _Color = dr("ColorID")
+                _Pattern = dr("PatternID")
+                _Grade = dr("GradeID")
+                _Weight = dr("Weight")
+                _OpSideBulk = dr("OpSideBulk")
+                _DriveSideBulk = dr("DriveSideBulk")
+                _MDT = dr("MDT")
+                _MDTE = dr("MDTE")
+                _CDTD = dr("CDTD")
+                _CDTW = dr("CDTW")
+                _CDTC = dr("CDTC")
+                _ZPeel = IIf(IsDBNull(dr("ZPeel")), 0, dr("ZPeel"))
+                _Contamination = dr("Contamination")
+                _TWA = dr("TWA")
+                _BPDate = IIf(IsDBNull(dr("BPDate")), "1/1/2000", dr("BPDate"))
+                _BPReelNo = IIf(IsDBNull(dr("BPReelNo")), 0, dr("BPReelNo"))
+            End While
+        End Using
     End Sub
 
     '*********************************************************************
@@ -534,5 +533,4 @@ Public Class QCTestsClass
         ' Run the stored procedure and return a dataset of all the records
         Return oSQL.RunProcReader("GetQCTestResults")
     End Function
-
 End Class

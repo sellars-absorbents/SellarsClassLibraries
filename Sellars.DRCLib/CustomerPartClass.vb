@@ -131,109 +131,107 @@ Public Class CustomerPartClass
         oSQL.AddParameter("@OD", SqlDbType.Decimal, 0, passOD, ParameterDirection.Input)
 
         ' Execute the stored procedure, and if it returned a record, then get the customer part
-        Dim dr As SqlClient.SqlDataReader = oSQL.RunProcReader("ReadCustomerSlitWidthPart")
-        If dr.Read() Then
-            _Found = True
-            _CustomerPart = dr("CUSTPRT")
-            If IsDBNull(dr("PRTDESC1")) Then
-                _Description1 = ""
-            Else
-                _Description1 = dr("PRTDESC1")
-            End If
-            If (_Description1 = "'") Or (_Description1 = "-") Then
-                _Description1 = ""
-            End If
-
-            If IsDBNull(dr("PRTDESC2")) Then
-                _Description2 = ""
-            Else
-                _Description2 = dr("PRTDESC2")
-            End If
-            If (_Description2 = "'") Or (_Description2 = "-") Then
-                _Description2 = ""
-            End If
-
-            If IsDBNull(dr("PRTDESC3")) Then
-                _Description3 = ""
-            Else
-                _Description3 = dr("PRTDESC3")
-            End If
-            If (_Description3 = "'") Or (_Description3 = "-") Then
-                _Description3 = ""
-            End If
-
-            If IsDBNull(dr("PRTDESC4")) Then
-                _Description4 = ""
-            Else
-                _Description4 = dr("PRTDESC4")
-            End If
-            If (_Description4 = "'") Or (_Description4 = "-") Then
-                _Description4 = ""
-            End If
-
-        Else
-            ' If we didn't find a match on the specified OD, then we need to try it with the dfault zero OD to see if there
-            ' is an entry for that!
-            If passOD <> 0 Then
-                oSQL = New SqlService(ConnectionString)
-
-                ' Add the parameter to the command object
-                oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, passCustomer, ParameterDirection.Input)
-                oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passPart, ParameterDirection.Input)
-                oSQL.AddParameter("@Width", SqlDbType.Decimal, 0, passWidth, ParameterDirection.Input)
-                oSQL.AddParameter("@OD", SqlDbType.Decimal, 0, 0, ParameterDirection.Input)
-                If dr.Read() Then
-                    _Found = True
-                    _CustomerPart = dr("CUSTPRT")
-                    If IsDBNull(dr("PRTDESC1")) Then
-                        _Description1 = ""
-                    Else
-                        _Description1 = dr("PRTDESC1")
-                    End If
-                    If (_Description1 = "'") Or (_Description1 = "-") Then
-                        _Description1 = ""
-                    End If
-
-                    If IsDBNull(dr("PRTDESC2")) Then
-                        _Description2 = ""
-                    Else
-                        _Description2 = dr("PRTDESC2")
-                    End If
-                    If (_Description2 = "'") Or (_Description2 = "-") Then
-                        _Description2 = ""
-                    End If
-
-                    If IsDBNull(dr("PRTDESC3")) Then
-                        _Description3 = ""
-                    Else
-                        _Description3 = dr("PRTDESC3")
-                    End If
-                    If (_Description3 = "'") Or (_Description3 = "-") Then
-                        _Description3 = ""
-                    End If
-
-                    If IsDBNull(dr("PRTDESC4")) Then
-                        _Description4 = ""
-                    Else
-                        _Description4 = dr("PRTDESC4")
-                    End If
-                    If (_Description4 = "'") Or (_Description4 = "-") Then
-                        _Description4 = ""
-                    End If
-                Else
-                    _Found = False
-                    _CustomerPart = ""
+        Using dr As SqlClient.SqlDataReader = oSQL.RunProcReader("ReadCustomerSlitWidthPart")
+            If dr.Read() Then
+                _Found = True
+                _CustomerPart = dr("CUSTPRT")
+                If IsDBNull(dr("PRTDESC1")) Then
                     _Description1 = ""
+                Else
+                    _Description1 = dr("PRTDESC1")
+                End If
+                If (_Description1 = "'") Or (_Description1 = "-") Then
+                    _Description1 = ""
+                End If
+
+                If IsDBNull(dr("PRTDESC2")) Then
                     _Description2 = ""
+                Else
+                    _Description2 = dr("PRTDESC2")
+                End If
+                If (_Description2 = "'") Or (_Description2 = "-") Then
+                    _Description2 = ""
+                End If
+
+                If IsDBNull(dr("PRTDESC3")) Then
                     _Description3 = ""
+                Else
+                    _Description3 = dr("PRTDESC3")
+                End If
+                If (_Description3 = "'") Or (_Description3 = "-") Then
+                    _Description3 = ""
+                End If
+
+                If IsDBNull(dr("PRTDESC4")) Then
+                    _Description4 = ""
+                Else
+                    _Description4 = dr("PRTDESC4")
+                End If
+                If (_Description4 = "'") Or (_Description4 = "-") Then
                     _Description4 = ""
                 End If
-            End If
-        End If
 
-        ' Close the dataset and free up memory
-        dr.Close()
-        dr = Nothing
+            Else
+                ' If we didn't find a match on the specified OD, then we need to try it with the dfault zero OD to see if there
+                ' is an entry for that!
+                If passOD <> 0 Then
+                    oSQL = New SqlService(ConnectionString)
+
+                    ' Add the parameter to the command object
+                    oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, passCustomer, ParameterDirection.Input)
+                    oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passPart, ParameterDirection.Input)
+                    oSQL.AddParameter("@Width", SqlDbType.Decimal, 0, passWidth, ParameterDirection.Input)
+                    oSQL.AddParameter("@OD", SqlDbType.Decimal, 0, 0, ParameterDirection.Input)
+                    If dr.Read() Then
+                        _Found = True
+                        _CustomerPart = dr("CUSTPRT")
+                        If IsDBNull(dr("PRTDESC1")) Then
+                            _Description1 = ""
+                        Else
+                            _Description1 = dr("PRTDESC1")
+                        End If
+                        If (_Description1 = "'") Or (_Description1 = "-") Then
+                            _Description1 = ""
+                        End If
+
+                        If IsDBNull(dr("PRTDESC2")) Then
+                            _Description2 = ""
+                        Else
+                            _Description2 = dr("PRTDESC2")
+                        End If
+                        If (_Description2 = "'") Or (_Description2 = "-") Then
+                            _Description2 = ""
+                        End If
+
+                        If IsDBNull(dr("PRTDESC3")) Then
+                            _Description3 = ""
+                        Else
+                            _Description3 = dr("PRTDESC3")
+                        End If
+                        If (_Description3 = "'") Or (_Description3 = "-") Then
+                            _Description3 = ""
+                        End If
+
+                        If IsDBNull(dr("PRTDESC4")) Then
+                            _Description4 = ""
+                        Else
+                            _Description4 = dr("PRTDESC4")
+                        End If
+                        If (_Description4 = "'") Or (_Description4 = "-") Then
+                            _Description4 = ""
+                        End If
+                    Else
+                        _Found = False
+                        _CustomerPart = ""
+                        _Description1 = ""
+                        _Description2 = ""
+                        _Description3 = ""
+                        _Description4 = ""
+                    End If
+                End If
+            End If
+        End Using
+
         oSQL = Nothing
     End Sub
 End Class

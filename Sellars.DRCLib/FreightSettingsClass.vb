@@ -80,27 +80,23 @@ Public Class FreightSettingsClass
         oSQL.AddParameter("@State", SqlDbType.NVarChar, 2, StateAbbreviation, ParameterDirection.Input)
 
         ' return the data from the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadFreightSettings")
-
-        dr.Read()
-        If dr("Count") = 0 Then
-            _ReadError = True
-        End If
-
-        ' Set the properties from the data in the datareader if
-        ' there was no error reading the record
-        If Not ReadError Then
-            ' First move to the next resultset
-            dr.NextResult()
-            ' Go grab the variables
-            If dr.Read() Then
-                _FreightMultiplier = dr("FreightMultiplier")
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadFreightSettings")
+            dr.Read()
+            If dr("Count") = 0 Then
+                _ReadError = True
             End If
-        End If
 
-        ' Close up the data readers and free up memory
-        dr.Close()
-        dr = Nothing
+            ' Set the properties from the data in the datareader if
+            ' there was no error reading the record
+            If Not ReadError Then
+                ' First move to the next resultset
+                dr.NextResult()
+                ' Go grab the variables
+                If dr.Read() Then
+                    _FreightMultiplier = dr("FreightMultiplier")
+                End If
+            End If
+        End Using
     End Sub
 
     Public Sub Update(ByVal StateAbbreviation As String, ByVal Freight As Decimal)

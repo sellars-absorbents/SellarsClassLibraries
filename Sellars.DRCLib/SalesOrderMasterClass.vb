@@ -1611,7 +1611,6 @@ Public Class SalesOrderMasterClass
                 ' Update the sellars sales order master right away
                 UpdateSellars(pORDNUM, pOrderDate, pCUSTPO, pFOB, pCustomerName, pADDR1.Trim, pADDR2.Trim, "", pCity.Trim, pState.Trim, pZIPCD.Trim, pCountry.Trim, newSHPCDE)
         End Select
-
     End Sub
 
     ' Function used to update any updateable line item field
@@ -1669,7 +1668,6 @@ Public Class SalesOrderMasterClass
                 ' Update the sellars sales order master right away
                 UpdateSellars(pORDNUM, pOrderDate, pCUSTPO, pFOB, pCustomerName, pADDR1.Trim, pADDR2.Trim, pADDR3.Trim, pCity.Trim, pState.Trim, pZIPCD.Trim, pCountry.Trim, newSHPCDE)
         End Select
-
     End Sub
     ' Function used to update any updateable line item field
     Public Sub UpdateFOB(ByVal value As DataSource, ByVal pORDNUM As String, ByVal FOB As String)
@@ -1701,7 +1699,6 @@ Public Class SalesOrderMasterClass
                 ' Update the sellars sales order master right away
                 ' UpdateSellars(pORDNUM, pOrderDate, pCUSTPO, pFOB, pCustomerName, pADDR1.Trim, pADDR2.Trim, pADDR3.Trim, pCity.Trim, pState.Trim, pZIPCD.Trim, pCountry.Trim, newSHPCDE)
         End Select
-
     End Sub
 
     ' The following routine will update a sales order master record in the sellars SQL sales order master table

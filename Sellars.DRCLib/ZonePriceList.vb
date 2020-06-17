@@ -43,10 +43,8 @@ Public Class ZonePriceList
 
     Public Function PrintToPDF(ByVal State As String, ByVal Format As String) As MemoryStream
         Dim rtnReport As MemoryStream = Nothing
-
         Dim historyID As String = Nothing
         Dim deviceInfo As String = Nothing
-        'Dim format As String = "EXCEL"
         Dim results As Byte() = Nothing
         Dim encoding As String = String.Empty
         Dim mimeType As String = String.Empty
@@ -62,40 +60,27 @@ Public Class ZonePriceList
         Dim _credentials As ReportService.DataSourceCredentials() = Nothing
         Dim _parameters As ReportService.ParameterValue() = Nothing
 
-        Try
-            ' Load the selected report
-            Dim ei As ReportExecutionService.ExecutionInfo = rsExec.LoadReport(_ReportURL, historyID)
+        ' Load the selected report
+        Dim ei As ReportExecutionService.ExecutionInfo = rsExec.LoadReport(_ReportURL, historyID)
 
-            ' prepare the report parameters
-            Dim parameters As ReportExecutionService.ParameterValue() = SetParameters(State)
+        ' prepare the report parameters
+        Dim parameters As ReportExecutionService.ParameterValue() = SetParameters(State)
 
-            ' Prepare device info to render PDF at 300 DPI
-            Dim sb As New System.Text.StringBuilder(1024)
-            Dim xr As System.Xml.XmlWriter = XmlWriter.Create(sb)
-            xr.WriteStartElement("DeviceInfo")
-            xr.WriteElementString("DpiX", "300")
-            xr.WriteElementString("DpiY", "300")
-            xr.Close()
+        ' Prepare device info to render PDF at 300 DPI
+        Dim sb As New System.Text.StringBuilder(1024)
+        Dim xr As System.Xml.XmlWriter = XmlWriter.Create(sb)
+        xr.WriteStartElement("DeviceInfo")
+        xr.WriteElementString("DpiX", "300")
+        xr.WriteElementString("DpiY", "300")
+        xr.Close()
 
-            deviceInfo = sb.ToString()
+        deviceInfo = sb.ToString()
 
-            rsExec.SetExecutionParameters(parameters, "en-us")
-            results = rsExec.Render(Format, deviceInfo, extension, mimeType, encoding, warnings, streamIDs)
+        rsExec.SetExecutionParameters(parameters, "en-us")
+        results = rsExec.Render(Format, deviceInfo, extension, mimeType, encoding, warnings, streamIDs)
 
-            ' put the results into the return memorystream
-            rtnReport = New MemoryStream(results)
-
-            ''Dim docformat As String = "PDF" here
-            'Dim requestUri As String = String.Format("http://192.168.100.22/ReportServer/?/Sales/ZoneMTSPriceList&rs:Command=Render&State={0}&rs:Format={1}", State, Format)
-            'Dim request As WebRequest = WebRequest.Create(requestUri)
-            'request.Credentials = rs.Credentials
-            'Dim response As WebResponse = request.GetResponse()
-
-            '' put the results into the return memorystream
-            'response.GetResponseStream().CopyTo(rtnReport)
-        Catch ex As Exception
-            Dim msg As String = ex.Message
-        End Try
+        ' put the results into the return memorystream
+        rtnReport = New MemoryStream(results)
 
         ' return the report memorystream object
         Return rtnReport
@@ -113,5 +98,4 @@ Public Class ZonePriceList
         ' return the parameters to the calling module
         Return parameters
     End Function
-
 End Class

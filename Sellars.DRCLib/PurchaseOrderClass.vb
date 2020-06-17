@@ -981,240 +981,237 @@ Public Class PurchaseOrderClass
                                "and LINNUM_10 = @LINNUM " & _
                                "and DELNUM_10 = @DELNUM"
 
-        ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        cmd.CommandType = CommandType.Text
-        cmd.Parameters.Add(New SqlParameter("@ORDNUM", passorder))
-        cmd.Parameters.Add(New SqlParameter("@LINNUM", LineNumber))
-        cmd.Parameters.Add(New SqlParameter("@DELNUM", DeliveryNumber))
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add(New SqlParameter("@ORDNUM", passorder))
+            cmd.Parameters.Add(New SqlParameter("@LINNUM", LineNumber))
+            cmd.Parameters.Add(New SqlParameter("@DELNUM", DeliveryNumber))
 
-        Dim OrderMasterReader As SqlDataReader = cmd.ExecuteReader()
-
-        _ORDNUM = passorder
-        If OrderMasterReader.Read() Then
-            _found = True
-            _LINNUM = dbRecordString(OrderMasterReader("LINNUM_10"))
-            _DELNUM = dbRecordString(OrderMasterReader("DELNUM_10"))
-            _PRTNUM = dbRecordString(OrderMasterReader("PRTNUM_10"))
-            Try
-                _CURDUE = dbRecordDate(OrderMasterReader("CURDUE_10"))
-            Catch
-                _CURDUE = DefaultDate
-            End Try
-            _RECFLG = dbRecordString(OrderMasterReader("RECFLG_10"))
-            _TAXABLE = dbRecordString(OrderMasterReader("TAXABLE_10"))
-            _TYPE = dbRecordString(OrderMasterReader("TYPE_10"))
-            _ORDER = dbRecordString(OrderMasterReader("ORDER_10"))
-            _VENID = dbRecordString(OrderMasterReader("VENID_10"))
-            Try
-                _ORGDUE = dbRecordDate(OrderMasterReader("ORGDUE_10"))
-            Catch
-                _ORGDUE = DefaultDate
-            End Try
-            _PURUOM = dbRecordString(OrderMasterReader("PURUOM_10"))
-            _CURQTY = dbRecordDouble(OrderMasterReader("CURQTY_10"))
-            _ORGQTY = dbRecordDouble(OrderMasterReader("ORGQTY_10"))
-            _DUEQTY = dbRecordDouble(OrderMasterReader("DUEQTY_10"))
-            Try
-                _CURPRM = dbRecordDate(OrderMasterReader("CURPRM_10"))
-            Catch
-                _CURPRM = DefaultDate
-            End Try
-            _FILL03 = dbRecordString(OrderMasterReader("FILL03_10"))
-            Try
-                _ORGPRM = dbRecordDate(OrderMasterReader("ORGPRM_10"))
-            Catch
-                _ORGPRM = DefaultDate
-            End Try
-            _FILL04 = dbRecordString(OrderMasterReader("FILL04_10"))
-            _FRMPLN = dbRecordString(OrderMasterReader("FRMPLN_10"))
-            _STATUS = dbRecordString(OrderMasterReader("STATUS_10"))
-            _STK = dbRecordString(OrderMasterReader("STK_10"))
-            _CUSORD = dbRecordString(OrderMasterReader("CUSORD_10"))
-            _PLANID = dbRecordString(OrderMasterReader("PLANID_10"))
-            _BUYER = dbRecordString(OrderMasterReader("BUYER_10"))
-            _PSCRAP = dbRecordDouble(OrderMasterReader("PSCRAP_10"))
-            _ASCRAP = dbRecordDouble(OrderMasterReader("ASCRAP_10"))
-            _SCRPCD = dbRecordString(OrderMasterReader("SCRPCD_10"))
-            _SCHCDE = dbRecordString(OrderMasterReader("SCHCDE_10"))
-            _REVLEV = dbRecordString(OrderMasterReader("REVLEV_10"))
-            _COST = dbRecordDouble(OrderMasterReader("COST_10"))
-            _CSTCNV = dbRecordDouble(OrderMasterReader("CSTCNV_10"))
-            _APRDBY = dbRecordString(OrderMasterReader("APRDBY_10"))
-            _ORDREF = dbRecordString(OrderMasterReader("ORDREF_10"))
-            Try
-                _TRNDTE = dbRecordDate(OrderMasterReader("TRNDTE_10"))
-            Catch
-                _TRNDTE = DefaultDate
-            End Try
-            _FILL05 = dbRecordString(OrderMasterReader("FILL05_10"))
-            _SCHFLG = dbRecordString(OrderMasterReader("SCHFLG_10"))
-            _CRTRAT = dbRecordString(OrderMasterReader("CRTRAT_10"))
-            _NEGATV = dbRecordString(OrderMasterReader("NEGATV_10"))
-            _REQPEG = dbRecordString(OrderMasterReader("REQPEG_10"))
-            _MPNNUM = dbRecordString(OrderMasterReader("MPNNUM_10"))
-            _LABOR = dbRecordDouble(OrderMasterReader("LABOR_10"))
-            _AMMEND = dbRecordString(OrderMasterReader("AMMEND_10"))
-            _LOTNUM = dbRecordString(OrderMasterReader("LOTNUM_10"))
-            _BEGSER = dbRecordString(OrderMasterReader("BEGSER_10"))
-            _REWORK = dbRecordString(OrderMasterReader("REWORK_10"))
-            _CRTSNS = dbRecordString(OrderMasterReader("CRTSNS_10"))
-            _TTLSNS = dbRecordDouble(OrderMasterReader("TTLSNS_10"))
-            _FORCUR = dbRecordDouble(OrderMasterReader("FORCUR_10"))
-            _EXCESS = dbRecordSingle(OrderMasterReader("EXCESS_10"))
-            _UOMCST = dbRecordDouble(OrderMasterReader("UOMCST_10"))
-            _UOMCNV = dbRecordDouble(OrderMasterReader("UOMCNV_10"))
-            _INSREQ = dbRecordString(OrderMasterReader("INSREQ_10"))
-            Try
-                _CREDTE = dbRecordDate(OrderMasterReader("CREDTE_10"))
-            Catch
-                _CREDTE = DefaultDate
-            End Try
-            _RTEREV = dbRecordString(OrderMasterReader("RTEREV_10"))
-            Try
-                _RTEDTE = dbRecordDate(OrderMasterReader("RTEDTE_10"))
-            Catch
-                _RTEDTE = DefaultDate
-            End Try
-            _COMCDE = dbRecordString(OrderMasterReader("COMCDE_10"))
-            _ORDPTP = dbRecordString(OrderMasterReader("ORDPTP_10"))
-            _JOBEXP = dbRecordString(OrderMasterReader("JOBEXP_10"))
-            _JOBCST = dbRecordDouble(OrderMasterReader("JOBCST_10"))
-            _TAXCDE = dbRecordString(OrderMasterReader("TAXCDE_10"))
-            _TAX1 = dbRecordDouble(OrderMasterReader("TAX1_10"))
-            _GLREF = dbRecordString(OrderMasterReader("GLREF_10"))
-            _CURR = dbRecordString(OrderMasterReader("CURR_10"))
-            _UDFKEY = dbRecordString(OrderMasterReader("UDFKEY_10"))
-            _UDFREF = dbRecordString(OrderMasterReader("UDFREF_10"))
-            _DISC = dbRecordSingle(OrderMasterReader("DISC_10"))
-            _RECCOST = dbRecordDouble(OrderMasterReader("RECCOST_10"))
-            _MPNMFG = dbRecordString(OrderMasterReader("MPNMFG_10"))
-            _DEXPFLG = dbRecordString(OrderMasterReader("DEXPFLG_10"))
-            _PLSTPRNT = dbRecordString(OrderMasterReader("PLSTPRNT_10"))
-            _ROUTPRNT = dbRecordString(OrderMasterReader("ROUTPRNT_10"))
-            _REQUES = dbRecordString(OrderMasterReader("REQUES_10"))
-            Try
-                _CLSDTE = dbRecordDate(OrderMasterReader("CLSDTE_10"))
-            Catch
-                _CLSDTE = DefaultDate
-            End Try
-            _XDFINT = dbRecordInt(OrderMasterReader("XDFINT_10"))
-            _XDFFLT = dbRecordDouble(OrderMasterReader("XDFFLT_10"))
-            _XDFBOL = dbRecordString(OrderMasterReader("XDFBOL_10"))
-            ' Because we can get bad dates in the recall date field
-            ' first try to read it, and if we can't set it to the default
-            Try
-                _XDFDTE = dbRecordDate(OrderMasterReader("XDFDTE_10"))
-            Catch
-                _XDFDTE = DefaultDate
-            End Try
-            _XDFTXT = dbRecordString(OrderMasterReader("XDFTXT_10"))
-            _FILLER = dbRecordString(OrderMasterReader("FILLER_10"))
-            _CREATEDBY = dbRecordString(OrderMasterReader("CreatedBy"))
-            _CREATIONDATE = dbRecordDate(OrderMasterReader("CreationDate"))
-            _MODIFIEDBY = dbRecordString(OrderMasterReader("ModifiedBy"))
-            _MODIFICATIONDATE = dbRecordDate(OrderMasterReader("ModificationDate"))
-            _TSKCDE = dbRecordString(OrderMasterReader("TSKCDE_10"))
-            _TSKTYP = dbRecordString(OrderMasterReader("TSKTYP_10"))
-            _REPORTER = dbRecordString(OrderMasterReader("REPORTER_10"))
-            _PRIORITY = dbRecordString(OrderMasterReader("PRIORITY_10"))
-            _PHONE = dbRecordString(OrderMasterReader("PHONE_10"))
-            _LOCATION = dbRecordString(OrderMasterReader("LOCATION_10"))
-        Else
-            _found = False
-            _LINNUM = ""
-            _DELNUM = ""
-            _PRTNUM = ""
-            _CURDUE = DefaultDate
-            _RECFLG = ""
-            _TAXABLE = ""
-            _TYPE = ""
-            _ORDER = ""
-            _VENID = ""
-            _ORGDUE = DefaultDate
-            _PURUOM = ""
-            _CURQTY = 0
-            _ORGQTY = 0
-            _DUEQTY = 0
-            _CURPRM = DefaultDate
-            _FILL03 = ""
-            _ORGPRM = DefaultDate
-            _FILL04 = ""
-            _FRMPLN = ""
-            _STATUS = ""
-            _STK = ""
-            _CUSORD = ""
-            _PLANID = ""
-            _BUYER = ""
-            _PSCRAP = 0
-            _ASCRAP = 0
-            _SCRPCD = ""
-            _SCHCDE = ""
-            _REVLEV = ""
-            _COST = 0
-            _CSTCNV = 0
-            _APRDBY = ""
-            _ORDREF = ""
-            _TRNDTE = DefaultDate
-            _FILL05 = ""
-            _SCHFLG = ""
-            _CRTRAT = ""
-            _NEGATV = ""
-            _REQPEG = ""
-            _MPNNUM = ""
-            _LABOR = 0
-            _AMMEND = ""
-            _LOTNUM = ""
-            _BEGSER = ""
-            _REWORK = ""
-            _CRTSNS = ""
-            _TTLSNS = 0
-            _FORCUR = 0
-            _EXCESS = 0
-            _UOMCST = 0
-            _UOMCNV = 0
-            _INSREQ = ""
-            _CREDTE = DefaultDate
-            _RTEREV = ""
-            _RTEDTE = DefaultDate
-            _COMCDE = ""
-            _ORDPTP = ""
-            _JOBEXP = ""
-            _JOBCST = 0
-            _TAXCDE = ""
-            _TAX1 = 0
-            _GLREF = ""
-            _CURR = ""
-            _UDFKEY = ""
-            _UDFREF = ""
-            _DISC = 0
-            _RECCOST = 0
-            _MPNMFG = ""
-            _DEXPFLG = ""
-            _PLSTPRNT = ""
-            _ROUTPRNT = ""
-            _REQUES = ""
-            _CLSDTE = DefaultDate
-            _XDFINT = 0
-            _XDFFLT = 0
-            _XDFBOL = ""
-            _XDFDTE = DefaultDate
-            _XDFTXT = ""
-            _FILLER = ""
-            _CREATEDBY = ""
-            _CREATIONDATE = DefaultDate
-            _MODIFIEDBY = ""
-            _MODIFICATIONDATE = DefaultDate
-            _TSKCDE = ""
-            _TSKTYP = ""
-            _REPORTER = ""
-            _PRIORITY = ""
-            _PHONE = ""
-            _LOCATION = ""
-        End If
-
-        OrderMasterReader.Close()
-        OrderMasterReader = Nothing
+            Using OrderMasterReader As SqlDataReader = cmd.ExecuteReader()
+                _ORDNUM = passorder
+                If OrderMasterReader.Read() Then
+                    _found = True
+                    _LINNUM = dbRecordString(OrderMasterReader("LINNUM_10"))
+                    _DELNUM = dbRecordString(OrderMasterReader("DELNUM_10"))
+                    _PRTNUM = dbRecordString(OrderMasterReader("PRTNUM_10"))
+                    Try
+                        _CURDUE = dbRecordDate(OrderMasterReader("CURDUE_10"))
+                    Catch
+                        _CURDUE = DefaultDate
+                    End Try
+                    _RECFLG = dbRecordString(OrderMasterReader("RECFLG_10"))
+                    _TAXABLE = dbRecordString(OrderMasterReader("TAXABLE_10"))
+                    _TYPE = dbRecordString(OrderMasterReader("TYPE_10"))
+                    _ORDER = dbRecordString(OrderMasterReader("ORDER_10"))
+                    _VENID = dbRecordString(OrderMasterReader("VENID_10"))
+                    Try
+                        _ORGDUE = dbRecordDate(OrderMasterReader("ORGDUE_10"))
+                    Catch
+                        _ORGDUE = DefaultDate
+                    End Try
+                    _PURUOM = dbRecordString(OrderMasterReader("PURUOM_10"))
+                    _CURQTY = dbRecordDouble(OrderMasterReader("CURQTY_10"))
+                    _ORGQTY = dbRecordDouble(OrderMasterReader("ORGQTY_10"))
+                    _DUEQTY = dbRecordDouble(OrderMasterReader("DUEQTY_10"))
+                    Try
+                        _CURPRM = dbRecordDate(OrderMasterReader("CURPRM_10"))
+                    Catch
+                        _CURPRM = DefaultDate
+                    End Try
+                    _FILL03 = dbRecordString(OrderMasterReader("FILL03_10"))
+                    Try
+                        _ORGPRM = dbRecordDate(OrderMasterReader("ORGPRM_10"))
+                    Catch
+                        _ORGPRM = DefaultDate
+                    End Try
+                    _FILL04 = dbRecordString(OrderMasterReader("FILL04_10"))
+                    _FRMPLN = dbRecordString(OrderMasterReader("FRMPLN_10"))
+                    _STATUS = dbRecordString(OrderMasterReader("STATUS_10"))
+                    _STK = dbRecordString(OrderMasterReader("STK_10"))
+                    _CUSORD = dbRecordString(OrderMasterReader("CUSORD_10"))
+                    _PLANID = dbRecordString(OrderMasterReader("PLANID_10"))
+                    _BUYER = dbRecordString(OrderMasterReader("BUYER_10"))
+                    _PSCRAP = dbRecordDouble(OrderMasterReader("PSCRAP_10"))
+                    _ASCRAP = dbRecordDouble(OrderMasterReader("ASCRAP_10"))
+                    _SCRPCD = dbRecordString(OrderMasterReader("SCRPCD_10"))
+                    _SCHCDE = dbRecordString(OrderMasterReader("SCHCDE_10"))
+                    _REVLEV = dbRecordString(OrderMasterReader("REVLEV_10"))
+                    _COST = dbRecordDouble(OrderMasterReader("COST_10"))
+                    _CSTCNV = dbRecordDouble(OrderMasterReader("CSTCNV_10"))
+                    _APRDBY = dbRecordString(OrderMasterReader("APRDBY_10"))
+                    _ORDREF = dbRecordString(OrderMasterReader("ORDREF_10"))
+                    Try
+                        _TRNDTE = dbRecordDate(OrderMasterReader("TRNDTE_10"))
+                    Catch
+                        _TRNDTE = DefaultDate
+                    End Try
+                    _FILL05 = dbRecordString(OrderMasterReader("FILL05_10"))
+                    _SCHFLG = dbRecordString(OrderMasterReader("SCHFLG_10"))
+                    _CRTRAT = dbRecordString(OrderMasterReader("CRTRAT_10"))
+                    _NEGATV = dbRecordString(OrderMasterReader("NEGATV_10"))
+                    _REQPEG = dbRecordString(OrderMasterReader("REQPEG_10"))
+                    _MPNNUM = dbRecordString(OrderMasterReader("MPNNUM_10"))
+                    _LABOR = dbRecordDouble(OrderMasterReader("LABOR_10"))
+                    _AMMEND = dbRecordString(OrderMasterReader("AMMEND_10"))
+                    _LOTNUM = dbRecordString(OrderMasterReader("LOTNUM_10"))
+                    _BEGSER = dbRecordString(OrderMasterReader("BEGSER_10"))
+                    _REWORK = dbRecordString(OrderMasterReader("REWORK_10"))
+                    _CRTSNS = dbRecordString(OrderMasterReader("CRTSNS_10"))
+                    _TTLSNS = dbRecordDouble(OrderMasterReader("TTLSNS_10"))
+                    _FORCUR = dbRecordDouble(OrderMasterReader("FORCUR_10"))
+                    _EXCESS = dbRecordSingle(OrderMasterReader("EXCESS_10"))
+                    _UOMCST = dbRecordDouble(OrderMasterReader("UOMCST_10"))
+                    _UOMCNV = dbRecordDouble(OrderMasterReader("UOMCNV_10"))
+                    _INSREQ = dbRecordString(OrderMasterReader("INSREQ_10"))
+                    Try
+                        _CREDTE = dbRecordDate(OrderMasterReader("CREDTE_10"))
+                    Catch
+                        _CREDTE = DefaultDate
+                    End Try
+                    _RTEREV = dbRecordString(OrderMasterReader("RTEREV_10"))
+                    Try
+                        _RTEDTE = dbRecordDate(OrderMasterReader("RTEDTE_10"))
+                    Catch
+                        _RTEDTE = DefaultDate
+                    End Try
+                    _COMCDE = dbRecordString(OrderMasterReader("COMCDE_10"))
+                    _ORDPTP = dbRecordString(OrderMasterReader("ORDPTP_10"))
+                    _JOBEXP = dbRecordString(OrderMasterReader("JOBEXP_10"))
+                    _JOBCST = dbRecordDouble(OrderMasterReader("JOBCST_10"))
+                    _TAXCDE = dbRecordString(OrderMasterReader("TAXCDE_10"))
+                    _TAX1 = dbRecordDouble(OrderMasterReader("TAX1_10"))
+                    _GLREF = dbRecordString(OrderMasterReader("GLREF_10"))
+                    _CURR = dbRecordString(OrderMasterReader("CURR_10"))
+                    _UDFKEY = dbRecordString(OrderMasterReader("UDFKEY_10"))
+                    _UDFREF = dbRecordString(OrderMasterReader("UDFREF_10"))
+                    _DISC = dbRecordSingle(OrderMasterReader("DISC_10"))
+                    _RECCOST = dbRecordDouble(OrderMasterReader("RECCOST_10"))
+                    _MPNMFG = dbRecordString(OrderMasterReader("MPNMFG_10"))
+                    _DEXPFLG = dbRecordString(OrderMasterReader("DEXPFLG_10"))
+                    _PLSTPRNT = dbRecordString(OrderMasterReader("PLSTPRNT_10"))
+                    _ROUTPRNT = dbRecordString(OrderMasterReader("ROUTPRNT_10"))
+                    _REQUES = dbRecordString(OrderMasterReader("REQUES_10"))
+                    Try
+                        _CLSDTE = dbRecordDate(OrderMasterReader("CLSDTE_10"))
+                    Catch
+                        _CLSDTE = DefaultDate
+                    End Try
+                    _XDFINT = dbRecordInt(OrderMasterReader("XDFINT_10"))
+                    _XDFFLT = dbRecordDouble(OrderMasterReader("XDFFLT_10"))
+                    _XDFBOL = dbRecordString(OrderMasterReader("XDFBOL_10"))
+                    ' Because we can get bad dates in the recall date field
+                    ' first try to read it, and if we can't set it to the default
+                    Try
+                        _XDFDTE = dbRecordDate(OrderMasterReader("XDFDTE_10"))
+                    Catch
+                        _XDFDTE = DefaultDate
+                    End Try
+                    _XDFTXT = dbRecordString(OrderMasterReader("XDFTXT_10"))
+                    _FILLER = dbRecordString(OrderMasterReader("FILLER_10"))
+                    _CREATEDBY = dbRecordString(OrderMasterReader("CreatedBy"))
+                    _CREATIONDATE = dbRecordDate(OrderMasterReader("CreationDate"))
+                    _MODIFIEDBY = dbRecordString(OrderMasterReader("ModifiedBy"))
+                    _MODIFICATIONDATE = dbRecordDate(OrderMasterReader("ModificationDate"))
+                    _TSKCDE = dbRecordString(OrderMasterReader("TSKCDE_10"))
+                    _TSKTYP = dbRecordString(OrderMasterReader("TSKTYP_10"))
+                    _REPORTER = dbRecordString(OrderMasterReader("REPORTER_10"))
+                    _PRIORITY = dbRecordString(OrderMasterReader("PRIORITY_10"))
+                    _PHONE = dbRecordString(OrderMasterReader("PHONE_10"))
+                    _LOCATION = dbRecordString(OrderMasterReader("LOCATION_10"))
+                Else
+                    _found = False
+                    _LINNUM = ""
+                    _DELNUM = ""
+                    _PRTNUM = ""
+                    _CURDUE = DefaultDate
+                    _RECFLG = ""
+                    _TAXABLE = ""
+                    _TYPE = ""
+                    _ORDER = ""
+                    _VENID = ""
+                    _ORGDUE = DefaultDate
+                    _PURUOM = ""
+                    _CURQTY = 0
+                    _ORGQTY = 0
+                    _DUEQTY = 0
+                    _CURPRM = DefaultDate
+                    _FILL03 = ""
+                    _ORGPRM = DefaultDate
+                    _FILL04 = ""
+                    _FRMPLN = ""
+                    _STATUS = ""
+                    _STK = ""
+                    _CUSORD = ""
+                    _PLANID = ""
+                    _BUYER = ""
+                    _PSCRAP = 0
+                    _ASCRAP = 0
+                    _SCRPCD = ""
+                    _SCHCDE = ""
+                    _REVLEV = ""
+                    _COST = 0
+                    _CSTCNV = 0
+                    _APRDBY = ""
+                    _ORDREF = ""
+                    _TRNDTE = DefaultDate
+                    _FILL05 = ""
+                    _SCHFLG = ""
+                    _CRTRAT = ""
+                    _NEGATV = ""
+                    _REQPEG = ""
+                    _MPNNUM = ""
+                    _LABOR = 0
+                    _AMMEND = ""
+                    _LOTNUM = ""
+                    _BEGSER = ""
+                    _REWORK = ""
+                    _CRTSNS = ""
+                    _TTLSNS = 0
+                    _FORCUR = 0
+                    _EXCESS = 0
+                    _UOMCST = 0
+                    _UOMCNV = 0
+                    _INSREQ = ""
+                    _CREDTE = DefaultDate
+                    _RTEREV = ""
+                    _RTEDTE = DefaultDate
+                    _COMCDE = ""
+                    _ORDPTP = ""
+                    _JOBEXP = ""
+                    _JOBCST = 0
+                    _TAXCDE = ""
+                    _TAX1 = 0
+                    _GLREF = ""
+                    _CURR = ""
+                    _UDFKEY = ""
+                    _UDFREF = ""
+                    _DISC = 0
+                    _RECCOST = 0
+                    _MPNMFG = ""
+                    _DEXPFLG = ""
+                    _PLSTPRNT = ""
+                    _ROUTPRNT = ""
+                    _REQUES = ""
+                    _CLSDTE = DefaultDate
+                    _XDFINT = 0
+                    _XDFFLT = 0
+                    _XDFBOL = ""
+                    _XDFDTE = DefaultDate
+                    _XDFTXT = ""
+                    _FILLER = ""
+                    _CREATEDBY = ""
+                    _CREATIONDATE = DefaultDate
+                    _MODIFIEDBY = ""
+                    _MODIFICATIONDATE = DefaultDate
+                    _TSKCDE = ""
+                    _TSKTYP = ""
+                    _REPORTER = ""
+                    _PRIORITY = ""
+                    _PHONE = ""
+                    _LOCATION = ""
+                End If
+            End Using
+        End Using
 
         CloseMaxConnection()
     End Sub

@@ -48,12 +48,9 @@ Public Class DueDaysClass
         oSQL.AddParameter("@ID", SqlDbType.SmallInt, 0, DueDaysID, ParameterDirection.Input)
 
         ' Get the data from the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadDueDays")
-        SetProperties(dr)
-
-        ' Close up the data readers and free up memory
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadDueDays")
+            SetProperties(dr)
+        End Using
     End Sub
 
     Private Sub SetProperties(ByRef dr As SqlClient.SqlDataReader)

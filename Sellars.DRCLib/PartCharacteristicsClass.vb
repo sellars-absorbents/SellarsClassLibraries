@@ -273,86 +273,83 @@ Public Class PartCharacteristicsClass
         ' Add the parameter to the command object
         oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passpart, ParameterDirection.Input)
 
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadPartCharacteristicsRecord")
-
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            ' New cahracteristics
-            _Found = True
-            _RMBasisWeight = dr("RMBasisWeight")
-            _FGBasisWeight = dr("FGBasisWeight")
-            _CaseHeight = dr("CaseHeight")
-            _CaseLength = dr("CaseLength")
-            _CaseWidth = dr("CaseWidth")
-            _Color = dr("ColorID")
-            _ColorDescription = dr("ColorDescription")
-            _cPerf = dr("CPERF")
-            _CustomerType = dr("CustomerType")
-            _CustomerTypeDescription = dr("CustomerTypeDescription")
-            _DueDaysID = dr("DueDaysID")
-            _Fold = dr("FoldID")
-            _FoldDescription = dr("FoldDescription")
-            _Grade = dr("GradeID")
-            _GradeDescription = dr("GradeDescription")
-            _LabelType = dr("LabelID")
-            _LabelDescription = dr("LabelDescription")
-            _Nascar = dr("NASCAR")
-            _PackageType = dr("PackagingID")
-            _PackageDescription = dr("PackageDescription")
-            _Pattern = dr("PatternID")
-            _PatternDescription = dr("PatternDescription")
-            _SlitWidth = dr("SlitWidth")
-            _xPerf = dr("XPERF")
-            _PalletQuantity = dr("PalletQuantity")
-            _EngineeringNotes = dr("EngineeringNotes")
-            _GrossWeight = dr("GrossWeight")
-            _CasesPerPalletLTL = dr("CasesPerPalletLTL")
-            _CasesPerPalletTL = dr("CasesPerPalletTL")
-            _PalletsPerTruck = dr("PalletsPerTruck")
-            _CasesPerTruck = dr("CasesPerTruck")
-            _ShippingClass = dr("ShippingClass")
-            _EachesPerMfgUnit = dr("EachesPerMfgUnit")
-            _CasesPerPalletLayer = dr("CasesPerPalletLayer")
-        Else
-            _Found = False
-            _RMBasisWeight = 0
-            _FGBasisWeight = 0
-            _CaseHeight = 0
-            _CaseLength = 0
-            _CaseWidth = 0
-            _Color = 99
-            _ColorDescription = ""
-            _cPerf = False
-            _CustomerType = 1
-            _CustomerTypeDescription = ""
-            _DueDaysID = 1
-            _Fold = 99
-            _FoldDescription = ""
-            _Grade = 99
-            _GradeDescription = ""
-            _LabelType = 99
-            _LabelDescription = ""
-            _Nascar = False
-            _PackageType = 99
-            _PackageDescription = ""
-            _Pattern = 99
-            _PatternDescription = ""
-            _SlitWidth = 0
-            _xPerf = False
-            _PalletQuantity = 0
-            _EngineeringNotes = ""
-            _GrossWeight = 0
-            _CasesPerPalletLTL = 0
-            _CasesPerPalletTL = 0
-            _PalletsPerTruck = 0
-            _CasesPerTruck = 0
-            _ShippingClass = ""
-            _EachesPerMfgUnit = 0
-            _CasesPerPalletLayer = 0
-        End If
-
-        dr.Close()
-        dr = Nothing
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadPartCharacteristicsRecord")
+            ' Assign the variables from the database to properties
+            If dr.Read() Then
+                ' New cahracteristics
+                _Found = True
+                _RMBasisWeight = dr("RMBasisWeight")
+                _FGBasisWeight = dr("FGBasisWeight")
+                _CaseHeight = dr("CaseHeight")
+                _CaseLength = dr("CaseLength")
+                _CaseWidth = dr("CaseWidth")
+                _Color = dr("ColorID")
+                _ColorDescription = dr("ColorDescription")
+                _cPerf = dr("CPERF")
+                _CustomerType = dr("CustomerType")
+                _CustomerTypeDescription = dr("CustomerTypeDescription")
+                _DueDaysID = dr("DueDaysID")
+                _Fold = dr("FoldID")
+                _FoldDescription = dr("FoldDescription")
+                _Grade = dr("GradeID")
+                _GradeDescription = dr("GradeDescription")
+                _LabelType = dr("LabelID")
+                _LabelDescription = dr("LabelDescription")
+                _Nascar = dr("NASCAR")
+                _PackageType = dr("PackagingID")
+                _PackageDescription = dr("PackageDescription")
+                _Pattern = dr("PatternID")
+                _PatternDescription = dr("PatternDescription")
+                _SlitWidth = dr("SlitWidth")
+                _xPerf = dr("XPERF")
+                _PalletQuantity = dr("PalletQuantity")
+                _EngineeringNotes = dr("EngineeringNotes")
+                _GrossWeight = dr("GrossWeight")
+                _CasesPerPalletLTL = dr("CasesPerPalletLTL")
+                _CasesPerPalletTL = dr("CasesPerPalletTL")
+                _PalletsPerTruck = dr("PalletsPerTruck")
+                _CasesPerTruck = dr("CasesPerTruck")
+                _ShippingClass = dr("ShippingClass")
+                _EachesPerMfgUnit = dr("EachesPerMfgUnit")
+                _CasesPerPalletLayer = dr("CasesPerPalletLayer")
+            Else
+                _Found = False
+                _RMBasisWeight = 0
+                _FGBasisWeight = 0
+                _CaseHeight = 0
+                _CaseLength = 0
+                _CaseWidth = 0
+                _Color = 99
+                _ColorDescription = ""
+                _cPerf = False
+                _CustomerType = 1
+                _CustomerTypeDescription = ""
+                _DueDaysID = 1
+                _Fold = 99
+                _FoldDescription = ""
+                _Grade = 99
+                _GradeDescription = ""
+                _LabelType = 99
+                _LabelDescription = ""
+                _Nascar = False
+                _PackageType = 99
+                _PackageDescription = ""
+                _Pattern = 99
+                _PatternDescription = ""
+                _SlitWidth = 0
+                _xPerf = False
+                _PalletQuantity = 0
+                _EngineeringNotes = ""
+                _GrossWeight = 0
+                _CasesPerPalletLTL = 0
+                _CasesPerPalletTL = 0
+                _PalletsPerTruck = 0
+                _CasesPerTruck = 0
+                _ShippingClass = ""
+                _EachesPerMfgUnit = 0
+                _CasesPerPalletLayer = 0
+            End If
+        End Using
     End Sub
 
     Public Sub Update(ByVal PRTNUM As String, ByVal Color As Integer, ByVal Pattern As Integer, ByVal Grade As Integer, ByVal Fold As Integer, ByVal PackageType As Integer, ByVal CustomerType As Integer, ByVal Label As Integer, ByVal CrossPerf As Boolean, ByVal CenterPerf As Boolean, ByVal Nascar As Boolean, ByVal SlitWidth As Decimal, ByVal FGBasisWeight As Decimal, ByVal RMBasisWeight As Decimal, ByVal PalletQuantity As Integer, ByVal EngineeringNotes As String, ByVal DueDaysID As Integer)

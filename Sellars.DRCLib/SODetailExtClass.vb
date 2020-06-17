@@ -208,70 +208,60 @@ Public Class SODetailExtClass
 
     Public Sub Clone(ByVal OldORDNUM As String, ByVal NewORDNUM As String, ByVal SelectedPart As String)
         Dim strSQL As String = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE (TABLE_NAME = 'SalesOrderDetailExt')"
-
         Dim columnListTarget As New StringBuilder()
-
-        ' retrieve the connection string from the task config
         Dim connectionString As String = System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString
 
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(connectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
-            Conn.Open()
-        End If
-
-        Try
-            ' Comment added.
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
-
-            Dim GetColumns As SqlDataReader = Cmd.ExecuteReader()
-            While GetColumns.Read
-
-                Dim colName As String = GetColumns("COLUMN_NAME")
-                Select Case colName
-                    Case "ORDNUM"
-                        columnListTarget.Append("'" + NewORDNUM + "'")
-
-                    Case "Priority"
-                        columnListTarget.Append(", 99")
-
-                    Case "Produced",
-                        "Scheduled"
-                        columnListTarget.Append(", 0")
-
-                    Case "EstProduction"
-                        columnListTarget.Append(", '2000-01-01 12:01:00.00 AM'")
-
-                    Case Else
-                        columnListTarget.Append("," + colName)
-                End Select
-
-            End While
-
-            GetColumns.Close()
+        Using Conn As SqlConnection = New SqlConnection(connectionString)
+            If Conn.State.Equals(ConnectionState.Closed) Then
+                Conn.Open()
+            End If
 
             Dim SQL As New StringBuilder()
+
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+
+                Dim GetColumns As SqlDataReader = Cmd.ExecuteReader()
+                While GetColumns.Read
+                    Dim colName As String = GetColumns("COLUMN_NAME")
+
+                    Select Case colName
+                        Case "ORDNUM"
+                            columnListTarget.Append("'" + NewORDNUM + "'")
+
+                        Case "Priority"
+                            columnListTarget.Append(", 99")
+
+                        Case "Produced",
+                        "Scheduled"
+                            columnListTarget.Append(", 0")
+
+                        Case "EstProduction"
+                            columnListTarget.Append(", '2000-01-01 12:01:00.00 AM'")
+
+                        Case Else
+                            columnListTarget.Append("," + colName)
+                    End Select
+                End While
+            End Using
+
             SQL.Append("INSERT INTO SalesOrderDetailExt SELECT " + columnListTarget.ToString() + " FROM SalesOrderDetailExt WHERE ORDNUM = @ORDNUM")
 
             If SelectedPart <> "" Then
                 SQL.Append(" and LINNUM in (select LINNUM_28 from ExactMAXSELLR..SO_Detail where ORDNUM_28 = @ORDNUM and PRTNUM_28 like @PRTNUM)")
             End If
 
-            Cmd = New SqlCommand(SQL.ToString(), Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OldORDNUM))
-            If SelectedPart <> "" Then
-                Cmd.Parameters.Add(New SqlParameter("@PRTNUM", SelectedPart + "%"))
-            End If
-            Cmd.ExecuteNonQuery()
+            Using Cmd As SqlCommand = New SqlCommand(SQL.ToString(), Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OldORDNUM))
 
-        Catch ex As Exception
-            Dim x As String = ex.Message
-        End Try
+                If SelectedPart <> "" Then
+                    Cmd.Parameters.Add(New SqlParameter("@PRTNUM", SelectedPart + "%"))
+                End If
 
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Function CloneRecord(ByVal ORDNUM As String, ByVal FromLINNUM As String, ByVal ToLINNUM As String, ByVal DELNUM As String, ByVal PromotionCode As String) As Boolean
@@ -282,44 +272,28 @@ Public Class SODetailExtClass
         ' automatically generated invoice number for applicable orders
         Dim strSQL As String = "insert into SalesOrderDetailExt (ORDNUM, LINNUM, DELNUM, SlitWidth, CoreSize, OD, Pallets, BasePaperWidth, Priority, Produced, Scheduled, EstProduction, UnisourceStatus, SentToUnisource, ShippedFromUnisource, BuyerPartNumber, PromotionCode, UnitPrice, DiscountPercent, PromotionAddedLine, ShipFromWarehouse) select ORDNUM, @ToLINNUM, DELNUM, SlitWidth, CoreSize, OD, Pallets, BasePaperWidth, Priority, Produced, Scheduled, EstProduction, UnisourceStatus, SentToUnisource, ShippedFromUnisource, BuyerPartNumber, @PromotionCode, UnitPrice, UnitPrice, 1, ShipFromWarehouse from SalesOrderDetailExt where ORDNUM = @ORDNUM and LINNUM = @FromLINNUM and DELNUM = @DELNUM"
 
-        Dim conn As SqlConnection = New SqlConnection(ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
             conn.Open()
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-            cmd.Parameters.Add(New SqlParameter("@FromLINNUM", FromLINNUM))
-            cmd.Parameters.Add(New SqlParameter("@ToLINNUM", ToLINNUM))
-            cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-            cmd.Parameters.Add(New SqlParameter("@PromotionCode", PromotionCode))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@FromLINNUM", FromLINNUM))
+                cmd.Parameters.Add(New SqlParameter("@ToLINNUM", ToLINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@PromotionCode", PromotionCode))
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
+                cmd.ExecuteNonQuery()
 
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-            Dim err As String = ex.Message
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                ' Set the return flag to true
+                rtnData = True
+            End Using
+        End Using
 
         Return rtnData
-
     End Function
 
     '*********************************************************************
@@ -349,108 +323,105 @@ Public Class SODetailExtClass
         oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, DELNUM.PadLeft(2, "0"), ParameterDirection.Input)
 
         ' Run the stored procedure
-        Dim dr As SqlDataReader = oSQL.RunProcReader("GetSODetailExt")
+        Using dr As SqlDataReader = oSQL.RunProcReader("GetSODetailExt")
+            ' if no record was read, then clear all the fields
+            If dr Is Nothing Then
+                ClearFields()
+                Throw New Exception("SQL Database Not Found while reading SODetailExt")
+                Exit Sub
+            End If
 
-        ' if no record was read, then clear all the fields
-        If dr Is Nothing Then
-            ClearFields()
-            Throw New Exception("SQL Database Not Found while reading SODetailExt")
-            Exit Sub
-        End If
-
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            If IsDBNull(dr("BuyerPartNumber")) Then
-                _BuyerPartNumber = 0
+            ' Assign the variables from the database to properties
+            If dr.Read() Then
+                If IsDBNull(dr("BuyerPartNumber")) Then
+                    _BuyerPartNumber = 0
+                Else
+                    _BuyerPartNumber = dr("BuyerPartNumber")
+                End If
+                If IsDBNull(dr("CoreSize")) Then
+                    _CoreSize = 0
+                Else
+                    _CoreSize = dr("CoreSize")
+                End If
+                If IsDBNull(dr("DiscountPercent")) Then
+                    _DiscountPercent = 0
+                Else
+                    _DiscountPercent = dr("DiscountPercent")
+                End If
+                If IsDBNull(dr("OD")) Then
+                    _OutsideDiameter = 0
+                Else
+                    _OutsideDiameter = dr("OD")
+                End If
+                If IsDBNull(dr("Pallets")) Then
+                    _Pallets = False
+                Else
+                    _Pallets = dr("Pallets")
+                End If
+                If IsDBNull(dr("Priority")) Then
+                    _Priority = 99
+                Else
+                    _Priority = dr("Priority")
+                End If
+                If IsDBNull(dr("EstProduction")) Then
+                    _EstProduction = DefaultDate
+                Else
+                    _EstProduction = dr("EstProduction")
+                End If
+                If IsDBNull(dr("Produced")) Then
+                    _Produced = False
+                Else
+                    _Produced = dr("Produced")
+                End If
+                If IsDBNull(dr("PromotionAddedLine")) Then
+                    _PromotionAddedLine = False
+                Else
+                    _PromotionAddedLine = dr("PromotionAddedLine")
+                End If
+                If IsDBNull(dr("PromotionCode")) Then
+                    _PromotionCode = ""
+                Else
+                    _PromotionCode = dr("PromotionCode")
+                End If
+                If IsDBNull(dr("SlitWidth")) Then
+                    _SlitWidth = 0
+                Else
+                    _SlitWidth = dr("SlitWidth")
+                End If
+                If IsDBNull(dr("BasePaperWidth")) Then
+                    _BasePaperWidth = 0
+                Else
+                    _BasePaperWidth = dr("BasePaperWidth")
+                End If
+                If IsDBNull(dr("UnisourceStatus")) Then
+                    _UnisourceStatus = 0
+                Else
+                    _UnisourceStatus = dr("UnisourceStatus")
+                End If
+                If IsDBNull(dr("UnitPrice")) Then
+                    _UnitPrice = 0
+                Else
+                    _UnitPrice = dr("UnitPrice")
+                End If
+                If IsDBNull(dr("SentToUnisource")) Then
+                    _SentToUnisource = DefaultDate
+                Else
+                    _SentToUnisource = dr("SentToUnisource")
+                End If
+                If IsDBNull(dr("ShippedFromUnisource")) Then
+                    _ShippedFromUnisource = DefaultDate
+                Else
+                    _ShippedFromUnisource = dr("ShippedFromUnisource")
+                End If
+                If IsDBNull(dr("ShipFromWarehouse")) Then
+                    _ShipFromWarehouse = ""
+                Else
+                    _ShipFromWarehouse = dr("ShipFromWarehouse")
+                End If
             Else
-                _BuyerPartNumber = dr("BuyerPartNumber")
+                ClearFields()
             End If
-            If IsDBNull(dr("CoreSize")) Then
-                _CoreSize = 0
-            Else
-                _CoreSize = dr("CoreSize")
-            End If
-            If IsDBNull(dr("DiscountPercent")) Then
-                _DiscountPercent = 0
-            Else
-                _DiscountPercent = dr("DiscountPercent")
-            End If
-            If IsDBNull(dr("OD")) Then
-                _OutsideDiameter = 0
-            Else
-                _OutsideDiameter = dr("OD")
-            End If
-            If IsDBNull(dr("Pallets")) Then
-                _Pallets = False
-            Else
-                _Pallets = dr("Pallets")
-            End If
-            If IsDBNull(dr("Priority")) Then
-                _Priority = 99
-            Else
-                _Priority = dr("Priority")
-            End If
-            If IsDBNull(dr("EstProduction")) Then
-                _EstProduction = DefaultDate
-            Else
-                _EstProduction = dr("EstProduction")
-            End If
-            If IsDBNull(dr("Produced")) Then
-                _Produced = False
-            Else
-                _Produced = dr("Produced")
-            End If
-            If IsDBNull(dr("PromotionAddedLine")) Then
-                _PromotionAddedLine = False
-            Else
-                _PromotionAddedLine = dr("PromotionAddedLine")
-            End If
-            If IsDBNull(dr("PromotionCode")) Then
-                _PromotionCode = ""
-            Else
-                _PromotionCode = dr("PromotionCode")
-            End If
-            If IsDBNull(dr("SlitWidth")) Then
-                _SlitWidth = 0
-            Else
-                _SlitWidth = dr("SlitWidth")
-            End If
-            If IsDBNull(dr("BasePaperWidth")) Then
-                _BasePaperWidth = 0
-            Else
-                _BasePaperWidth = dr("BasePaperWidth")
-            End If
-            If IsDBNull(dr("UnisourceStatus")) Then
-                _UnisourceStatus = 0
-            Else
-                _UnisourceStatus = dr("UnisourceStatus")
-            End If
-            If IsDBNull(dr("UnitPrice")) Then
-                _UnitPrice = 0
-            Else
-                _UnitPrice = dr("UnitPrice")
-            End If
-            If IsDBNull(dr("SentToUnisource")) Then
-                _SentToUnisource = DefaultDate
-            Else
-                _SentToUnisource = dr("SentToUnisource")
-            End If
-            If IsDBNull(dr("ShippedFromUnisource")) Then
-                _ShippedFromUnisource = DefaultDate
-            Else
-                _ShippedFromUnisource = dr("ShippedFromUnisource")
-            End If
-            If IsDBNull(dr("ShipFromWarehouse")) Then
-                _ShipFromWarehouse = ""
-            Else
-                _ShipFromWarehouse = dr("ShipFromWarehouse")
-            End If
-        Else
-            ClearFields()
-        End If
-
-        dr.Close()
-        dr = Nothing
+        End Using
     End Sub
 
     Private Sub ClearFields()
@@ -606,39 +577,27 @@ Public Class SODetailExtClass
         ' Set the UnisourceStatus for the applicable lines in the order
         Dim strSQL As String = "update SalesOrderDetailExt set UnisourceStatus = @UnisourceStatus where ORDNUM = @ORDNUM and LINNUM = @LINNUM and DELNUM = @DELNUM"
 
-        Dim conn As SqlConnection = New SqlConnection(ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
             conn.Open()
 
             ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-            cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
-            cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-            cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
+                ' Execute the stored procedure to update the InvoiceMasterExt table
+                cmd.ExecuteNonQuery()
 
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                ' Set the return flag to true
+                rtnData = True
+            End Using
+        End Using
 
         Return rtnData
     End Function
@@ -654,34 +613,30 @@ Public Class SODetailExtClass
         ' Set the UnisourceStatus for the applicable lines in the order
         Dim strSQL As String = "update SalesOrderDetailExt set UnisourceStatus = @UnisourceStatus, ShipFromWarehouse = @ShipFromWarehouse, WarehouseChangeReasonCode = @WarehouseChangeReason where ORDNUM = @ORDNUM and LINNUM = @LINNUM and DELNUM = @DELNUM"
 
-        Try
-            Using conn As SqlConnection = New SqlConnection(ConnectionString)
-                ' Open the database connection
-                conn.Open()
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
+            conn.Open()
 
-                ' Set up a new SQL Command
-                Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+            ' Set up a new SQL Command
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
 
-                    cmd.CommandType = CommandType.Text
-                    cmd.CommandTimeout = 0
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-                    ' Add parameters to the command to fill in the sql command string defined above
-                    cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-                    cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
-                    cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-                    cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
-                    cmd.Parameters.Add(New SqlParameter("@ShipFromWarehouse", ShipfromWarehouse))
-                    cmd.Parameters.Add(New SqlParameter("@WarehouseChangeReason", WarehouseChangeReason))
+                ' Add parameters to the command to fill in the sql command string defined above
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
+                cmd.Parameters.Add(New SqlParameter("@ShipFromWarehouse", ShipfromWarehouse))
+                cmd.Parameters.Add(New SqlParameter("@WarehouseChangeReason", WarehouseChangeReason))
 
-                    ' Execute the stored procedure to update the InvoiceMasterExt table
-                    cmd.ExecuteNonQuery()
-                End Using
+                ' Execute the stored procedure to update the InvoiceMasterExt table
+                cmd.ExecuteNonQuery()
             End Using
+        End Using
 
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-        End Try
+        ' Set the return flag to true
+        rtnData = True
 
         Return rtnData
     End Function
@@ -703,41 +658,27 @@ Public Class SODetailExtClass
             strSQL = "update SalesOrderDetailExt set UnisourceStatus = case when UnisourceStatus = 0 then 1 else UnisourceStatus end, ShipFromWarehouse = @ShipFromWarehouse where ORDNUM = @ORDNUM And LINNUM = @LINNUM And DELNUM = @DELNUM"
         End If
 
-        Dim conn As SqlConnection = New SqlConnection(ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
             conn.Open()
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-            cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
-            cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-            cmd.Parameters.Add(New SqlParameter("@ShipFromWarehouse", ShipFromWarehouse))
-            cmd.Parameters.Add(New SqlParameter("@WarehouseChangeReason", WarehouseChangeReason))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@ShipFromWarehouse", ShipFromWarehouse))
+                cmd.Parameters.Add(New SqlParameter("@WarehouseChangeReason", WarehouseChangeReason))
 
+                ' Execute the stored procedure to update the InvoiceMasterExt table
+                cmd.ExecuteNonQuery()
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
-
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                ' Set the return flag to true
+                rtnData = True
+            End Using
+        End Using
 
         Return rtnData
     End Function
@@ -754,39 +695,26 @@ Public Class SODetailExtClass
         ' automatically generated invoice number for applicable orders
         Dim strSQL As String = "update SalesOrderDetailExt set UnisourceStatus = 3 SentToUnisource = @SentToUnisource where ORDNUM = @ORDNUM and LINNUM = @LINNUM and DELNUM = @DELNUM"
 
-        Dim conn As SqlConnection = New SqlConnection(ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
             conn.Open()
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-            cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
-            cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-            cmd.Parameters.Add(New SqlParameter("@SentToUnisource", SentToUnisource))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@SentToUnisource", SentToUnisource))
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
+                ' Execute the stored procedure to update the InvoiceMasterExt table
+                cmd.ExecuteNonQuery()
 
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                ' Set the return flag to true
+                rtnData = True
+            End Using
+        End Using
 
         Return rtnData
     End Function
@@ -803,39 +731,26 @@ Public Class SODetailExtClass
         ' automatically generated invoice number for applicable orders
         Dim strSQL As String = "update SalesOrderDetailExt set UnisourceStatus = @UnisourceStatus where ORDNUM = @ORDNUM and LINNUM = @LINNUM and DELNUM = @DELNUM"
 
-        Dim conn As SqlConnection = New SqlConnection(ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
             conn.Open()
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-            cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
-            cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-            cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
+                ' Execute the stored procedure to update the InvoiceMasterExt table
+                cmd.ExecuteNonQuery()
 
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                ' Set the return flag to true
+                rtnData = True
+            End Using
+        End Using
 
         Return rtnData
     End Function
@@ -852,45 +767,30 @@ Public Class SODetailExtClass
         ' automatically generated invoice number for applicable orders
         Dim strSQL As String = "update SalesOrderDetailExt set PromotionCode = @PromotionCode, UnitPrice = @UnitPrice, DiscountPercent = @DiscountPercent, QuoteIssue = @QuoteIssue where ORDNUM = @ORDNUM and LINNUM = @LINNUM and DELNUM = @DELNUM"
 
-        Dim conn As SqlConnection = New SqlConnection(ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConnectionString)
             conn.Open()
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
-            cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
-            cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
-            cmd.Parameters.Add(New SqlParameter("@PromotionCode", PromotionCode))
-            cmd.Parameters.Add(New SqlParameter("@UnitPrice", UnitPrice))
-            cmd.Parameters.Add(New SqlParameter("@DiscountPercent", DiscountPercent))
-            cmd.Parameters.Add(New SqlParameter("@QuoteIssue", QuoteIssue))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@ORDNUM", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LINNUM", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
+                cmd.Parameters.Add(New SqlParameter("@PromotionCode", PromotionCode))
+                cmd.Parameters.Add(New SqlParameter("@UnitPrice", UnitPrice))
+                cmd.Parameters.Add(New SqlParameter("@DiscountPercent", DiscountPercent))
+                cmd.Parameters.Add(New SqlParameter("@QuoteIssue", QuoteIssue))
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
+                ' Execute the stored procedure to update the InvoiceMasterExt table
+                cmd.ExecuteNonQuery()
 
-            ' Set the return flag to true
-            rtnData = True
-        Catch ex As Exception
-            Dim msg As String = ex.Message
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                ' Set the return flag to true
+                rtnData = True
+            End Using
+        End Using
 
         Return rtnData
     End Function
-
 End Class

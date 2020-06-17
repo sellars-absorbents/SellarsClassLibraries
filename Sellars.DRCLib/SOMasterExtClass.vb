@@ -364,74 +364,64 @@ Public Class SOMasterExtClass
         ' retrieve the connection string from the task config
         Dim connectionString As String = System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString
 
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(connectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
+        Using Conn As SqlConnection = New SqlConnection(connectionString)
             Conn.Open()
-        End If
 
-        Try
-            ' Comment added.
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
 
-            Dim GetColumns As SqlDataReader = Cmd.ExecuteReader()
-            While GetColumns.Read
+                Using GetColumns As SqlDataReader = Cmd.ExecuteReader()
+                    While GetColumns.Read
 
-                Dim colName As String = GetColumns("COLUMN_NAME").ToString.Trim()
-                Select Case colName
-                    Case "ORDNUM"
-                        columnListTarget.Append("'" + NewORDNUM + "'")
+                        Dim colName As String = GetColumns("COLUMN_NAME").ToString.Trim()
+                        Select Case colName
+                            Case "ORDNUM"
+                                columnListTarget.Append("'" + NewORDNUM + "'")
 
-                    Case "EnteredBy"
-                        columnListTarget.Append(", '" + Username + "'")
+                            Case "EnteredBy"
+                                columnListTarget.Append(", '" + Username + "'")
 
-                    Case "LastChanged"
-                        columnListTarget.Append(", '" + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt") + "'")
+                            Case "LastChanged"
+                                columnListTarget.Append(", '" + DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt") + "'")
 
-                    Case "LocationCodeQualifier",
-                        "AddressLocationNumber",
-                        "RDCDescription",
-                        "CarrierAlphaCode",
-                        "CarrierRouting",
-                        "CarrierTransMethodCode",
-                        "CCTransactionID",
-                        "CCAuthCode",
-                        "ProofedBy"
-                        columnListTarget.Append(", ''")
+                            Case "LocationCodeQualifier",
+                                "AddressLocationNumber",
+                                "RDCDescription",
+                                "CarrierAlphaCode",
+                                "CarrierRouting",
+                                "CarrierTransMethodCode",
+                                "CCTransactionID",
+                                "CCAuthCode",
+                                "ProofedBy"
+                                columnListTarget.Append(", ''")
 
-                    Case "AcknowledgementSent",
-                        "CCCaptureDate",
-                        "LastPrinted",
-                        "LastPickPrinted"
-                        columnListTarget.Append(", '12/31/2050 00:00:00 AM'")
+                            Case "AcknowledgementSent",
+                                "CCCaptureDate",
+                                "LastPrinted",
+                                "LastPickPrinted"
+                                columnListTarget.Append(", '12/31/2050 00:00:00 AM'")
 
-                    Case "Finished",
-                        "PickPrinted",
-                        "SendAcknowledgement",
-                        "CCCaptureStatus"
-                        columnListTarget.Append(", 0")
+                            Case "Finished",
+                                "PickPrinted",
+                                "SendAcknowledgement",
+                                "CCCaptureStatus"
+                                columnListTarget.Append(", 0")
 
-                    Case Else
-                        columnListTarget.Append(", " + colName)
-                End Select
-
-            End While
-
-            GetColumns.Close()
+                            Case Else
+                                columnListTarget.Append(", " + colName)
+                        End Select
+                    End While
+                End Using
+            End Using
 
             Dim SQL As String = "INSERT INTO SalesOrderMasterExt SELECT " + columnListTarget.ToString() + " FROM SalesOrderMasterExt WHERE ORDNUM = @ORDNUM"
-            Cmd = New SqlCommand(SQL, Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OldORDNUM))
-            Cmd.ExecuteNonQuery()
 
-        Catch ex As Exception
-            Dim x As String = ex.Message
-        End Try
-
+            Using Cmd As SqlCommand = New SqlCommand(SQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OldORDNUM))
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Sub Read(ByVal ORDNUM As String)
@@ -440,191 +430,185 @@ Public Class SOMasterExtClass
 
         ' Add the parameters to the command object
         oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, ORDNUM, ParameterDirection.Input)
-        Dim dr As SqlDataReader
 
-        ' Run the stored procedure
-        dr = oSQL.RunProcReader("GetSOMasterExt")
-
-        ' Assign the variables from the database to properties
-        If dr Is Nothing Then
-            ClearFields()
-            Throw New Exception("SQL Database Not Found while reading SOMasterExt")
-            Exit Sub
-        End If
-
-        If dr.Read() Then
-            If IsDBNull(dr("AddressLocationNumber")) Then
-                _AddressLocationNumber = ""
-            Else
-                _AddressLocationNumber = dr("AddressLocationNumber")
-            End If
-            If IsDBNull(dr("AllowFinish")) Then
-                _AllowFinish = False
-            Else
-                _AllowFinish = dr("AllowFinish")
+        Using dr As SqlDataReader = oSQL.RunProcReader("GetSOMasterExt")
+            If dr Is Nothing Then
+                ClearFields()
+                Throw New Exception("SQL Database Not Found while reading SOMasterExt")
+                Exit Sub
             End If
 
-            If IsDBNull(dr("Carrier")) Then
-                _Carrier = 0
-            Else
-                _Carrier = Convert.ToInt16(dr("Carrier"))
-            End If
-            If IsDBNull(dr("CarrierAlphaCode")) Then
-                _CarrierAlphaCode = ""
-            Else
-                _CarrierAlphaCode = dr("CarrierAlphaCode")
-            End If
-            If IsDBNull(dr("ContactEmail")) Then
-                _ContactEmail = ""
-            Else
-                _ContactEmail = dr("ContactEmail")
-            End If
-            If IsDBNull(dr("ContactName")) Then
-                _ContactName = ""
-            Else
-                _ContactName = dr("ContactName")
-            End If
-            If IsDBNull(dr("ContactPhone")) Then
-                _ContactPhone = ""
-            Else
-                _ContactPhone = dr("ContactPhone")
-            End If
-            If IsDBNull(dr("CarrierMethod")) Then
-                _CarrierMethod = 0
-            Else
-                _CarrierMethod = dr("CarrierMethod")
-            End If
-            If IsDBNull(dr("CarrierRouting")) Then
-                _CarrierRouting = ""
-            Else
-                _CarrierRouting = dr("CarrierRouting")
-            End If
-            If IsDBNull(dr("CarrierThirdParty")) Then
-                _CarrierThirdParty = ""
-            Else
-                _CarrierThirdParty = dr("CarrierThirdParty")
-            End If
-            If IsDBNull(dr("CarrierName")) Then
-                _CarrierName = ""
-            Else
-                _CarrierName = dr("CarrierName")
-            End If
-            If IsDBNull(dr("CarrierTransMethodCode")) Then
-                _CarrierTransMethodCode = ""
-            Else
-                _CarrierTransMethodCode = dr("CarrierTransMethodCode")
-            End If
-            If IsDBNull(dr("EnteredBy")) Then
-                _EnteredBy = ""
-            Else
-                _EnteredBy = dr("EnteredBy")
-            End If
-            If IsDBNull(dr("LastChanged")) Then
-                _LastChanged = DefaultDate
-            Else
-                _LastChanged = dr("LastChanged")
-            End If
-            If IsDBNull(dr("LastPrinted")) Then
-                _LastPrinted = DefaultDate
-            Else
-                _LastPrinted = dr("LastPrinted")
-            End If
-            If IsDBNull(dr("LocationCodeQualifier")) Then
-                _LocationCodeQualifier = ""
-            Else
-                _LocationCodeQualifier = dr("LocationCodeQualifier")
-            End If
-            If IsDBNull(dr("ProofedBy")) Then
-                _ProofedBy = ""
-            Else
-                _ProofedBy = dr("ProofedBy")
-            End If
-            If IsDBNull(dr("Notes")) Then
-                _Notes = ""
-            Else
-                _Notes = dr("Notes")
-                _Notes.Replace("\r\n", Environment.NewLine)
-            End If
-            If IsDBNull(dr("Hold")) Then
-                _Hold = False
-            Else
-                _Hold = dr("Hold")
-            End If
-            If IsDBNull(dr("HoldUserEmail")) Then
-                _HoldUserEmail = ""
-            Else
-                _HoldUserEmail = dr("HoldUserEmail")
-            End If
-            If IsDBNull(dr("DefaultStockID")) Then
-                _DefaultStockID = ""
-            Else
-                _DefaultStockID = dr("DefaultStockID")
-            End If
-            If IsDBNull(dr("OrderType")) Then
-                _OrderType = ""
-            Else
-                _OrderType = dr("OrderType")
-            End If
-            If IsDBNull(dr("Finished")) Then
-                _Finished = False
-            Else
-                _Finished = dr("Finished")
-            End If
-            If IsDBNull(dr("ConversionID")) Then
-                _ConversionID = 1
-            Else
-                _ConversionID = dr("ConversionID")
-            End If
-            If IsDBNull(dr("PickPrinted")) Then
-                _PickPrinted = 0
-            Else
-                _PickPrinted = dr("PickPrinted")
-            End If
-            If IsDBNull(dr("LastPickPrinted")) Then
-                _LastPickPrinted = DefaultDate
-            Else
-                _LastPickPrinted = dr("LastPickPrinted")
-            End If
-            If IsDBNull(dr("CCAuthCode")) Then
-                _CCAuthCode = ""
-            Else
-                _CCAuthCode = dr("CCAuthCode")
-            End If
-            If IsDBNull(dr("CCCaptureDate")) Then
-                _CCCaptureDate = DefaultDate
-            Else
-                _CCCaptureDate = dr("CCCaptureDate")
-            End If
-            If IsDBNull(dr("CCCaptureStatus")) Then
-                _CCCaptureStatus = 0
-            Else
-                _CCCaptureStatus = dr("CCCaptureStatus")
-            End If
-            If IsDBNull(dr("CCTransactionID")) Then
-                _CCTransactionID = ""
-            Else
-                _CCTransactionID = dr("CCTransactionID")
-            End If
-            If IsDBNull(dr("EstimatedShipping")) Then
-                _EstimatedShipping = 0
-            Else
-                _EstimatedShipping = dr("EstimatedShipping")
-            End If
-            If IsDBNull(dr("ShipFromStockID")) Then
-                _ShipFromStockID = ""
-            Else
-                _ShipFromStockID = dr("ShipFromStockID")
-            End If
+            If dr.Read() Then
+                If IsDBNull(dr("AddressLocationNumber")) Then
+                    _AddressLocationNumber = ""
+                Else
+                    _AddressLocationNumber = dr("AddressLocationNumber")
+                End If
+                If IsDBNull(dr("AllowFinish")) Then
+                    _AllowFinish = False
+                Else
+                    _AllowFinish = dr("AllowFinish")
+                End If
 
-            _ThirdPartyBillingID = dr("ThirdPartyBillingID")
-            _NoteID = dr("CustomerNoteID")
-            _NoteType = dr("NoteType")
-        Else
-            ClearFields()
-        End If
+                If IsDBNull(dr("Carrier")) Then
+                    _Carrier = 0
+                Else
+                    _Carrier = Convert.ToInt16(dr("Carrier"))
+                End If
+                If IsDBNull(dr("CarrierAlphaCode")) Then
+                    _CarrierAlphaCode = ""
+                Else
+                    _CarrierAlphaCode = dr("CarrierAlphaCode")
+                End If
+                If IsDBNull(dr("ContactEmail")) Then
+                    _ContactEmail = ""
+                Else
+                    _ContactEmail = dr("ContactEmail")
+                End If
+                If IsDBNull(dr("ContactName")) Then
+                    _ContactName = ""
+                Else
+                    _ContactName = dr("ContactName")
+                End If
+                If IsDBNull(dr("ContactPhone")) Then
+                    _ContactPhone = ""
+                Else
+                    _ContactPhone = dr("ContactPhone")
+                End If
+                If IsDBNull(dr("CarrierMethod")) Then
+                    _CarrierMethod = 0
+                Else
+                    _CarrierMethod = dr("CarrierMethod")
+                End If
+                If IsDBNull(dr("CarrierRouting")) Then
+                    _CarrierRouting = ""
+                Else
+                    _CarrierRouting = dr("CarrierRouting")
+                End If
+                If IsDBNull(dr("CarrierThirdParty")) Then
+                    _CarrierThirdParty = ""
+                Else
+                    _CarrierThirdParty = dr("CarrierThirdParty")
+                End If
+                If IsDBNull(dr("CarrierName")) Then
+                    _CarrierName = ""
+                Else
+                    _CarrierName = dr("CarrierName")
+                End If
+                If IsDBNull(dr("CarrierTransMethodCode")) Then
+                    _CarrierTransMethodCode = ""
+                Else
+                    _CarrierTransMethodCode = dr("CarrierTransMethodCode")
+                End If
+                If IsDBNull(dr("EnteredBy")) Then
+                    _EnteredBy = ""
+                Else
+                    _EnteredBy = dr("EnteredBy")
+                End If
+                If IsDBNull(dr("LastChanged")) Then
+                    _LastChanged = DefaultDate
+                Else
+                    _LastChanged = dr("LastChanged")
+                End If
+                If IsDBNull(dr("LastPrinted")) Then
+                    _LastPrinted = DefaultDate
+                Else
+                    _LastPrinted = dr("LastPrinted")
+                End If
+                If IsDBNull(dr("LocationCodeQualifier")) Then
+                    _LocationCodeQualifier = ""
+                Else
+                    _LocationCodeQualifier = dr("LocationCodeQualifier")
+                End If
+                If IsDBNull(dr("ProofedBy")) Then
+                    _ProofedBy = ""
+                Else
+                    _ProofedBy = dr("ProofedBy")
+                End If
+                If IsDBNull(dr("Notes")) Then
+                    _Notes = ""
+                Else
+                    _Notes = dr("Notes")
+                    _Notes.Replace("\r\n", Environment.NewLine)
+                End If
+                If IsDBNull(dr("Hold")) Then
+                    _Hold = False
+                Else
+                    _Hold = dr("Hold")
+                End If
+                If IsDBNull(dr("HoldUserEmail")) Then
+                    _HoldUserEmail = ""
+                Else
+                    _HoldUserEmail = dr("HoldUserEmail")
+                End If
+                If IsDBNull(dr("DefaultStockID")) Then
+                    _DefaultStockID = ""
+                Else
+                    _DefaultStockID = dr("DefaultStockID")
+                End If
+                If IsDBNull(dr("OrderType")) Then
+                    _OrderType = ""
+                Else
+                    _OrderType = dr("OrderType")
+                End If
+                If IsDBNull(dr("Finished")) Then
+                    _Finished = False
+                Else
+                    _Finished = dr("Finished")
+                End If
+                If IsDBNull(dr("ConversionID")) Then
+                    _ConversionID = 1
+                Else
+                    _ConversionID = dr("ConversionID")
+                End If
+                If IsDBNull(dr("PickPrinted")) Then
+                    _PickPrinted = 0
+                Else
+                    _PickPrinted = dr("PickPrinted")
+                End If
+                If IsDBNull(dr("LastPickPrinted")) Then
+                    _LastPickPrinted = DefaultDate
+                Else
+                    _LastPickPrinted = dr("LastPickPrinted")
+                End If
+                If IsDBNull(dr("CCAuthCode")) Then
+                    _CCAuthCode = ""
+                Else
+                    _CCAuthCode = dr("CCAuthCode")
+                End If
+                If IsDBNull(dr("CCCaptureDate")) Then
+                    _CCCaptureDate = DefaultDate
+                Else
+                    _CCCaptureDate = dr("CCCaptureDate")
+                End If
+                If IsDBNull(dr("CCCaptureStatus")) Then
+                    _CCCaptureStatus = 0
+                Else
+                    _CCCaptureStatus = dr("CCCaptureStatus")
+                End If
+                If IsDBNull(dr("CCTransactionID")) Then
+                    _CCTransactionID = ""
+                Else
+                    _CCTransactionID = dr("CCTransactionID")
+                End If
+                If IsDBNull(dr("EstimatedShipping")) Then
+                    _EstimatedShipping = 0
+                Else
+                    _EstimatedShipping = dr("EstimatedShipping")
+                End If
+                If IsDBNull(dr("ShipFromStockID")) Then
+                    _ShipFromStockID = ""
+                Else
+                    _ShipFromStockID = dr("ShipFromStockID")
+                End If
 
-        dr.Close()
-        dr = Nothing
+                _ThirdPartyBillingID = dr("ThirdPartyBillingID")
+                _NoteID = dr("CustomerNoteID")
+                _NoteType = dr("NoteType")
+            Else
+                ClearFields()
+            End If
+        End Using
     End Sub
 
     Public Sub ReadHeld(ByRef DS As DataSet)
@@ -806,175 +790,84 @@ Public Class SOMasterExtClass
     End Sub
 
     Public Sub UpdateEstimatedShipping(ByVal OrderNumber As String, ByVal EstimatedShipping As Decimal)
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(ConnectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
+        Using Conn As SqlConnection = New SqlConnection(ConnectionString)
             Conn.Open()
-        End If
 
-        Dim strSQL As String = ""
+            Dim strSQL As String = "Update SalesOrderMasterExt set EstimatedShipping = @EstimatedShipping where ORDNUM = @ORDNUM"
 
-        strSQL = "Update SalesOrderMasterExt set EstimatedShipping = @EstimatedShipping where ORDNUM = @ORDNUM"
-
-        Try
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
-            Cmd.Parameters.Add(New SqlParameter("@EstimatedShipping", EstimatedShipping))
-            Cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            Throw ex
-        End Try
-
-        ' Close the database connection and free up memory
-        Conn.Close()
-        Conn.Dispose()
-
-        ' If the command is set, then dispose of it to free up memory
-        If Cmd IsNot Nothing Then
-            Cmd.Dispose()
-        End If
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
+                Cmd.Parameters.Add(New SqlParameter("@EstimatedShipping", EstimatedShipping))
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Sub UpdateFinished(ByVal OrderNumber As String, Optional ByVal Finished As Boolean = True, Optional ByVal PickPrinted As Boolean = False)
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(ConnectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
+        Using Conn As SqlConnection = New SqlConnection(ConnectionString)
             Conn.Open()
-        End If
 
-        Dim strSQL As String = ""
+            Dim strSQL As String = "Update SalesOrderMasterExt set Finished = @Finished, PickPrinted = @PickPrinted, FinishedAt = @FinishedAt where ORDNUM = @ORDNUM"
+            Dim FinishedAt As DateTime = New DateTime(2050, 12, 31, 0, 0, 0)
 
-        strSQL = "Update SalesOrderMasterExt set Finished = @Finished, PickPrinted = @PickPrinted, FinishedAt = @FinishedAt where ORDNUM = @ORDNUM"
+            If Finished Then
+                FinishedAt = DateTime.Now
+            End If
 
-        Dim FinishedAt As DateTime = New DateTime(2050, 12, 31, 0, 0, 0)
-        If Finished Then
-            FinishedAt = DateTime.Now
-        End If
-
-        Try
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
-            Cmd.Parameters.Add(New SqlParameter("@Finished", Finished))
-            Cmd.Parameters.Add(New SqlParameter("@PickPrinted", PickPrinted))
-            Cmd.Parameters.Add(New SqlParameter("@FinishedAt", FinishedAt))
-            Cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            Throw ex
-        End Try
-
-        ' Close the database connection and free up memory
-        Conn.Close()
-        Conn.Dispose()
-
-        ' If the command is set, then dispose of it to free up memory
-        If Cmd IsNot Nothing Then
-            Cmd.Dispose()
-        End If
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
+                Cmd.Parameters.Add(New SqlParameter("@Finished", Finished))
+                Cmd.Parameters.Add(New SqlParameter("@PickPrinted", PickPrinted))
+                Cmd.Parameters.Add(New SqlParameter("@FinishedAt", FinishedAt))
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Sub Reset(ByVal OrderNumber As String)
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(ConnectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
+        Using Conn As SqlConnection = New SqlConnection(ConnectionString)
             Conn.Open()
-        End If
 
-        Dim strSQL As String = ""
+            Dim strSQL As String = "Update SalesOrderMasterExt set Finished = 0, PickPrinted = 0 where ORDNUM = @ORDNUM"
 
-        strSQL = "Update SalesOrderMasterExt set Finished = 0, PickPrinted = 0 where ORDNUM = @ORDNUM"
-
-        Try
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
-            Cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            Throw ex
-        End Try
-
-        ' Close the database connection and free up memory
-        Conn.Close()
-        Conn.Dispose()
-
-        ' If the command is set, then dispose of it to free up memory
-        If Cmd IsNot Nothing Then
-            Cmd.Dispose()
-        End If
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Sub UpdateCCCaptureStatus(ByVal OrderNumber As String, ByVal Status As Integer)
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(ConnectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
+        Using Conn As SqlConnection = New SqlConnection(ConnectionString)
             Conn.Open()
-        End If
 
-        Dim strSQL As String = ""
+            Dim strSQL As String = "Update SalesOrderMasterExt set CCCaptureStatus = @CCCaptureStatus where ORDNUM = @ORDNUM"
 
-        strSQL = "Update SalesOrderMasterExt set CCCaptureStatus = @CCCaptureStatus where ORDNUM = @ORDNUM"
-
-        Try
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
-            Cmd.Parameters.Add(New SqlParameter("@CCCaptureStatus", Status))
-            Cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            Throw ex
-        End Try
-
-        ' Close the database connection and free up memory
-        Conn.Close()
-        Conn.Dispose()
-
-        ' If the command is set, then dispose of it to free up memory
-        If Cmd IsNot Nothing Then
-            Cmd.Dispose()
-        End If
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
+                Cmd.Parameters.Add(New SqlParameter("@CCCaptureStatus", Status))
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Sub UpdateCCPaymentInfo(ByVal OrderNumber As String, ByVal TransactionID As String, ByVal AuthCode As String)
-        Dim Cmd As SqlCommand
-
-        ' Open up the database connection
-        Dim Conn As SqlConnection = New SqlConnection(ConnectionString)
-        If Conn.State.Equals(ConnectionState.Closed) Then
+        Using Conn As SqlConnection = New SqlConnection(ConnectionString)
             Conn.Open()
-        End If
 
-        Dim strSQL As String = ""
+            Dim strSQL As String = "Update SalesOrderMasterExt set CCCaptureStatus = 1, CCTransactionID = @TransactionID, CCAuthCode = @AuthCode, Finished = 1 where ORDNUM = @ORDNUM"
 
-        strSQL = "Update SalesOrderMasterExt set CCCaptureStatus = 1, CCTransactionID = @TransactionID, CCAuthCode = @AuthCode, Finished = 1 where ORDNUM = @ORDNUM"
-
-        Try
-            Cmd = New SqlCommand(strSQL, Conn)
-            Cmd.CommandType = CommandType.Text
-            Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
-            Cmd.Parameters.Add(New SqlParameter("@TransactionID", TransactionID))
-            Cmd.Parameters.Add(New SqlParameter("@AuthCode", AuthCode))
-            Cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            Throw ex
-        End Try
-
-        ' Close the database connection and free up memory
-        Conn.Close()
-        Conn.Dispose()
-
-        ' If the command is set, then dispose of it to free up memory
-        If Cmd IsNot Nothing Then
-            Cmd.Dispose()
-        End If
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@ORDNUM", OrderNumber))
+                Cmd.Parameters.Add(New SqlParameter("@TransactionID", TransactionID))
+                Cmd.Parameters.Add(New SqlParameter("@AuthCode", AuthCode))
+                Cmd.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
-
 End Class
