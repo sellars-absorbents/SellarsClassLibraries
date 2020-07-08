@@ -4,8 +4,8 @@ Public Class MAXTransaction
     Inherits ClassBase
 
 #Region "Properties"
-    Public Property TYPE_39() As Char = ""
-    Public Property SUBTYPE_39() As Char = " " 'blank space (not empty string) required for specific types of transactions - MAX Update User Guide
+    Public Property TYPE_39() As Char = " "c
+    Public Property SUBTYPE_39() As Char = " "c 'blank space (not empty string) required for specific types of transactions - MAX Update User Guide
     Public Property RCVSTK_39() As String = ""
     Public Property ISSSTK_39() As String = ""
     Public Property PRTNUM_39() As String = ""
@@ -30,18 +30,18 @@ Public Class MAXTransaction
     Public Property SETUPTIME_39() As Decimal = 0D
     Public Property ELAPSED_39() As Decimal = 0D
     Public Property ASCRAP_39() As Decimal = 0D
-    Public Property REASON_39() As Char = ""
+    Public Property REASON_39() As Char = " "c
     Public Property USERNAME_39() As String = ""
     Public Property UDFKEY_39() As String = ""
     Public Property UDFREF_39() As String = ""
-    Public Property ASSCODE_39() As Char = ""
+    Public Property ASSCODE_39() As Char = " "c
     Public Property LOT_39() As String = ""
     Public Property SERIAL_39() As String = ""
     Public Property TERMINAL_39() As String = ""
-    Public Property QCODE_39() As Char = ""
+    Public Property QCODE_39() As Char = " "c
     Public Property EXPDATE_39() As Date = New Date(1, 1, 1)
     Public Property DEFECT_39() As String = ""
-    Public Property RECPL_39() As Char = ""
+    Public Property RECPL_39() As Char = " "c
     Public Property DISPOSITION_39() As String = ""
     Public Property CLASS_39() As String = ""
 #End Region
