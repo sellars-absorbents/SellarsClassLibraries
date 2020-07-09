@@ -5,7 +5,7 @@
         ClassBase.InitializeASP(connStr, comName, licPath, logPath, log)
     End Sub
 
-    Protected Overrides Function ProcessTransXML(xml As String, showErrorMessages As Boolean) As Integer
-        Return ClassBase.MAXUpdateASP.ProcessTransXML(xml, showErrorMessages)
+    Protected Overrides Function ProcessTransXML(xml As String, ByRef errorMessage As String) As Integer
+        Return ClassBase.MAXUpdateASP.ProcessTransXML(xml, errorMessage)
     End Function
 End Class
