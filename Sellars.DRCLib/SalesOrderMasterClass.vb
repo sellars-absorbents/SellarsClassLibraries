@@ -1056,6 +1056,7 @@ Public Class SalesOrderMasterClass
 
         Dim salesOrderXML As XDocument = FillStructure()
 
+        salesOrderXML.Descendants("ORDNUM_27").Remove()
         salesOrderXML.Descendants("INVCE_27").First().Value = "N"
         salesOrderXML.Descendants("APPINV_27").First().Value = blanks.GetFixedLengthString(6)
 
