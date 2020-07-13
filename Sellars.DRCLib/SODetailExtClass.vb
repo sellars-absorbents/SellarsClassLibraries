@@ -221,28 +221,29 @@ Public Class SODetailExtClass
             Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
                 Cmd.CommandType = CommandType.Text
 
-                Dim GetColumns As SqlDataReader = Cmd.ExecuteReader()
-                While GetColumns.Read
-                    Dim colName As String = GetColumns("COLUMN_NAME")
+                Using GetColumns As SqlDataReader = Cmd.ExecuteReader()
+                    While GetColumns.Read
+                        Dim colName As String = GetColumns("COLUMN_NAME")
 
-                    Select Case colName
-                        Case "ORDNUM"
-                            columnListTarget.Append("'" + NewORDNUM + "'")
+                        Select Case colName
+                            Case "ORDNUM"
+                                columnListTarget.Append("'" + NewORDNUM + "'")
 
-                        Case "Priority"
-                            columnListTarget.Append(", 99")
+                            Case "Priority"
+                                columnListTarget.Append(", 99")
 
-                        Case "Produced",
-                        "Scheduled"
-                            columnListTarget.Append(", 0")
+                            Case "Produced",
+                            "Scheduled"
+                                columnListTarget.Append(", 0")
 
-                        Case "EstProduction"
-                            columnListTarget.Append(", '2000-01-01 12:01:00.00 AM'")
+                            Case "EstProduction"
+                                columnListTarget.Append(", '2000-01-01 12:01:00.00 AM'")
 
-                        Case Else
-                            columnListTarget.Append("," + colName)
-                    End Select
-                End While
+                            Case Else
+                                columnListTarget.Append("," + colName)
+                        End Select
+                    End While
+                End Using
             End Using
 
             SQL.Append("INSERT INTO SalesOrderDetailExt SELECT " + columnListTarget.ToString() + " FROM SalesOrderDetailExt WHERE ORDNUM = @ORDNUM")

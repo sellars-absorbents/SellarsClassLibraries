@@ -1062,11 +1062,11 @@ Public Class SalesOrderDetailClass
             salesOrderDetailXML.Descendants("CURSHP_28").First().Value = 0
             salesOrderDetailXML.Descendants("STATUS_28").First().Value = Convert.ToString(LineStatus.Open)
             salesOrderDetailXML.Descendants("XDFDTE_28").First().Value = MakeDate(DefaultDate)
-            salesOrderDetailXML.Descendants("MODIFICATIONDATE_28").First().Value = MakeDate(Now())
-            salesOrderDetailXML.Descendants("CREATIONDATE_28").First().Value = MakeDate(Now())
+            salesOrderDetailXML.Descendants("ModificationDate").First().Value = MakeDate(Now())
+            salesOrderDetailXML.Descendants("CreationDate").First().Value = MakeDate(Now())
             salesOrderDetailXML.Descendants("BOKDTE_28").First().Value = MakeDate(DefaultDate)
             salesOrderDetailXML.Descendants("DBKDTE_28").First().Value = MakeDate(DefaultDate)
-            salesOrderDetailXML.Descendants("SHPDTE_28").First().Value = "0001-01-01" '<-- null date in MAX
+            salesOrderDetailXML.Descendants("SHPDTE_28").Remove()
 
             'Add Sales Order Detail record via MAX Update
             Dim retValue As Short = AddSalesOrderLineItemXML(salesOrderDetailXML.ToString())
