@@ -2897,26 +2897,25 @@ Public Class SalesOrderDetailClass
             <eMAXExact>
                 <SO_Detail_Table>
                     <SO_Detail>
-                        <ORDNUM_28><%= ORDNUM.PadRight(8) %></ORDNUM_28>
-                        <LINNUM_28><%= LINNUM.PadLeft(2, "0") %></LINNUM_28>
-                        <DELNUM_28><%= DELNUM.PadLeft(2, "0") %></DELNUM_28>
-                        <STATUS_28><%= STATUS.PadRight(1) %></STATUS_28>
-                        <CUSTID_28><%= CUSTID.PadRight(20) %></CUSTID_28>
-                        <PRTNUM_28><%= PRTNUM.PadRight(30) %></PRTNUM_28>
-                        <EDILIN_28><%= EDILIN.PadRight(6) %></EDILIN_28>
-                        <TAXABL_28><%= TAXABL.PadRight(1) %></TAXABL_28>
-                        <GLXREF_28><%= GLXREF.PadRight(32) %></GLXREF_28>
+                        <ORDNUM_28><%= ORDNUM %></ORDNUM_28>
+                        <LINNUM_28><%= LINNUM %></LINNUM_28>
+                        <DELNUM_28><%= DELNUM %></DELNUM_28>
+                        <STATUS_28><%= STATUS %></STATUS_28>
+                        <CUSTID_28><%= CUSTID %></CUSTID_28>
+                        <PRTNUM_28><%= PRTNUM %></PRTNUM_28>
+                        <EDILIN_28><%= EDILIN %></EDILIN_28>
+                        <TAXABL_28><%= TAXABL %></TAXABL_28>
+                        <GLXREF_28><%= GLXREF %></GLXREF_28>
                         <CURDUE_28><%= MakeDate(CURDUE) %></CURDUE_28>
-                        <CURDUE_28></CURDUE_28>
-                        <QTLINE_28><%= QTLINE.PadLeft(2, "0") %></QTLINE_28>
+                        <QTLINE_28><%= QTLINE %></QTLINE_28>
                         <ORGDUE_28><%= MakeDate(ORGDUE) %></ORGDUE_28>
-                        <QTDEL_28><%= QTDEL.PadLeft(2, "0") %></QTDEL_28>
+                        <QTDEL_28><%= QTDEL %></QTDEL_28>
                         <CUSDUE_28><%= MakeDate(CUSDUE) %></CUSDUE_28>
                         <PROBAB_28><%= PROBAB %></PROBAB_28>
-                        <SHPDTE_28><%= IIf(SHPDTE = DefaultDate, 0, MakeDate(SHPDTE)) %></SHPDTE_28>
-                        <FILL04_28><%= FILL04.PadRight(2) %></FILL04_28>
-                        <SLSUOM_28><%= SLSUOM.PadRight(2) %></SLSUOM_28>
-                        <REFRNC_28><%= REFRNC.PadRight(25) %></REFRNC_28>
+                        <SHPDTE_28><%= MakeDate(SHPDTE) %></SHPDTE_28>
+                        <FILL04_28><%= FILL04 %></FILL04_28>
+                        <SLSUOM_28><%= SLSUOM %></SLSUOM_28>
+                        <REFRNC_28><%= REFRNC %></REFRNC_28>
                         <PRICE_28><%= PRICE %></PRICE_28>
                         <ORGQTY_28><%= ORGQTY %></ORGQTY_28>
                         <CURQTY_28><%= CURQTY %></CURQTY_28>
@@ -2926,44 +2925,44 @@ Public Class SalesOrderDetailClass
                         <DUEQTY_28><%= DUEQTY %></DUEQTY_28>
                         <INVQTY_28><%= INVQTY %></INVQTY_28>
                         <DISC_28><%= DISC %></DISC_28>
-                        <STYPE_28><%= STYPE.PadRight(2) %></STYPE_28>
-                        <PRNT_28><%= PRNT.PadRight(1) %></PRNT_28>
-                        <AKPRNT_28><%= AKPRNT.PadRight(1) %></AKPRNT_28>
-                        <STK_28><%= STK.ToUpper().PadRight(8) %></STK_28>
-                        <COCFLG_28><%= COCFLG.PadRight(3) %></COCFLG_28>
+                        <STYPE_28><%= STYPE %></STYPE_28>
+                        <PRNT_28><%= PRNT %></PRNT_28>
+                        <AKPRNT_28><%= AKPRNT %></AKPRNT_28>
+                        <STK_28><%= STK %></STK_28>
+                        <COCFLG_28><%= COCFLG %></COCFLG_28>
                         <FORCUR_28><%= FORCUR %></FORCUR_28>
-                        <HSTAT_28><%= HSTAT.PadRight(1) %></HSTAT_28>
-                        <SLSREP_28><%= SLSREP.PadRight(7) %></SLSREP_28>
+                        <HSTAT_28><%= HSTAT %></HSTAT_28>
+                        <SLSREP_28><%= SLSREP %></SLSREP_28>
                         <COMMIS_28><%= COMMIS %></COMMIS_28>
-                        <DRPSHP_28><%= DRPSHP.PadRight(10) %></DRPSHP_28>
+                        <DRPSHP_28><%= DRPSHP %></DRPSHP_28>
                         <QUMQTY_28><%= QUMQTY %></QUMQTY_28>
-                        <TAXCDE1_28><%= TAXCDE1.PadRight(7) %></TAXCDE1_28>
+                        <TAXCDE1_28><%= TAXCDE1 %></TAXCDE1_28>
                         <TAX1_28><%= TAX1 %></TAX1_28>
-                        <TAXCDE2_28><%= TAXCDE2.PadRight(7) %></TAXCDE2_28>
+                        <TAXCDE2_28><%= TAXCDE2 %></TAXCDE2_28>
                         <TAX2_28><%= TAX2 %></TAX2_28>
-                        <TAXCDE3_28><%= TAXCDE3.PadRight(7) %></TAXCDE3_28>
+                        <TAXCDE3_28><%= TAXCDE3 %></TAXCDE3_28>
                         <TAX3_28><%= TAX3 %></TAX3_28>
-                        <MCOMP_28><%= MCOMP.PadRight(3) %></MCOMP_28>
-                        <MSITE_28><%= MSITE.PadRight(3) %></MSITE_28>
-                        <UDFKEY_28><%= UDFKEY.PadRight(15) %></UDFKEY_28>
-                        <UDFREF_28><%= UDFREF.PadRight(25) %></UDFREF_28>
-                        <DEXPFLG_28><%= DEXPFLG.PadRight(1) %></DEXPFLG_28>
+                        <MCOMP_28><%= MCOMP %></MCOMP_28>
+                        <MSITE_28><%= MSITE %></MSITE_28>
+                        <UDFKEY_28><%= UDFKEY %></UDFKEY_28>
+                        <UDFREF_28><%= UDFREF %></UDFREF_28>
+                        <DEXPFLG_28><%= DEXPFLG %></DEXPFLG_28>
                         <COST_28><%= COST %></COST_28>
                         <MARKUP_28><%= MARKUP %></MARKUP_28>
-                        <QTORD_28><%= QTORD.PadRight(8) %></QTORD_28>
+                        <QTORD_28><%= QTORD %></QTORD_28>
                         <XDFINT_28><%= XDFINT %></XDFINT_28>
                         <XDFFLT_28><%= XDFFLT %></XDFFLT_28>
-                        <XDFBOL_28><%= XDFBOL.PadRight(1) %></XDFBOL_28>
+                        <XDFBOL_28><%= XDFBOL %></XDFBOL_28>
                         <XDFDTE_28><%= MakeDate(XDFDTE) %></XDFDTE_28>
-                        <XDFTXT_28><%= XDFTXT.PadRight(100) %></XDFTXT_28>
-                        <FILLER_28><%= FILLER.PadRight(50) %></FILLER_28>
-                        <CreatedBy><%= CREATEDBY.PadRight(100) %></CreatedBy>
+                        <XDFTXT_28><%= XDFTXT %></XDFTXT_28>
+                        <FILLER_28><%= FILLER %></FILLER_28>
+                        <CreatedBy><%= CREATEDBY %></CreatedBy>
                         <CreationDate><%= MakeDate(CREATIONDATE) %></CreationDate>
-                        <ModifiedBy><%= MODIFIEDBY.PadRight(100) %></ModifiedBy>
+                        <ModifiedBy><%= MODIFIEDBY %></ModifiedBy>
                         <ModificationDate><%= MakeDate(MODIFICATIONDATE) %></ModificationDate>
                         <BOKDTE_28><%= MakeDate(BOKDTE) %></BOKDTE_28>
                         <DBKDTE_28><%= MakeDate(DBKDTE) %></DBKDTE_28>
-                        <REVLEV_28><%= REVLEV.PadLeft(3) %></REVLEV_28>
+                        <REVLEV_28><%= REVLEV %></REVLEV_28>
                         <MANPRC_28></MANPRC_28>
                         <ORGPRC_28></ORGPRC_28>
                         <PRCALC_28></PRCALC_28>
@@ -2977,6 +2976,10 @@ Public Class SalesOrderDetailClass
                     </SO_Detail>
                 </SO_Detail_Table>
             </eMAXExact>
+
+        If (salesOrderDetailXML.Descendants("SHPDTE_28").First().Value = MakeDate(DefaultShipDate)) Then
+            salesOrderDetailXML.Descendants("SHPDTE_28").Remove()
+        End If
 
         Return salesOrderDetailXML
     End Function
