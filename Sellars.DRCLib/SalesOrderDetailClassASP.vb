@@ -9,7 +9,7 @@
         Return ClassBase.MAXUpdateASP.ChangeSalesOrderLineItemXML(newSODXML, oldSODXML)
     End Function
 
-    Protected Overrides Function DeleteSalesOrderLineItemXML(xml As String) As Integer
-        Return ClassBase.MAXUpdateASP.DeleteSalesOrderLineItemXML(xml)
+    Protected Overrides Function DeleteSalesOrderLineItemXML(sod As String) As Integer
+        Return ClassBase.MAXUpdateASP.DeleteSalesOrderLineItemXML(sod)
     End Function
 End Class

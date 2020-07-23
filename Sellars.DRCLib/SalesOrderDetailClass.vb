@@ -1179,14 +1179,8 @@ Public Class SalesOrderDetailClass
     End Sub
 
     Public Sub Delete(ByVal pOrder As String, ByVal pLINNUM As String, ByVal pDELNUM As String)
-        ' Read the requested sales order detail record
-        Read(pOrder, pLINNUM, pDELNUM)
-
-        ' Fill the old and new structures with data from the record
-        Dim salesOrderDetailXML As XDocument = FillStructure()
-
         'delete the Sales Order Detail record via MAX Update
-        Dim retValue As Integer = DeleteSalesOrderLineItemXML(salesOrderDetailXML.ToString())
+        Dim retValue As Integer = DeleteSalesOrderLineItemXML(pOrder & pLINNUM & pDELNUM)
 
         Select Case retValue
             Case 0
@@ -1198,15 +1192,15 @@ Public Class SalesOrderDetailClass
                 Dim oSQL As New SqlService(ConnectionString)
 
                 ' Add the parameters to the command object
-                oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, salesOrderDetailXML.Descendants("ORDNUM_28").First().Value, ParameterDirection.Input)
-                oSQL.AddParameter("@LINNUM", SqlDbType.NVarChar, 2, salesOrderDetailXML.Descendants("LINNUM_28").First().Value, ParameterDirection.Input)
-                oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, salesOrderDetailXML.Descendants("DELNUM_28").First().Value, ParameterDirection.Input)
+                oSQL.AddParameter("@ORDNUM", SqlDbType.NVarChar, 20, pOrder, ParameterDirection.Input)
+                oSQL.AddParameter("@LINNUM", SqlDbType.NVarChar, 2, pLINNUM, ParameterDirection.Input)
+                oSQL.AddParameter("@DELNUM", SqlDbType.NVarChar, 2, pDELNUM, ParameterDirection.Input)
 
                 ' Run the stored procedure
                 oSQL.RunProc("DeleteSalesOrderDetail")
 
                 Dim SODE As New SODetailExtClass
-                SODE.Delete(salesOrderDetailXML.Descendants("ORDNUM_28").First().Value, salesOrderDetailXML.Descendants("LINNUM_28").First().Value, salesOrderDetailXML.Descendants("DELNUM_28").First().Value)
+                SODE.Delete(pOrder, pLINNUM, pDELNUM)
                 SODE = Nothing
         End Select
     End Sub
@@ -3115,8 +3109,8 @@ Public Class SalesOrderDetailClass
         Return ClassBase.MAXUpdate.AddSOLineItemXML(xml, False)
     End Function
 
-    Protected Overridable Function DeleteSalesOrderLineItemXML(ByVal xml As String) As Integer
-        Return ClassBase.MAXUpdate.DeleteSalesOrderLineItemXML(xml)
+    Protected Overridable Function DeleteSalesOrderLineItemXML(ByVal sod As String) As Integer
+        Return ClassBase.MAXUpdate.DeleteSalesOrderLineItemXML(sod)
     End Function
 
     Protected Overridable Function ChangeSalesOrderLineItemXML(ByVal newSODXML As String, ByVal oldSODXML As String) As Integer
