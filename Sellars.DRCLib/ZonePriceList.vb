@@ -95,6 +95,11 @@ Public Class ZonePriceList
         parameters(0).Name = "State"
         parameters(0).Value = State.ToUpper
 
+        parameters(1) = New ReportExecutionService.ParameterValue()
+        parameters(1).Label = "TargetDate"
+        parameters(1).Name = "TargetDate"
+        parameters(1).Value = Date.Now()
+
         ' return the parameters to the calling module
         Return parameters
     End Function
