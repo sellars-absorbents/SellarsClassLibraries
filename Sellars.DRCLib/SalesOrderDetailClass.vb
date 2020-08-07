@@ -3105,6 +3105,11 @@ Public Class SalesOrderDetailClass
         End Using
     End Sub
 
+    ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
+    Public Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
+        ClassBase.Initialize(connStr, comName, licPath, logPath, log)
+    End Sub
+
     Protected Overridable Function AddSalesOrderLineItemXML(ByVal xml As String) As Integer
         Return ClassBase.MAXUpdate.AddSOLineItemXML(xml, False)
     End Function
