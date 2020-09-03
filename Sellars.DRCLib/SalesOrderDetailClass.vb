@@ -80,7 +80,7 @@ Public Class SalesOrderDetailClass
     'new fields in max 5
     Private _COST As Double
     Private _MARKUP As Double
-    Private _QTORD As String
+    Private _QTORD As String = ""
 
     Private _XDFINT As Integer
     Private _XDFFLT As Double
