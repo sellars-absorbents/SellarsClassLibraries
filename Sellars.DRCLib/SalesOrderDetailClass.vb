@@ -11,15 +11,15 @@ Imports System.Xml.Linq
 Public Class SalesOrderDetailClass
     Inherits ClassBase
 
-    Private _CoreSize As Decimal
+    Private _CoreSize As Decimal = 0
     Private _ErrorCode As Integer = 0
     Private _ErrorDescription As String = ""
-    Private _LastLine As Integer
-    Private _OutsideDiameter As Decimal
-    Private _Pallets As Boolean
+    Private _LastLine As Integer = 0
+    Private _OutsideDiameter As Decimal = 0
+    Private _Pallets As Boolean = 0
     Private _Deleteable As Boolean = False
-    Private _TotalPrice As Decimal
-    Private _SlitWidth As Decimal
+    Private _TotalPrice As Decimal = 0
+    Private _SlitWidth As Decimal = 0
 
     Private _ORDNUM As String = ""
     Private _LINNUM As String = ""
@@ -30,43 +30,43 @@ Public Class SalesOrderDetailClass
     Private _EDILIN As String = ""
     Private _TAXABL As String = ""
     Private _GLXREF As String = ""
-    Private _CURDUE As Date
+    Private _CURDUE As Date = New Date(1, 1, 1)
     Private _FILL01 As String = ""
-    Private _ORGDUE As Date
+    Private _ORGDUE As Date = New Date(1, 1, 1)
     'Private _FILL02 As String
-    Private _PROBAB As Integer
-    Private _CUSDUE As Date
+    Private _PROBAB As Integer = 0
+    Private _CUSDUE As Date = New Date(1, 1, 1)
     Private _FILL03 As String = ""
-    Private _SHPDTE As Date
+    Private _SHPDTE As Date = New Date(1, 1, 1)
     Private _FILL04 As String = ""
     Private _SLSUOM As String = ""
     Private _REFRNC As String = ""
-    Private _PRICE As Decimal
-    Private _ORGQTY As Double
-    Private _CURQTY As Double
-    Private _BCKQTY As Double
-    Private _SHPQTY As Double
-    Private _CURSHP As Double
-    Private _DUEQTY As Double
-    Private _INVQTY As Double
-    Private _DISC As Single
+    Private _PRICE As Decimal = 0
+    Private _ORGQTY As Double = 0
+    Private _CURQTY As Double = 0
+    Private _BCKQTY As Double = 0
+    Private _SHPQTY As Double = 0
+    Private _CURSHP As Double = 0
+    Private _DUEQTY As Double = 0
+    Private _INVQTY As Double = 0
+    Private _DISC As Single = 0
     Private _STYPE As String = ""
     Private _PRNT As String = ""
     Private _AKPRNT As String = ""
     Private _STK As String = ""
     Private _COCFLG As String = ""
-    Private _FORCUR As Double
+    Private _FORCUR As Double = 0
     Private _HSTAT As String = ""
     Private _SLSREP As String = ""
-    Private _COMMIS As Single
+    Private _COMMIS As Single = 0
     Private _DRPSHP As String = ""
-    Private _QUMQTY As Single
+    Private _QUMQTY As Single = 0
     Private _TAXCDE1 As String = ""
-    Private _TAX1 As Double
+    Private _TAX1 As Double = 0
     Private _TAXCDE2 As String = ""
-    Private _TAX2 As Double
+    Private _TAX2 As Double = 0
     Private _TAXCDE3 As String = ""
-    Private _TAX3 As Double
+    Private _TAX3 As Double = 0
     Private _MCOMP As String = ""
     Private _MSITE As String = ""
     Private _QTDEL As String = ""
@@ -78,21 +78,21 @@ Public Class SalesOrderDetailClass
     Private _OrderPolicy As String = ""
 
     'new fields in max 5
-    Private _COST As Double
-    Private _MARKUP As Double
+    Private _COST As Double = 0
+    Private _MARKUP As Double = 0
     Private _QTORD As String = ""
 
-    Private _XDFINT As Integer
-    Private _XDFFLT As Double
+    Private _XDFINT As Integer = 0
+    Private _XDFFLT As Double = 0
     Private _XDFBOL As String = ""
-    Private _XDFDTE As Date
+    Private _XDFDTE As Date = New Date(1, 1, 1)
     Private _XDFTXT As String = ""
     Private _CREATEDBY As String = ""
-    Private _CREATIONDATE As Date
+    Private _CREATIONDATE As Date = New Date(1, 1, 1)
     Private _MODIFIEDBY As String = ""
-    Private _MODIFICATIONDATE As Date
-    Private _BOKDTE As Date
-    Private _DBKDTE As Date
+    Private _MODIFICATIONDATE As Date = New Date(1, 1, 1)
+    Private _BOKDTE As Date = New Date(1, 1, 1)
+    Private _DBKDTE As Date = New Date(1, 1, 1)
     Private _REVLEV As String = ""
 
     Public Enum LineStatus
