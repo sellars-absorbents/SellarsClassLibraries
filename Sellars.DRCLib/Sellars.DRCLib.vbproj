@@ -231,6 +231,7 @@
     <Compile Include="EDITarget850Class.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ErrorLog.vb" />
     <Compile Include="Exceptions.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -280,15 +281,18 @@
     <Compile Include="PriceQuoteClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ProcessLog.vb" />
     <Compile Include="PurchaseOrderClass.vb" />
     <Compile Include="PurchaseOrderClassASP.vb" />
     <Compile Include="SalesOrderClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SalesOrderDetail.vb" />
     <Compile Include="SalesOrderDetailClass.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SalesOrderDetailClassASP.vb" />
+    <Compile Include="SalesOrderDetailNotes.vb" />
     <Compile Include="SalesOrderMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -297,6 +301,7 @@
     <Compile Include="SalesRepMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ShippingCarrierInfo.vb" />
     <Compile Include="ShippingMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -332,6 +337,7 @@
     <Compile Include="ZonePriceList.vb" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SalesOrder.vb" />
     <Content Include="Third Party\ERMRemCl.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

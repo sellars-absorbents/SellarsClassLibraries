@@ -47,6 +47,49 @@ Public Class MAXTransaction
 #End Region
 
 #Region "Methods"
+    Public Sub ClearProperties()
+        Me.TYPE_39 = " "c
+        Me.SUBTYPE_39 = " "c 'blank space (not empty string) required for specific types of transactions - MAX Update User Guide
+        Me.RCVSTK_39 = ""
+        Me.ISSSTK_39 = ""
+        Me.PRTNUM_39 = ""
+        Me.ORDNUM_39 = ""
+        Me.LINNUM_39 = ""
+        Me.DELNUM_39 = ""
+        Me.TNXQTY_39 = 0D
+        Me.TNXDTE_39 = New DateTime(1, 1, 1) ' null date in MAX is 0001-01-01 ' MMddyy required format - MAX Update User Guide
+        Me.TNXTME_39 = New DateTime(1, 1, 1) ' hhmmss required format - MAX Update User Guide
+        Me.REFDSC_39 = ""
+        Me.GLREF_39 = ""
+        Me.OPRSEQ_39 = ""
+        Me.NXTOPR_39 = ""
+        Me.RUNACT_39 = 0D
+        Me.SETACT_39 = 0D
+        Me.SHIFT_39 = 0
+        Me.LOCATOR_39 = ""
+        Me.EMPID_39 = ""
+        Me.TICKET_39 = ""
+        Me.STARTTIME_39 = New Date(1, 1, 1)
+        Me.ENDTIME_39 = New Date(1, 1, 1)
+        Me.SETUPTIME_39 = 0D
+        Me.ELAPSED_39 = 0D
+        Me.ASCRAP_39 = 0D
+        Me.REASON_39 = " "c
+        Me.USERNAME_39 = ""
+        Me.UDFKEY_39 = ""
+        Me.UDFREF_39 = ""
+        Me.ASSCODE_39 = " "c
+        Me.LOT_39 = ""
+        Me.SERIAL_39 = ""
+        Me.TERMINAL_39 = ""
+        Me.QCODE_39 = " "c
+        Me.EXPDATE_39 = New Date(1, 1, 1)
+        Me.DEFECT_39 = ""
+        Me.RECPL_39 = " "c
+        Me.DISPOSITION_39 = ""
+        Me.CLASS_39 = ""
+    End Sub
+
     Public Sub GenericTransaction()
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
@@ -168,6 +211,10 @@ Public Class MAXTransaction
 
         Return transactionXML
     End Function
+
+    Public Sub TerminateMax()
+        ClassBase.TerminateMAXObject()
+    End Sub
 
     ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
     Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)

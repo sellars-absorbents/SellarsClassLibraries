@@ -30,14 +30,14 @@ Public Class SalesOrderDetailClass
     Private _EDILIN As String = ""
     Private _TAXABL As String = ""
     Private _GLXREF As String = ""
-    Private _CURDUE As Date = New Date(1, 1, 1)
+    Private _CURDUE As Date = DefaultDate
     Private _FILL01 As String = ""
-    Private _ORGDUE As Date = New Date(1, 1, 1)
+    Private _ORGDUE As Date = DefaultDate
     'Private _FILL02 As String
     Private _PROBAB As Integer = 0
-    Private _CUSDUE As Date = New Date(1, 1, 1)
+    Private _CUSDUE As Date = DefaultDate
     Private _FILL03 As String = ""
-    Private _SHPDTE As Date = New Date(1, 1, 1)
+    Private _SHPDTE As Date = DefaultDate
     Private _FILL04 As String = ""
     Private _SLSUOM As String = ""
     Private _REFRNC As String = ""
@@ -85,14 +85,14 @@ Public Class SalesOrderDetailClass
     Private _XDFINT As Integer = 0
     Private _XDFFLT As Double = 0
     Private _XDFBOL As String = ""
-    Private _XDFDTE As Date = New Date(1, 1, 1)
+    Private _XDFDTE As Date = DefaultDate
     Private _XDFTXT As String = ""
     Private _CREATEDBY As String = ""
-    Private _CREATIONDATE As Date = New Date(1, 1, 1)
+    Private _CREATIONDATE As Date = DefaultDate
     Private _MODIFIEDBY As String = ""
-    Private _MODIFICATIONDATE As Date = New Date(1, 1, 1)
-    Private _BOKDTE As Date = New Date(1, 1, 1)
-    Private _DBKDTE As Date = New Date(1, 1, 1)
+    Private _MODIFICATIONDATE As Date = DefaultDate
+    Private _BOKDTE As Date = DefaultDate
+    Private _DBKDTE As Date = DefaultDate
     Private _REVLEV As String = ""
 
     Public Enum LineStatus
@@ -963,6 +963,7 @@ Public Class SalesOrderDetailClass
     Private Sub AddMax()
         Dim salesOrderDetailXML As XDocument = FillStructure()
 
+        salesOrderDetailXML.Descendants("SHPDTE_28").Remove
         salesOrderDetailXML.Descendants("STATUS_28").First().Value = Convert.ToString(LineStatus.Open)
         salesOrderDetailXML.Descendants("ORGDUE_28").First().Value = MakeDate(_CURDUE)
 

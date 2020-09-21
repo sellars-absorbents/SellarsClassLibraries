@@ -45,6 +45,11 @@ Public MustInherit Class ClassBase
         _maxUpdateASP.InitASPXMLWrapper(connectionString, companyName, licensePath, logPath, errorReport)
         _maxUpdateASP.SetVisualErrorReportingXML(0)
     End Sub
+
+    Protected Shared Sub TerminateMAXObject()
+        _maxUpdateASP = Nothing
+        _maxUpdate = Nothing
+    End Sub
 #End Region
 
     ' Declare varible to hold the database connection string

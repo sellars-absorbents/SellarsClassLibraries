@@ -923,7 +923,7 @@ Public Class SalesOrderMasterClass
                         <STATUS_27><%= Convert.ToString(OrderStatus.Open) %></STATUS_27>
                         <CUSTPO_27><%= CUSTPO.Trim() %></CUSTPO_27>
                         <ORDID_27><%= OrderedBy.Trim() %></ORDID_27>
-                        <ORDDTE_27><%= MakeDate(Now()) %></ORDDTE_27>
+                        <ORDDTE_27><%= MakeDate(OrderDate) %></ORDDTE_27>
                         <FILL01A_27></FILL01A_27>
                         <FILL01_27></FILL01_27>
                         <SHPCDE_27><%= SHPCDE.Trim() %></SHPCDE_27>
@@ -1789,7 +1789,7 @@ Public Class SalesOrderMasterClass
                         <STATUS_27><%= Convert.ToString(OrderStatus.Open) %></STATUS_27>
                         <CUSTPO_27><%= _CUSTPO.GetFixedLengthString(25) %></CUSTPO_27>
                         <ORDID_27><%= _ORDID.GetFixedLengthString(20) %></ORDID_27>
-                        <ORDDTE_27><%= MakeDate(Now()) %></ORDDTE_27>
+                        <ORDDTE_27><%= MakeDate(ORDDTE) %></ORDDTE_27>
                         <FILL01A_27><%= "" %></FILL01A_27>
                         <FILL01_27><%= "" %></FILL01_27>
                         <SHPCDE_27><%= _SHPCDE.GetFixedLengthString(10) %></SHPCDE_27>
@@ -1907,6 +1907,10 @@ Public Class SalesOrderMasterClass
 
         Return isDuplicate
     End Function
+
+    Public Sub TerminateMax()
+        ClassBase.TerminateMAXObject()
+    End Sub
 
     ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
     Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
