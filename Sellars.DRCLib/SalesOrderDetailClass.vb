@@ -877,11 +877,11 @@ Public Class SalesOrderDetailClass
                         <EDILIN_28></EDILIN_28>
                         <TAXABL_28><%= Taxable %></TAXABL_28>
                         <GLXREF_28><%= GLCode.ToUpper %></GLXREF_28>
-                        <CURDUE_28><%= MakeDate(CusDue) %></CURDUE_28>
+                        <CURDUE_28><%= MakeDate(CurDue) %></CURDUE_28>
                         <QTLINE_28></QTLINE_28>
                         <ORGDUE_28><%= MakeDate(CurDue) %></ORGDUE_28>
                         <QTDEL_28></QTDEL_28>
-                        <CUSDUE_28><%= MakeDate(CurDue) %></CUSDUE_28>
+                        <CUSDUE_28><%= MakeDate(CusDue) %></CUSDUE_28>
                         <PROBAB_28><%= 0 %></PROBAB_28>
                         <SHPDTE_28/>
                         <FILL04_28></FILL04_28>
