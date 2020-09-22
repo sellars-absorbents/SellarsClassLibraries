@@ -139,7 +139,7 @@ Public Class SalesOrderClass
         Public Property Success As Boolean
     End Class
 
-    Public Function AddSPS(ByRef som As SalesOrderMasterClassASP, ByVal Username As String, ByVal Password As String, ByVal SO As SalesOrder, ByVal CarrierInfo As ShippingCarrierInfo, ByVal FixCrLf As Boolean,
+    Public Function AddSPS(ByRef som As SalesOrderMasterClass, ByVal Username As String, ByVal Password As String, ByVal SO As SalesOrder, ByVal CarrierInfo As ShippingCarrierInfo, ByVal FixCrLf As Boolean,
                            ByVal maxDLLConnectionString As String, ByVal company As String, ByVal licensePath As String, ByVal logPath As String) As AddSPSResult
         Dim result As AddSPSResult = New AddSPSResult()
         ' Instantiate the sales order class
@@ -178,7 +178,7 @@ Public Class SalesOrderClass
                 ' Loop through and add all the items from the order to the database
                 For Each item As SalesOrderDetail In SO.LINEITEMS
                     ' Instantiate the sales order detail class
-                    Dim sod As New SalesOrderDetailClassASP()
+                    Dim sod As New SalesOrderDetailClass()
 
                     ' Copy all the item fields from the inbound sales order to matching fields in the sales order detail record
                     item.CopyTo(sod)
@@ -311,7 +311,7 @@ Public Class SalesOrderClass
         Return rtnVal
     End Function
 
-    Public Sub AddFastenal(ByRef som As SalesOrderMasterClassASP, ByVal Username As String, ByVal Password As String, ByVal SO As SalesOrder, ByVal CarrierInfo As ShippingCarrierInfo, ByVal FixCrLf As Boolean,
+    Public Sub AddFastenal(ByRef som As SalesOrderMasterClass, ByVal Username As String, ByVal Password As String, ByVal SO As SalesOrder, ByVal CarrierInfo As ShippingCarrierInfo, ByVal FixCrLf As Boolean,
                            ByVal maxDLLConnectionString As String, ByVal company As String, ByVal licensePath As String, ByVal logPath As String)
         ' Instantiate the sales order class
         ' Check if the Customer PO already exists, and if it does, then exit the routine
@@ -345,7 +345,7 @@ Public Class SalesOrderClass
                 ' Loop through and add all the items from the order to the database
                 For Each item As SalesOrderDetail In SO.LINEITEMS
                     ' Instantiate the sales order detail class
-                    Dim sod As New SalesOrderDetailClassASP()
+                    Dim sod As New SalesOrderDetailClass()
                     Dim DueDate As DateTime = New DateTime(2030, 12, 31, 0, 0, 0)
 
                     ' Copy all the item fields from the inbound sales order to matching fields in the sales order detail record
@@ -437,7 +437,7 @@ Public Class SalesOrderClass
         End Try
     End Sub
 
-    Private Sub CheckFastenal3PL(ByRef UnisourceStatus As Integer, ByRef sod As SalesOrderDetailClassASP)
+    Private Sub CheckFastenal3PL(ByRef UnisourceStatus As Integer, ByRef sod As SalesOrderDetailClass)
         ' Check if the item being added is a unisource Item, and if it is, then set the flag in the Sales Order Detail extension table
         ' UnisourceItem = IsUnisourceItem(sod.STK)
         Dim stkElements As Array = sod.STK.Trim.Split(" ")
