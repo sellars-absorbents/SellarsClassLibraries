@@ -4,6 +4,8 @@ Imports System.Collections.Specialized
 Imports System.Configuration
 Imports System.Text
 Imports MaxUpdateXML
+Imports Microsoft.VisualBasic.Compatibility.VB6
+Imports System.Runtime.Serialization
 
 Public MustInherit Class ClassBase
 
@@ -44,11 +46,6 @@ Public MustInherit Class ClassBase
         _maxUpdateASP = New ASPXMLWrapper()
         _maxUpdateASP.InitASPXMLWrapper(connectionString, companyName, licensePath, logPath, errorReport)
         _maxUpdateASP.SetVisualErrorReportingXML(0)
-    End Sub
-
-    Protected Shared Sub TerminateMAXObject()
-        _maxUpdateASP = Nothing
-        _maxUpdate = Nothing
     End Sub
 #End Region
 

@@ -1908,10 +1908,6 @@ Public Class SalesOrderMasterClass
         Return isDuplicate
     End Function
 
-    Public Sub TerminateMax()
-        ClassBase.TerminateMAXObject()
-    End Sub
-
     ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
     Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)
         ClassBase.Initialize(connStr, comName, licPath, logPath, log)
