@@ -24,7 +24,7 @@ Imports System.Xml.Serialization
 Namespace ReportExecutionService
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
      System.Web.Services.WebServiceBindingAttribute(Name:="ReportExecutionServiceSoap", [Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices"),  _
@@ -42,27 +42,39 @@ Namespace ReportExecutionService
         
         Private LoadReportOperationCompleted As System.Threading.SendOrPostCallback
         
+        Private LoadReport3OperationCompleted As System.Threading.SendOrPostCallback
+        
         Private LoadReport2OperationCompleted As System.Threading.SendOrPostCallback
         
         Private LoadReportDefinitionOperationCompleted As System.Threading.SendOrPostCallback
         
         Private LoadReportDefinition2OperationCompleted As System.Threading.SendOrPostCallback
         
+        Private LoadReportDefinition3OperationCompleted As System.Threading.SendOrPostCallback
+        
         Private SetExecutionCredentialsOperationCompleted As System.Threading.SendOrPostCallback
         
         Private SetExecutionCredentials2OperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private SetExecutionCredentials3OperationCompleted As System.Threading.SendOrPostCallback
         
         Private SetExecutionParametersOperationCompleted As System.Threading.SendOrPostCallback
         
         Private SetExecutionParameters2OperationCompleted As System.Threading.SendOrPostCallback
         
+        Private SetExecutionParameters3OperationCompleted As System.Threading.SendOrPostCallback
+        
         Private ResetExecutionOperationCompleted As System.Threading.SendOrPostCallback
         
         Private ResetExecution2OperationCompleted As System.Threading.SendOrPostCallback
         
+        Private ResetExecution3OperationCompleted As System.Threading.SendOrPostCallback
+        
         Private RenderOperationCompleted As System.Threading.SendOrPostCallback
         
         Private Render2OperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private DeliverReportItemOperationCompleted As System.Threading.SendOrPostCallback
         
         Private RenderStreamOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -70,11 +82,15 @@ Namespace ReportExecutionService
         
         Private GetExecutionInfo2OperationCompleted As System.Threading.SendOrPostCallback
         
+        Private GetExecutionInfo3OperationCompleted As System.Threading.SendOrPostCallback
+        
         Private GetDocumentMapOperationCompleted As System.Threading.SendOrPostCallback
         
         Private LoadDrillthroughTargetOperationCompleted As System.Threading.SendOrPostCallback
         
         Private LoadDrillthroughTarget2OperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private LoadDrillthroughTarget3OperationCompleted As System.Threading.SendOrPostCallback
         
         Private ToggleItemOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -87,6 +103,8 @@ Namespace ReportExecutionService
         Private SortOperationCompleted As System.Threading.SendOrPostCallback
         
         Private Sort2OperationCompleted As System.Threading.SendOrPostCallback
+        
+        Private Sort3OperationCompleted As System.Threading.SendOrPostCallback
         
         Private GetRenderResourceOperationCompleted As System.Threading.SendOrPostCallback
         
@@ -168,6 +186,9 @@ Namespace ReportExecutionService
         Public Event LoadReportCompleted As LoadReportCompletedEventHandler
         
         '''<remarks/>
+        Public Event LoadReport3Completed As LoadReport3CompletedEventHandler
+        
+        '''<remarks/>
         Public Event LoadReport2Completed As LoadReport2CompletedEventHandler
         
         '''<remarks/>
@@ -177,10 +198,16 @@ Namespace ReportExecutionService
         Public Event LoadReportDefinition2Completed As LoadReportDefinition2CompletedEventHandler
         
         '''<remarks/>
+        Public Event LoadReportDefinition3Completed As LoadReportDefinition3CompletedEventHandler
+        
+        '''<remarks/>
         Public Event SetExecutionCredentialsCompleted As SetExecutionCredentialsCompletedEventHandler
         
         '''<remarks/>
         Public Event SetExecutionCredentials2Completed As SetExecutionCredentials2CompletedEventHandler
+        
+        '''<remarks/>
+        Public Event SetExecutionCredentials3Completed As SetExecutionCredentials3CompletedEventHandler
         
         '''<remarks/>
         Public Event SetExecutionParametersCompleted As SetExecutionParametersCompletedEventHandler
@@ -189,16 +216,25 @@ Namespace ReportExecutionService
         Public Event SetExecutionParameters2Completed As SetExecutionParameters2CompletedEventHandler
         
         '''<remarks/>
+        Public Event SetExecutionParameters3Completed As SetExecutionParameters3CompletedEventHandler
+        
+        '''<remarks/>
         Public Event ResetExecutionCompleted As ResetExecutionCompletedEventHandler
         
         '''<remarks/>
         Public Event ResetExecution2Completed As ResetExecution2CompletedEventHandler
         
         '''<remarks/>
+        Public Event ResetExecution3Completed As ResetExecution3CompletedEventHandler
+        
+        '''<remarks/>
         Public Event RenderCompleted As RenderCompletedEventHandler
         
         '''<remarks/>
         Public Event Render2Completed As Render2CompletedEventHandler
+        
+        '''<remarks/>
+        Public Event DeliverReportItemCompleted As DeliverReportItemCompletedEventHandler
         
         '''<remarks/>
         Public Event RenderStreamCompleted As RenderStreamCompletedEventHandler
@@ -210,6 +246,9 @@ Namespace ReportExecutionService
         Public Event GetExecutionInfo2Completed As GetExecutionInfo2CompletedEventHandler
         
         '''<remarks/>
+        Public Event GetExecutionInfo3Completed As GetExecutionInfo3CompletedEventHandler
+        
+        '''<remarks/>
         Public Event GetDocumentMapCompleted As GetDocumentMapCompletedEventHandler
         
         '''<remarks/>
@@ -217,6 +256,9 @@ Namespace ReportExecutionService
         
         '''<remarks/>
         Public Event LoadDrillthroughTarget2Completed As LoadDrillthroughTarget2CompletedEventHandler
+        
+        '''<remarks/>
+        Public Event LoadDrillthroughTarget3Completed As LoadDrillthroughTarget3CompletedEventHandler
         
         '''<remarks/>
         Public Event ToggleItemCompleted As ToggleItemCompletedEventHandler
@@ -235,6 +277,9 @@ Namespace ReportExecutionService
         
         '''<remarks/>
         Public Event Sort2Completed As Sort2CompletedEventHandler
+        
+        '''<remarks/>
+        Public Event Sort3Completed As Sort3CompletedEventHandler
         
         '''<remarks/>
         Public Event GetRenderResourceCompleted As GetRenderResourceCompletedEventHandler
@@ -306,6 +351,37 @@ Namespace ReportExecutionService
             If (Not (Me.LoadReportCompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent LoadReportCompleted(Me, New LoadReportCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa"& _ 
+            "dReport3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function LoadReport3(ByVal Report As String, ByVal HistoryID As String) As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("LoadReport3", New Object() {Report, HistoryID})
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub LoadReport3Async(ByVal Report As String, ByVal HistoryID As String)
+            Me.LoadReport3Async(Report, HistoryID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub LoadReport3Async(ByVal Report As String, ByVal HistoryID As String, ByVal userState As Object)
+            If (Me.LoadReport3OperationCompleted Is Nothing) Then
+                Me.LoadReport3OperationCompleted = AddressOf Me.OnLoadReport3OperationCompleted
+            End If
+            Me.InvokeAsync("LoadReport3", New Object() {Report, HistoryID}, Me.LoadReport3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnLoadReport3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.LoadReport3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent LoadReport3Completed(Me, New LoadReport3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -406,6 +482,38 @@ Namespace ReportExecutionService
         
         '''<remarks/>
         <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa"& _ 
+            "dReportDefinition3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function LoadReportDefinition3(<System.Xml.Serialization.XmlElementAttribute(DataType:="base64Binary")> ByVal Definition() As Byte, ByRef warnings() As Warning) As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("LoadReportDefinition3", New Object() {Definition})
+            warnings = CType(results(1),Warning())
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub LoadReportDefinition3Async(ByVal Definition() As Byte)
+            Me.LoadReportDefinition3Async(Definition, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub LoadReportDefinition3Async(ByVal Definition() As Byte, ByVal userState As Object)
+            If (Me.LoadReportDefinition3OperationCompleted Is Nothing) Then
+                Me.LoadReportDefinition3OperationCompleted = AddressOf Me.OnLoadReportDefinition3OperationCompleted
+            End If
+            Me.InvokeAsync("LoadReportDefinition3", New Object() {Definition}, Me.LoadReportDefinition3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnLoadReportDefinition3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.LoadReportDefinition3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent LoadReportDefinition3Completed(Me, New LoadReportDefinition3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
          System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
          System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
          System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set"& _ 
@@ -463,6 +571,37 @@ Namespace ReportExecutionService
             If (Not (Me.SetExecutionCredentials2CompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent SetExecutionCredentials2Completed(Me, New SetExecutionCredentials2CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set"& _ 
+            "ExecutionCredentials3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function SetExecutionCredentials3(ByVal Credentials() As DataSourceCredentials) As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("SetExecutionCredentials3", New Object() {Credentials})
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub SetExecutionCredentials3Async(ByVal Credentials() As DataSourceCredentials)
+            Me.SetExecutionCredentials3Async(Credentials, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SetExecutionCredentials3Async(ByVal Credentials() As DataSourceCredentials, ByVal userState As Object)
+            If (Me.SetExecutionCredentials3OperationCompleted Is Nothing) Then
+                Me.SetExecutionCredentials3OperationCompleted = AddressOf Me.OnSetExecutionCredentials3OperationCompleted
+            End If
+            Me.InvokeAsync("SetExecutionCredentials3", New Object() {Credentials}, Me.SetExecutionCredentials3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSetExecutionCredentials3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.SetExecutionCredentials3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SetExecutionCredentials3Completed(Me, New SetExecutionCredentials3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -532,6 +671,37 @@ Namespace ReportExecutionService
         <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
          System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
          System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Set"& _ 
+            "ExecutionParameters3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function SetExecutionParameters3(ByVal Parameters() As ParameterValue, ByVal ParameterLanguage As String) As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("SetExecutionParameters3", New Object() {Parameters, ParameterLanguage})
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub SetExecutionParameters3Async(ByVal Parameters() As ParameterValue, ByVal ParameterLanguage As String)
+            Me.SetExecutionParameters3Async(Parameters, ParameterLanguage, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub SetExecutionParameters3Async(ByVal Parameters() As ParameterValue, ByVal ParameterLanguage As String, ByVal userState As Object)
+            If (Me.SetExecutionParameters3OperationCompleted Is Nothing) Then
+                Me.SetExecutionParameters3OperationCompleted = AddressOf Me.OnSetExecutionParameters3OperationCompleted
+            End If
+            Me.InvokeAsync("SetExecutionParameters3", New Object() {Parameters, ParameterLanguage}, Me.SetExecutionParameters3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSetExecutionParameters3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.SetExecutionParameters3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent SetExecutionParameters3Completed(Me, New SetExecutionParameters3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
          System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res"& _ 
             "etExecution", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function ResetExecution() As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo
@@ -587,6 +757,37 @@ Namespace ReportExecutionService
             If (Not (Me.ResetExecution2CompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent ResetExecution2Completed(Me, New ResetExecution2CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Res"& _ 
+            "etExecution3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function ResetExecution3() As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("ResetExecution3", New Object(-1) {})
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub ResetExecution3Async()
+            Me.ResetExecution3Async(Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub ResetExecution3Async(ByVal userState As Object)
+            If (Me.ResetExecution3OperationCompleted Is Nothing) Then
+                Me.ResetExecution3OperationCompleted = AddressOf Me.OnResetExecution3OperationCompleted
+            End If
+            Me.InvokeAsync("ResetExecution3", New Object(-1) {}, Me.ResetExecution3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnResetExecution3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.ResetExecution3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent ResetExecution3Completed(Me, New ResetExecution3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -659,6 +860,36 @@ Namespace ReportExecutionService
             If (Not (Me.Render2CompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent Render2Completed(Me, New Render2CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Del"& _ 
+            "iverReportItem", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Sub DeliverReportItem(ByVal Format As String, ByVal DeviceInfo As String, ByVal ExtensionSettings As ExtensionSettings, ByVal Description As String, ByVal EventType As String, ByVal MatchData As String)
+            Me.Invoke("DeliverReportItem", New Object() {Format, DeviceInfo, ExtensionSettings, Description, EventType, MatchData})
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub DeliverReportItemAsync(ByVal Format As String, ByVal DeviceInfo As String, ByVal ExtensionSettings As ExtensionSettings, ByVal Description As String, ByVal EventType As String, ByVal MatchData As String)
+            Me.DeliverReportItemAsync(Format, DeviceInfo, ExtensionSettings, Description, EventType, MatchData, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub DeliverReportItemAsync(ByVal Format As String, ByVal DeviceInfo As String, ByVal ExtensionSettings As ExtensionSettings, ByVal Description As String, ByVal EventType As String, ByVal MatchData As String, ByVal userState As Object)
+            If (Me.DeliverReportItemOperationCompleted Is Nothing) Then
+                Me.DeliverReportItemOperationCompleted = AddressOf Me.OnDeliverReportItemOperationCompleted
+            End If
+            Me.InvokeAsync("DeliverReportItem", New Object() {Format, DeviceInfo, ExtensionSettings, Description, EventType, MatchData}, Me.DeliverReportItemOperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnDeliverReportItemOperationCompleted(ByVal arg As Object)
+            If (Not (Me.DeliverReportItemCompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent DeliverReportItemCompleted(Me, New System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -762,6 +993,37 @@ Namespace ReportExecutionService
          System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
          System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
          System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get"& _ 
+            "ExecutionInfo3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function GetExecutionInfo3() As <System.Xml.Serialization.XmlElementAttribute("executionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("GetExecutionInfo3", New Object(-1) {})
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub GetExecutionInfo3Async()
+            Me.GetExecutionInfo3Async(Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub GetExecutionInfo3Async(ByVal userState As Object)
+            If (Me.GetExecutionInfo3OperationCompleted Is Nothing) Then
+                Me.GetExecutionInfo3OperationCompleted = AddressOf Me.OnGetExecutionInfo3OperationCompleted
+            End If
+            Me.InvokeAsync("GetExecutionInfo3", New Object(-1) {}, Me.GetExecutionInfo3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnGetExecutionInfo3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.GetExecutionInfo3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent GetExecutionInfo3Completed(Me, New GetExecutionInfo3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get"& _ 
             "DocumentMap", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
         Public Function GetDocumentMap() As <System.Xml.Serialization.XmlElementAttribute("result")> DocumentMapNode
             Dim results() As Object = Me.Invoke("GetDocumentMap", New Object(-1) {})
@@ -847,6 +1109,37 @@ Namespace ReportExecutionService
             If (Not (Me.LoadDrillthroughTarget2CompletedEvent) Is Nothing) Then
                 Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
                 RaiseEvent LoadDrillthroughTarget2Completed(Me, New LoadDrillthroughTarget2CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.InOut),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Loa"& _ 
+            "dDrillthroughTarget3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function LoadDrillthroughTarget3(ByVal DrillthroughID As String) As <System.Xml.Serialization.XmlElementAttribute("ExecutionInfo")> ExecutionInfo3
+            Dim results() As Object = Me.Invoke("LoadDrillthroughTarget3", New Object() {DrillthroughID})
+            Return CType(results(0),ExecutionInfo3)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub LoadDrillthroughTarget3Async(ByVal DrillthroughID As String)
+            Me.LoadDrillthroughTarget3Async(DrillthroughID, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub LoadDrillthroughTarget3Async(ByVal DrillthroughID As String, ByVal userState As Object)
+            If (Me.LoadDrillthroughTarget3OperationCompleted Is Nothing) Then
+                Me.LoadDrillthroughTarget3OperationCompleted = AddressOf Me.OnLoadDrillthroughTarget3OperationCompleted
+            End If
+            Me.InvokeAsync("LoadDrillthroughTarget3", New Object() {DrillthroughID}, Me.LoadDrillthroughTarget3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnLoadDrillthroughTarget3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.LoadDrillthroughTarget3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent LoadDrillthroughTarget3Completed(Me, New LoadDrillthroughTarget3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
             End If
         End Sub
         
@@ -1042,6 +1335,39 @@ Namespace ReportExecutionService
         End Sub
         
         '''<remarks/>
+        <System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ExecutionHeaderValue"),  _
+         System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
+         System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Sor"& _ 
+            "t3", RequestNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", ResponseNamespace:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices", Use:=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle:=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)>  _
+        Public Function Sort3(ByVal SortItem As String, ByVal Direction As SortDirectionEnum, ByVal Clear As Boolean, ByVal PaginationMode As PageCountMode, ByRef ReportItem As String, ByRef ExecutionInfo As ExecutionInfo3) As <System.Xml.Serialization.XmlElementAttribute("PageNumber")> Integer
+            Dim results() As Object = Me.Invoke("Sort3", New Object() {SortItem, Direction, Clear, PaginationMode})
+            ReportItem = CType(results(1),String)
+            ExecutionInfo = CType(results(2),ExecutionInfo3)
+            Return CType(results(0),Integer)
+        End Function
+        
+        '''<remarks/>
+        Public Overloads Sub Sort3Async(ByVal SortItem As String, ByVal Direction As SortDirectionEnum, ByVal Clear As Boolean, ByVal PaginationMode As PageCountMode)
+            Me.Sort3Async(SortItem, Direction, Clear, PaginationMode, Nothing)
+        End Sub
+        
+        '''<remarks/>
+        Public Overloads Sub Sort3Async(ByVal SortItem As String, ByVal Direction As SortDirectionEnum, ByVal Clear As Boolean, ByVal PaginationMode As PageCountMode, ByVal userState As Object)
+            If (Me.Sort3OperationCompleted Is Nothing) Then
+                Me.Sort3OperationCompleted = AddressOf Me.OnSort3OperationCompleted
+            End If
+            Me.InvokeAsync("Sort3", New Object() {SortItem, Direction, Clear, PaginationMode}, Me.Sort3OperationCompleted, userState)
+        End Sub
+        
+        Private Sub OnSort3OperationCompleted(ByVal arg As Object)
+            If (Not (Me.Sort3CompletedEvent) Is Nothing) Then
+                Dim invokeArgs As System.Web.Services.Protocols.InvokeCompletedEventArgs = CType(arg,System.Web.Services.Protocols.InvokeCompletedEventArgs)
+                RaiseEvent Sort3Completed(Me, New Sort3CompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState))
+            End If
+        End Sub
+        
+        '''<remarks/>
         <System.Web.Services.Protocols.SoapHeaderAttribute("ServerInfoHeaderValue", Direction:=System.Web.Services.Protocols.SoapHeaderDirection.Out),  _
          System.Web.Services.Protocols.SoapHeaderAttribute("TrustedUserHeaderValue"),  _
          System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices/Get"& _ 
@@ -1178,7 +1504,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1227,7 +1553,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1296,7 +1622,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
     Public Enum ExtensionTypeEnum
@@ -1315,7 +1641,7 @@ Namespace ReportExecutionService
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1360,8 +1686,78 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ParameterValue)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
+    Partial Public Class ExtensionSettings
+        
+        Private extensionField As String
+        
+        Private parameterValuesField() As ParameterValueOrFieldReference
+        
+        '''<remarks/>
+        Public Property Extension() As String
+            Get
+                Return Me.extensionField
+            End Get
+            Set
+                Me.extensionField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        <System.Xml.Serialization.XmlArrayItemAttribute(GetType(ParameterFieldReference)),  _
+         System.Xml.Serialization.XmlArrayItemAttribute(GetType(ParameterValue))>  _
+        Public Property ParameterValues() As ParameterValueOrFieldReference()
+            Get
+                Return Me.parameterValuesField
+            End Get
+            Set
+                Me.parameterValuesField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
+    Partial Public Class ParameterFieldReference
+        Inherits ParameterValueOrFieldReference
+        
+        Private parameterNameField As String
+        
+        Private fieldAliasField As String
+        
+        '''<remarks/>
+        Public Property ParameterName() As String
+            Get
+                Return Me.parameterNameField
+            End Get
+            Set
+                Me.parameterNameField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property FieldAlias() As String
+            Get
+                Return Me.fieldAliasField
+            End Get
+            Set
+                Me.fieldAliasField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ParameterFieldReference)),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ParameterValue)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1370,7 +1766,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1416,7 +1812,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1461,7 +1857,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1530,7 +1926,97 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
+    Partial Public Class ParametersGridCellDefinition
+        
+        Private rowIndexField As Integer
+        
+        Private columnsIndexField As Integer
+        
+        Private parameterNameField As String
+        
+        '''<remarks/>
+        Public Property RowIndex() As Integer
+            Get
+                Return Me.rowIndexField
+            End Get
+            Set
+                Me.rowIndexField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ColumnsIndex() As Integer
+            Get
+                Return Me.columnsIndexField
+            End Get
+            Set
+                Me.columnsIndexField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property ParameterName() As String
+            Get
+                Return Me.parameterNameField
+            End Get
+            Set
+                Me.parameterNameField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
+    Partial Public Class ParametersGridLayoutDefinition
+        
+        Private numberOfColumnsField As Integer
+        
+        Private numberOfRowsField As Integer
+        
+        Private cellDefinitionsField() As ParametersGridCellDefinition
+        
+        '''<remarks/>
+        Public Property NumberOfColumns() As Integer
+            Get
+                Return Me.numberOfColumnsField
+            End Get
+            Set
+                Me.numberOfColumnsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property NumberOfRows() As Integer
+            Get
+                Return Me.numberOfRowsField
+            End Get
+            Set
+                Me.numberOfRowsField = value
+            End Set
+        End Property
+        
+        '''<remarks/>
+        Public Property CellDefinitions() As ParametersGridCellDefinition()
+            Get
+                Return Me.cellDefinitionsField
+            End Get
+            Set
+                Me.cellDefinitionsField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1587,7 +2073,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1620,7 +2106,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1653,7 +2139,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1698,7 +2184,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -1731,7 +2217,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -2039,7 +2525,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
     Public Enum ParameterTypeEnum
@@ -2061,7 +2547,7 @@ Namespace ReportExecutionService
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
     Public Enum ParameterStateEnum
@@ -2081,7 +2567,8 @@ Namespace ReportExecutionService
     
     '''<remarks/>
     <System.Xml.Serialization.XmlIncludeAttribute(GetType(ExecutionInfo2)),  _
-     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+     System.Xml.Serialization.XmlIncludeAttribute(GetType(ExecutionInfo3)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -2282,7 +2769,8 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.Xml.Serialization.XmlIncludeAttribute(GetType(ExecutionInfo3)),  _
+     System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -2304,7 +2792,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
     Public Enum PageCountMode
@@ -2317,7 +2805,29 @@ Namespace ReportExecutionService
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
+     System.SerializableAttribute(),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code"),  _
+     System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
+    Partial Public Class ExecutionInfo3
+        Inherits ExecutionInfo2
+        
+        Private parametersLayoutField As ParametersGridLayoutDefinition
+        
+        '''<remarks/>
+        Public Property ParametersLayout() As ParametersGridLayoutDefinition
+            Get
+                Return Me.parametersLayoutField
+            End Get
+            Set
+                Me.parametersLayoutField = value
+            End Set
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -2389,7 +2899,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code"),  _
@@ -2425,7 +2935,7 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.4084.0"),  _
      System.SerializableAttribute(),  _
      System.Xml.Serialization.XmlTypeAttribute([Namespace]:="http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices")>  _
     Public Enum SortDirectionEnum
@@ -2441,11 +2951,11 @@ Namespace ReportExecutionService
     End Enum
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub ListSecureMethodsCompletedEventHandler(ByVal sender As Object, ByVal e As ListSecureMethodsCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class ListSecureMethodsCompletedEventArgs
@@ -2468,11 +2978,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LoadReportCompletedEventHandler(ByVal sender As Object, ByVal e As LoadReportCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class LoadReportCompletedEventArgs
@@ -2495,11 +3005,38 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub LoadReport3CompletedEventHandler(ByVal sender As Object, ByVal e As LoadReport3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class LoadReport3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LoadReport2CompletedEventHandler(ByVal sender As Object, ByVal e As LoadReport2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class LoadReport2CompletedEventArgs
@@ -2522,11 +3059,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LoadReportDefinitionCompletedEventHandler(ByVal sender As Object, ByVal e As LoadReportDefinitionCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class LoadReportDefinitionCompletedEventArgs
@@ -2557,11 +3094,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LoadReportDefinition2CompletedEventHandler(ByVal sender As Object, ByVal e As LoadReportDefinition2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class LoadReportDefinition2CompletedEventArgs
@@ -2592,11 +3129,46 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub LoadReportDefinition3CompletedEventHandler(ByVal sender As Object, ByVal e As LoadReportDefinition3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class LoadReportDefinition3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+        
+        '''<remarks/>
+        Public ReadOnly Property warnings() As Warning()
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(1),Warning())
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub SetExecutionCredentialsCompletedEventHandler(ByVal sender As Object, ByVal e As SetExecutionCredentialsCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class SetExecutionCredentialsCompletedEventArgs
@@ -2619,11 +3191,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub SetExecutionCredentials2CompletedEventHandler(ByVal sender As Object, ByVal e As SetExecutionCredentials2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class SetExecutionCredentials2CompletedEventArgs
@@ -2646,11 +3218,38 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub SetExecutionCredentials3CompletedEventHandler(ByVal sender As Object, ByVal e As SetExecutionCredentials3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class SetExecutionCredentials3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub SetExecutionParametersCompletedEventHandler(ByVal sender As Object, ByVal e As SetExecutionParametersCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class SetExecutionParametersCompletedEventArgs
@@ -2673,11 +3272,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub SetExecutionParameters2CompletedEventHandler(ByVal sender As Object, ByVal e As SetExecutionParameters2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class SetExecutionParameters2CompletedEventArgs
@@ -2700,11 +3299,38 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub SetExecutionParameters3CompletedEventHandler(ByVal sender As Object, ByVal e As SetExecutionParameters3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class SetExecutionParameters3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub ResetExecutionCompletedEventHandler(ByVal sender As Object, ByVal e As ResetExecutionCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class ResetExecutionCompletedEventArgs
@@ -2727,11 +3353,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub ResetExecution2CompletedEventHandler(ByVal sender As Object, ByVal e As ResetExecution2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class ResetExecution2CompletedEventArgs
@@ -2754,11 +3380,38 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub ResetExecution3CompletedEventHandler(ByVal sender As Object, ByVal e As ResetExecution3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class ResetExecution3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub RenderCompletedEventHandler(ByVal sender As Object, ByVal e As RenderCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class RenderCompletedEventArgs
@@ -2821,11 +3474,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub Render2CompletedEventHandler(ByVal sender As Object, ByVal e As Render2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class Render2CompletedEventArgs
@@ -2888,11 +3541,15 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub DeliverReportItemCompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub RenderStreamCompletedEventHandler(ByVal sender As Object, ByVal e As RenderStreamCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class RenderStreamCompletedEventArgs
@@ -2931,11 +3588,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub GetExecutionInfoCompletedEventHandler(ByVal sender As Object, ByVal e As GetExecutionInfoCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class GetExecutionInfoCompletedEventArgs
@@ -2958,11 +3615,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub GetExecutionInfo2CompletedEventHandler(ByVal sender As Object, ByVal e As GetExecutionInfo2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class GetExecutionInfo2CompletedEventArgs
@@ -2985,11 +3642,38 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub GetExecutionInfo3CompletedEventHandler(ByVal sender As Object, ByVal e As GetExecutionInfo3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class GetExecutionInfo3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub GetDocumentMapCompletedEventHandler(ByVal sender As Object, ByVal e As GetDocumentMapCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class GetDocumentMapCompletedEventArgs
@@ -3012,11 +3696,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LoadDrillthroughTargetCompletedEventHandler(ByVal sender As Object, ByVal e As LoadDrillthroughTargetCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class LoadDrillthroughTargetCompletedEventArgs
@@ -3039,11 +3723,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LoadDrillthroughTarget2CompletedEventHandler(ByVal sender As Object, ByVal e As LoadDrillthroughTarget2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class LoadDrillthroughTarget2CompletedEventArgs
@@ -3066,11 +3750,38 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub LoadDrillthroughTarget3CompletedEventHandler(ByVal sender As Object, ByVal e As LoadDrillthroughTarget3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class LoadDrillthroughTarget3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub ToggleItemCompletedEventHandler(ByVal sender As Object, ByVal e As ToggleItemCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class ToggleItemCompletedEventArgs
@@ -3093,11 +3804,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub NavigateDocumentMapCompletedEventHandler(ByVal sender As Object, ByVal e As NavigateDocumentMapCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class NavigateDocumentMapCompletedEventArgs
@@ -3120,11 +3831,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub NavigateBookmarkCompletedEventHandler(ByVal sender As Object, ByVal e As NavigateBookmarkCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class NavigateBookmarkCompletedEventArgs
@@ -3155,11 +3866,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub FindStringCompletedEventHandler(ByVal sender As Object, ByVal e As FindStringCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class FindStringCompletedEventArgs
@@ -3182,11 +3893,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub SortCompletedEventHandler(ByVal sender As Object, ByVal e As SortCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class SortCompletedEventArgs
@@ -3225,11 +3936,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub Sort2CompletedEventHandler(ByVal sender As Object, ByVal e As Sort2CompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class Sort2CompletedEventArgs
@@ -3268,11 +3979,54 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
+    Public Delegate Sub Sort3CompletedEventHandler(ByVal sender As Object, ByVal e As Sort3CompletedEventArgs)
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
+     System.Diagnostics.DebuggerStepThroughAttribute(),  _
+     System.ComponentModel.DesignerCategoryAttribute("code")>  _
+    Partial Public Class Sort3CompletedEventArgs
+        Inherits System.ComponentModel.AsyncCompletedEventArgs
+        
+        Private results() As Object
+        
+        Friend Sub New(ByVal results() As Object, ByVal exception As System.Exception, ByVal cancelled As Boolean, ByVal userState As Object)
+            MyBase.New(exception, cancelled, userState)
+            Me.results = results
+        End Sub
+        
+        '''<remarks/>
+        Public ReadOnly Property Result() As Integer
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(0),Integer)
+            End Get
+        End Property
+        
+        '''<remarks/>
+        Public ReadOnly Property ReportItem() As String
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(1),String)
+            End Get
+        End Property
+        
+        '''<remarks/>
+        Public ReadOnly Property ExecutionInfo() As ExecutionInfo3
+            Get
+                Me.RaiseExceptionIfNecessary
+                Return CType(Me.results(2),ExecutionInfo3)
+            End Get
+        End Property
+    End Class
+    
+    '''<remarks/>
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub GetRenderResourceCompletedEventHandler(ByVal sender As Object, ByVal e As GetRenderResourceCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class GetRenderResourceCompletedEventArgs
@@ -3303,11 +4057,11 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub ListRenderingExtensionsCompletedEventHandler(ByVal sender As Object, ByVal e As ListRenderingExtensionsCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0"),  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0"),  _
      System.Diagnostics.DebuggerStepThroughAttribute(),  _
      System.ComponentModel.DesignerCategoryAttribute("code")>  _
     Partial Public Class ListRenderingExtensionsCompletedEventArgs
@@ -3330,10 +4084,10 @@ Namespace ReportExecutionService
     End Class
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LogonUserCompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
     
     '''<remarks/>
-    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")>  _
+    <System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.4084.0")>  _
     Public Delegate Sub LogoffCompletedEventHandler(ByVal sender As Object, ByVal e As System.ComponentModel.AsyncCompletedEventArgs)
 End Namespace

@@ -13,7 +13,6 @@ Imports System.Web.Services
 Imports System.Web.Services.Protocols
 
 Public Class ZonePriceList
-    Private rs As ReportService.ReportingService2010 = New ReportService.ReportingService2010()
     Private rsExec As ReportExecutionService.ReportExecutionService = New ReportExecutionService.ReportExecutionService()
 
     Private _ReportURL As String = ""
@@ -35,13 +34,13 @@ Public Class ZonePriceList
     End Property
 
     Public Sub New(ByVal ReportServer As String, ByVal ReportURL As String, ByVal Username As String, ByVal Password As String, ByVal Domain As String)
-        rs.Credentials = New NetworkCredential(Username, Password, Domain)
+        'rs.Credentials = New NetworkCredential(Username, Password, Domain)
         rsExec.Credentials = New NetworkCredential(Username, Password, Domain)
         rsExec.Url = ReportServer
         _ReportURL = ReportURL
     End Sub
 
-    Public Function PrintToPDF(ByVal State As String, ByVal Format As String) As MemoryStream
+    Public Function PrintToPDF(ByVal State As String, ByVal Format As String, ByVal effectiveDate As Date) As MemoryStream
         Dim rtnReport As MemoryStream = Nothing
         Dim historyID As String = Nothing
         Dim deviceInfo As String = Nothing
@@ -64,7 +63,7 @@ Public Class ZonePriceList
         Dim ei As ReportExecutionService.ExecutionInfo = rsExec.LoadReport(_ReportURL, historyID)
 
         ' prepare the report parameters
-        Dim parameters As ReportExecutionService.ParameterValue() = SetParameters(State)
+        Dim parameters As ReportExecutionService.ParameterValue() = SetParameters(State, effectiveDate)
 
         ' Prepare device info to render PDF at 300 DPI
         Dim sb As New System.Text.StringBuilder(1024)
@@ -86,7 +85,7 @@ Public Class ZonePriceList
         Return rtnReport
     End Function
 
-    Private Function SetParameters(ByVal State As String) As ReportExecutionService.ParameterValue()
+    Private Function SetParameters(ByVal State As String, ByVal effectiveDate As Date) As ReportExecutionService.ParameterValue()
         Dim parameters(3) As ReportExecutionService.ParameterValue
 
         ' Set the warehouse parameter
@@ -98,7 +97,7 @@ Public Class ZonePriceList
         parameters(1) = New ReportExecutionService.ParameterValue()
         parameters(1).Label = "TargetDate"
         parameters(1).Name = "TargetDate"
-        parameters(1).Value = Date.Now()
+        parameters(1).Value = effectiveDate
 
         ' return the parameters to the calling module
         Return parameters

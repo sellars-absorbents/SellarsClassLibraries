@@ -15,7 +15,7 @@ Option Explicit On
 Namespace My
     
     <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.2.0.0"),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0"),  _
      Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
@@ -57,7 +57,7 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.WebServiceUrl),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("http://192.168.100.22:80/ReportServer/ReportExecution2005.asmx")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("http://sellarsreports:80/ReportServer/ReportExecution2005.asmx")>  _
         Public ReadOnly Property Sellars_DRCLib_ReportExecutionService_ReportExecutionService() As String
             Get
                 Return CType(Me("Sellars_DRCLib_ReportExecutionService_ReportExecutionService"),String)
@@ -67,7 +67,7 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.WebServiceUrl),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("http://192.168.100.22:80/ReportServer/ReportService2010.asmx")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("http://sellarsreports:80/ReportServer/ReportExecution2005.asmx")>  _
         Public ReadOnly Property Sellars_DRCLib_ReportService_ReportingService2010() As String
             Get
                 Return CType(Me("Sellars_DRCLib_ReportService_ReportingService2010"),String)

@@ -13,7 +13,7 @@ Imports System.Web.Services
 Imports System.Web.Services.Protocols
 
 Public Class MTSOverstockPriceList
-    Private rs As ReportService.ReportingService2010 = New ReportService.ReportingService2010()
+    'Private rs As ReportService.ReportingService2005 = New ReportService.ReportingService2005()
     Private rsExec As ReportExecutionService.ReportExecutionService = New ReportExecutionService.ReportExecutionService()
 
     Private _ReportURL As String = ""
@@ -35,7 +35,7 @@ Public Class MTSOverstockPriceList
     End Property
 
     Public Sub New(ByVal ReportServer As String, ByVal ReportURL As String, ByVal Username As String, ByVal Password As String, ByVal Domain As String)
-        rs.Credentials = New NetworkCredential(Username, Password, Domain)
+        'rs.Credentials = New NetworkCredential(Username, Password, Domain)
         rsExec.Credentials = New NetworkCredential(Username, Password, Domain)
         rsExec.Url = ReportServer
         _ReportURL = ReportURL
