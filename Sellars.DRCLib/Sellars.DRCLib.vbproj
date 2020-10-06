@@ -334,6 +334,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web\QueuedWebSalesOrderDetail.vb" />
+    <Compile Include="Web\QueuedWebSalesOrderMaster.vb" />
     <Compile Include="ZonePriceList.vb" />
   </ItemGroup>
   <ItemGroup>
