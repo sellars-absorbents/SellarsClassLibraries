@@ -757,4 +757,51 @@ Public Class QueuedWebSalesOrderMaster
 
         master.CreatedOn = dr("CreatedOn")
     End Sub
+
+    Public Sub IncrementProcessTries(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderMaster 
+                             set ProcessTries = ProcessTries + 1
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub SetOrderNumber(ByVal shopfloorConnection As String, ByVal orderNumber As String)
+        Dim sql As String = "update QueuedWebSalesOrderMaster 
+                             set ORDNUM = @ORDNUM
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ORDNUM", orderNumber))
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub MarkAsProcessed(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderMaster 
+                             set Processed = 1,
+                             ProcessedOn = GETDATE()
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
 End Class

@@ -210,4 +210,55 @@ Public Class SalesOrderDetailNotes
 
         nte.CreatedOn = dr("CreatedOn")
     End Sub
+
+    Public Sub IncrementProcessTries(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetailNote 
+                             set ProcessTries = ProcessTries + 1
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub SetOrderInfo(ByVal shopfloorConnection As String, ByVal orderNumber As String, ByVal lineNumber As String, ByVal delNumber As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetailNote 
+                             set ORDNUM = @ORDNUM,
+                             LINNUM = @LINNUM,
+                             DELNUM = @DELNUM
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ORDNUM", orderNumber))
+                command.Parameters.Add(New SqlParameter("@LINNUM", lineNumber.PadLeft(2, " "c)))
+                command.Parameters.Add(New SqlParameter("@DELNUM", delNumber.PadLeft(2, " "c)))
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub MarkAsProcessed(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetailNote 
+                             set Processed = 1,
+                             ProcessedOn = GETDATE()
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
 End Class

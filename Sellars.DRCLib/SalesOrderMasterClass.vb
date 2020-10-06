@@ -70,8 +70,6 @@ Public Class SalesOrderMasterClass
     Private _UDFREF As String = ""
     Private _SHPTHRU As String = ""
     Private _FILLER As String = ""
-
-    'new fields in max 5
     Private _XDFINT As Integer = 0
     Private _XDFFLT As Double = 0
     Private _XDFBOL As String = ""
@@ -81,8 +79,6 @@ Public Class SalesOrderMasterClass
     Private _CREATIONDATE As Date = DefaultDate
     Private _MODIFIEDBY As String = ""
     Private _MODIFICATIONDATE As Date = DefaultDate
-
-    ' Keep track of sales order master extension data
     Private _EnteredBy As String = ""
     Private _LastChanged As Date = DefaultDate
     Private _LastPrinted As Date = DefaultDate
@@ -90,14 +86,12 @@ Public Class SalesOrderMasterClass
     Private _Notes As String = ""
     Private _Hold As Boolean = False
     Private _HoldUserEmail As String = ""
-
     Private _DefaultStockID As String = ""
     Private _ShipFromStockID As String = ""
     Private _SellarsOrderType As String = ""
     Private _Finished As Boolean = False
     Private _EstimatedShipping As Decimal = 0
     Private _AllowFinish As Boolean = False
-
     Private _Function As String = ""
 
     Public Enum OrderStatus
@@ -1907,6 +1901,93 @@ Public Class SalesOrderMasterClass
 
         Return isDuplicate
     End Function
+
+    Public Sub ClearProperties()
+        _found = False
+        _ORDNUM = ""
+        _CUSTID = ""
+        _GLXREF = ""
+        _STYPE = ""
+        _STATUS = ""
+        _CUSTPO = ""
+        _ORDID = ""
+        _ORDDTE = DefaultDate
+        _FILL01 = ""
+        _SHPCDE = ""
+        _REP1 = ""
+        _SPLIT1 = 100
+        _REP2 = ""
+        _SPLIT2 = 0
+        _REP3 = ""
+        _SPLIT3 = 0
+        _COMMIS = 0
+        _TERMS = ""
+        _SHPVIA = ""
+        _XURR = ""
+        _FOB = ""
+        _TAXCD1 = ""
+        _TAXCD2 = ""
+        _TAXCD3 = ""
+        _COMNT1 = ""
+        _COMNT2 = ""
+        _COMNT3 = ""
+        _SHPLBL = 0
+        _INVCE = "N"
+        _APPINV = ""
+        _REASON = ""
+        _NAME = ""
+        _ADDR1 = ""
+        _ADDR2 = ""
+        _CITY = ""
+        _STATE = ""
+        _ZIPCD = ""
+        _CNTRY = ""
+        _PHONE = ""
+        _CNTCT = ""
+        _TAXPRV = ""
+        _FEDTAX = "N"
+        _TAXABL = ""
+        _EXCRTE = 0
+        _FIXVAR = "F"
+        _CURR = "USA"
+        _RCLDTE = DefaultDate
+        _FILL02 = ""
+        _TTAX = 0
+        _LNETAX = "N"
+        _ADDR3 = ""
+        _ADDR4 = ""
+        _ADDR5 = ""
+        _ADDR6 = ""
+        _MCOMP = ""
+        _MSITE = ""
+        _UDFKEY = ""
+        _UDFREF = ""
+        _SHPTHRU = ""
+        _FILLER = ""
+        _XDFINT = 0
+        _XDFFLT = 0
+        _XDFBOL = ""
+        _XDFDTE = DefaultDate
+        _XDFTXT = ""
+        _CREATEDBY = ""
+        _CREATIONDATE = DefaultDate
+        _MODIFIEDBY = ""
+        _MODIFICATIONDATE = DefaultDate
+        _EnteredBy = ""
+        _LastChanged = DefaultDate
+        _LastPrinted = DefaultDate
+        _ProofedBy = ""
+        _Notes = ""
+        _Hold = False
+        _HoldUserEmail = ""
+        _DefaultStockID = ""
+        _ShipFromStockID = ""
+        _SellarsOrderType = ""
+        _Finished = False
+        _EstimatedShipping = 0
+        _AllowFinish = False
+        _Function = ""
+    End Sub
 
     ' This function is the initialization routine that needs to be called before any MaxUpdateXML function is called
     Public Overridable Sub InitializeMax(ByVal connStr As String, ByVal comName As String, ByVal licPath As String, ByVal logPath As String, ByVal log As Boolean)

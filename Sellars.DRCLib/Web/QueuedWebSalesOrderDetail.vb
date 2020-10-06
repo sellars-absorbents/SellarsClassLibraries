@@ -3,7 +3,7 @@ Imports System.Data.SqlClient
 
 Public Class QueuedWebSalesOrderDetail
     Protected Friend Const DefaultDate As Date = #1/1/2000 12:01:00 AM#
-    Private _LINNUM As Integer = 0                      ' Line Number
+    Private _LINNUM As String = ""                      ' Line Number
     Private _PRTNUM As String = ""                    ' Part Number
     Private _DUEDATE As Date = DefaultDate            ' Current Due Date
     Private _SLSUOM As String = ""                    ' Unit of Measure (e.g. 'EA', 'RL', etc.)
@@ -18,6 +18,8 @@ Public Class QueuedWebSalesOrderDetail
     Private _DiscountPercent As Decimal = 0
     Private _GLXREF As String = ""
     Private _Notes As New SalesOrderDetailNotes
+    Private _purchasedProcessed As Boolean = False
+    Private _freeProcessed As Boolean = False
     Private _id As Guid
     Private _masterID As Guid
 
@@ -50,12 +52,12 @@ Public Class QueuedWebSalesOrderDetail
         End Set
     End Property
 
-    Public Property LINNUM() As Integer
+    Public Property LINNUM() As String
         Get
             Return _LINNUM
         End Get
-        Set(ByVal value As Integer)
-            _LINNUM = GetValue(value, 0)
+        Set(ByVal value As String)
+            _LINNUM = GetValue(value, "")
         End Set
     End Property
 
@@ -142,12 +144,30 @@ Public Class QueuedWebSalesOrderDetail
         End Set
     End Property
 
+    Public Property FreeProcessed As Boolean
+        Get
+            Return _freeProcessed
+        End Get
+        Private Set(value As Boolean)
+            _freeProcessed = value
+        End Set
+    End Property
+
     Public Property QuantityPurchased() As Double
         Get
             Return _QUANTITYPURCHASED
         End Get
         Set(ByVal value As Double)
             _QUANTITYPURCHASED = GetValue(value, 0)
+        End Set
+    End Property
+
+    Public Property PurchasedProcessed As Boolean
+        Get
+            Return _purchasedProcessed
+        End Get
+        Private Set(value As Boolean)
+            _purchasedProcessed = value
         End Set
     End Property
 
@@ -335,7 +355,9 @@ Public Class QueuedWebSalesOrderDetail
         detail.SLSUOM = dr("SLSUOM")
         detail.PRICE = dr("PRICE")
         detail.QuantityPurchased = dr("QuantityPurchased")
+        detail.PurchasedProcessed = dr("PurchasedProcessed")
         detail.QuantityFree = dr("QuantityFree")
+        detail.FreeProcessed = dr("FreeProcessed")
         detail.DISC = dr("DISC")
         detail.BuyerPartNumber = dr("BuyerPartNumber")
         detail.PromotionCode = dr("PromotionCode")
@@ -354,5 +376,86 @@ Public Class QueuedWebSalesOrderDetail
         End If
 
         detail.CreatedOn = dr("CreatedOn")
+    End Sub
+
+    Public Sub IncrementProcessTries(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetail 
+                             set ProcessTries = ProcessTries + 1
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub SetOrderInfo(ByVal shopfloorConnection As String, ByVal orderNumber As String, ByVal lineNumber As String, ByVal delNumber As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetail 
+                             set ORDNUM = @ORDNUM,
+                             LINNUM = @LINNUM,
+                             DELNUM = @DELNUM
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ORDNUM", orderNumber))
+                command.Parameters.Add(New SqlParameter("@LINNUM", lineNumber.PadLeft(2, " "c)))
+                command.Parameters.Add(New SqlParameter("@DELNUM", delNumber.PadLeft(2, " "c)))
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub MarkPurchasedAsProcessed(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetail 
+                             set PurchasedProcessed = 1
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub MarkFreeAsProcessed(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetail 
+                             set FreeProcessed = 1
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
+    Public Sub MarkAsProcessed(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderDetail 
+                             set Processed = 1,
+                             ProcessedOn = GETDATE()
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 End Class
