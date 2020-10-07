@@ -804,4 +804,19 @@ Public Class QueuedWebSalesOrderMaster
             End Using
         End Using
     End Sub
+
+    Public Sub MarkAsOnHold(ByVal shopfloorConnection As String)
+        Dim sql As String = "update QueuedWebSalesOrderMaster 
+                             set OnHold = 1 
+                             where ID = @ID"
+
+        Using connection As SqlConnection = New SqlConnection(shopfloorConnection)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ID", Me.ID))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
 End Class
