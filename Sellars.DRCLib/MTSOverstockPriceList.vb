@@ -13,7 +13,7 @@ Imports System.Web.Services
 Imports System.Web.Services.Protocols
 
 Public Class MTSOverstockPriceList
-    Private rs As ReportService.ReportingService2010 = New ReportService.ReportingService2010()
+    'Private rs As ReportService.ReportingService2005 = New ReportService.ReportingService2005()
     Private rsExec As ReportExecutionService.ReportExecutionService = New ReportExecutionService.ReportExecutionService()
 
     Private _ReportURL As String = ""
@@ -35,7 +35,7 @@ Public Class MTSOverstockPriceList
     End Property
 
     Public Sub New(ByVal ReportServer As String, ByVal ReportURL As String, ByVal Username As String, ByVal Password As String, ByVal Domain As String)
-        rs.Credentials = New NetworkCredential(Username, Password, Domain)
+        'rs.Credentials = New NetworkCredential(Username, Password, Domain)
         rsExec.Credentials = New NetworkCredential(Username, Password, Domain)
         rsExec.Url = ReportServer
         _ReportURL = ReportURL
@@ -61,31 +61,26 @@ Public Class MTSOverstockPriceList
         Dim _credentials As ReportService.DataSourceCredentials() = Nothing
         Dim _parameters As ReportService.ParameterValue() = Nothing
 
-        Try
-            ' Load the selected report
-            Dim ei As ReportExecutionService.ExecutionInfo = rsExec.LoadReport(_ReportURL, historyID)
+        Dim ei As ReportExecutionService.ExecutionInfo = rsExec.LoadReport(_ReportURL, historyID)
 
-            ' prepare the report parameters
-            Dim parameters As ReportExecutionService.ParameterValue() = SetParameters(ReportType)
+        ' prepare the report parameters
+        Dim parameters As ReportExecutionService.ParameterValue() = SetParameters(ReportType)
 
-            ' Prepare device info to render PDF at 300 DPI
-            Dim sb As New System.Text.StringBuilder(1024)
-            Dim xr As System.Xml.XmlWriter = XmlWriter.Create(sb)
-            xr.WriteStartElement("DeviceInfo")
-            xr.WriteElementString("DpiX", "300")
-            xr.WriteElementString("DpiY", "300")
-            xr.Close()
+        ' Prepare device info to render PDF at 300 DPI
+        Dim sb As New System.Text.StringBuilder(1024)
+        Dim xr As System.Xml.XmlWriter = XmlWriter.Create(sb)
+        xr.WriteStartElement("DeviceInfo")
+        xr.WriteElementString("DpiX", "300")
+        xr.WriteElementString("DpiY", "300")
+        xr.Close()
 
-            deviceInfo = sb.ToString()
+        deviceInfo = sb.ToString()
 
-            rsExec.SetExecutionParameters(parameters, "en-us")
-            results = rsExec.Render(Format, deviceInfo, extension, mimeType, encoding, warnings, streamIDs)
+        rsExec.SetExecutionParameters(parameters, "en-us")
+        results = rsExec.Render(Format, deviceInfo, extension, mimeType, encoding, warnings, streamIDs)
 
-            ' put the results into the return memorystream
-            rtnReport = New MemoryStream(results)
-        Catch ex As Exception
-            Dim msg As String = ex.Message
-        End Try
+        ' put the results into the return memorystream
+        rtnReport = New MemoryStream(results)
 
         ' return the report memorystream object
         Return rtnReport

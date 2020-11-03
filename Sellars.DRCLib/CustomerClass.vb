@@ -553,30 +553,28 @@ Public Class CustomerClass
     Private Function ReadMaxOpenOrderTotal(ByVal passcustomer As String, ByVal passType As String) As Decimal
         Dim strSQL As String = "SELECT Sum((DUEQTY_28 * PRICE_28) + TAX1_28 + TAX2_28 + Tax3_28) as OpenTotal FROM ""SO_Detail"" where CUSTID_28 = '" & passcustomer.Trim & "' and STATUS_28 = '3' and STYPE_28 = '" & passType & "'"
         Dim returnvalue As Decimal = 0
-        Dim dr As SqlDataReader
 
         ' Set up the new Sql command and execute the query
         OpenMaxConnection()
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
 
-        ' If no records were read, then return a zero, otherwise return the amount of open line items
-        Try
-            dr = cmd.ExecuteReader()
-            If dr.Read() Then
-                If IsDBNull(dr("OpenTotal")) Then
-                    returnvalue = 0
-                Else
-                    returnvalue = dr("OpenTotal")
-                End If
-            End If
-        Catch ex As Exception
-            returnvalue = 0
-            MsgBox("Error Reading Open Order Totals, sql statement is:" & vbCrLf & vbCrLf & strSQL & vbCrLf & vbCrLf & "Error Message is:" & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Critical, "Error Reading Open Order Totals")
-        End Try
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            ' If no records were read, then return a zero, otherwise return the amount of open line items
+            Try
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
+                        If IsDBNull(dr("OpenTotal")) Then
+                            returnvalue = 0
+                        Else
+                            returnvalue = dr("OpenTotal")
+                        End If
+                    End If
+                End Using
+            Catch ex As Exception
+                returnvalue = 0
+                MsgBox("Error Reading Open Order Totals, sql statement is:" & vbCrLf & vbCrLf & strSQL & vbCrLf & vbCrLf & "Error Message is:" & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Critical, "Error Reading Open Order Totals")
+            End Try
+        End Using
 
-        ' Free up memory
-        dr.Close()
-        dr = Nothing
         CloseMaxConnection()
 
         ' Return the total value of all open line items
@@ -586,38 +584,30 @@ Public Class CustomerClass
     Private Function ReadMaxOpenOrderTotal2(ByVal passcustomer As String, ByVal passType As String) As Decimal
         Dim strSQL As String = "SELECT Sum((DUEQTY_28 * PRICE_28) + TAX1_28 + TAX2_28 + Tax3_28) as OpenTotal FROM ""SO_Detail"" where CUSTID_28 = '" & passcustomer.Trim & "' and STATUS_28 = '3' and STYPE_28 = '" & passType & "'"
         Dim returnvalue As Decimal = 0
-        Dim dr As SqlDataReader
 
         ' Set up the new Sql command and execute the query
         ' try to open another connection to the max database
-        Dim MaxConnection As SqlConnection = New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
-        MaxConnection.Open()
+        Using MaxConnection As SqlConnection = New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
+            MaxConnection.Open()
 
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-
-        ' If no records were read, then return a zero, otherwise return the amount of open line items
-        Try
-            dr = cmd.ExecuteReader()
-            If dr.Read() Then
-                If IsDBNull(dr("OpenTotal")) Then
+            Using cmd As New SqlCommand(strSQL, MaxConnection)
+                ' If no records were read, then return a zero, otherwise return the amount of open line items
+                Try
+                    Using dr As SqlDataReader = cmd.ExecuteReader()
+                        If dr.Read() Then
+                            If IsDBNull(dr("OpenTotal")) Then
+                                returnvalue = 0
+                            Else
+                                returnvalue = dr("OpenTotal")
+                            End If
+                        End If
+                    End Using
+                Catch ex As Exception
                     returnvalue = 0
-                Else
-                    returnvalue = dr("OpenTotal")
-                End If
-            End If
-            ' Close the datareader
-            dr.Close()
-        Catch ex As Exception
-            returnvalue = 0
-            MsgBox("Error Reading Open Order Totals, sql statement is:" & vbCrLf & vbCrLf & strSQL & vbCrLf & vbCrLf & "Error Message is:" & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Critical, "Error Reading Open Order Totals")
-        End Try
-
-        ' Free up memory
-        dr = Nothing
-        If MaxConnection.State = ConnectionState.Open Then
-            MaxConnection.Close()
-        End If
-        MaxConnection.Dispose()
+                    MsgBox("Error Reading Open Order Totals, sql statement is:" & vbCrLf & vbCrLf & strSQL & vbCrLf & vbCrLf & "Error Message is:" & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Critical, "Error Reading Open Order Totals")
+                End Try
+            End Using
+        End Using
 
         ' Return the total value of all open line items
         Return returnvalue
@@ -632,94 +622,87 @@ Public Class CustomerClass
         oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, passcustomer, ParameterDirection.Input)
 
         ' Run the stored procedure and return a datareader
-        Dim dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerRecord")
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadCustomerRecord")
+            ' Assign the variables from the database to properties
+            If dr.Read() Then
+                _Name = dr("Name")
+                _Status = dr("Status")
+                ' Set the credit limit field.  If the value is zero, then this means
+                ' MAX value, or unlimited credit
+                _CreditLimit = dr("CreditLimit")
+                If _CreditLimit = 0 Then
+                    _CreditLimit = _CreditLimit.MaxValue
+                End If
+                If IsDBNull(dr("SalesRep")) Then
+                    _SalesRep = ""
+                Else
+                    _SalesRep = dr("SalesRep")
+                End If
+                _Addr1 = dr("Address1")
+                If IsDBNull(dr("Address2")) Then
+                    _Addr2 = ""
+                Else
+                    _Addr2 = dr("Address2")
+                End If
+                If IsDBNull(dr("City")) Then
+                    _City = ""
+                Else
+                    _City = dr("City")
+                End If
+                If IsDBNull(dr("State")) Then
+                    _State = ""
+                Else
+                    _State = dr("State")
+                End If
+                If IsDBNull(dr("ZipCode")) Then
+                    _ZipCode = ""
+                Else
+                    _ZipCode = dr("ZipCode")
+                End If
+                _MailingAddress = FullAddress()
 
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            _Name = dr("Name")
-            _Status = dr("Status")
-            ' Set the credit limit field.  If the value is zero, then this means
-            ' MAX value, or unlimited credit
-            _CreditLimit = dr("CreditLimit")
-            If _CreditLimit = 0 Then
-                _CreditLimit = _CreditLimit.MaxValue
-            End If
-            If IsDBNull(dr("SalesRep")) Then
-                _SalesRep = ""
-            Else
-                _SalesRep = dr("SalesRep")
-            End If
-            _Addr1 = dr("Address1")
-            If IsDBNull(dr("Address2")) Then
-                _Addr2 = ""
-            Else
-                _Addr2 = dr("Address2")
-            End If
-            If IsDBNull(dr("City")) Then
-                _City = ""
-            Else
-                _City = dr("City")
-            End If
-            If IsDBNull(dr("State")) Then
-                _State = ""
-            Else
-                _State = dr("State")
-            End If
-            If IsDBNull(dr("ZipCode")) Then
-                _ZipCode = ""
-            Else
-                _ZipCode = dr("ZipCode")
-            End If
-            _MailingAddress = FullAddress()
+                _ShipVia = "-1"
+                _FOB = ""
+                _SalesRepName = ""
+                _TaxCode1 = ""
+                _TaxCode2 = ""
+                _TaxCode3 = ""
 
-            _ShipVia = "-1"
-            _FOB = ""
-            _SalesRepName = ""
-            _TaxCode1 = ""
-            _TaxCode2 = ""
-            _TaxCode3 = ""
+                If IsDBNull(dr("Terms")) Then
+                    _TermCode = "-1"
+                Else
+                    _TermCode = dr("Terms")
+                End If
 
-            If IsDBNull(dr("Terms")) Then
-                _TermCode = "-1"
-            Else
-                _TermCode = dr("Terms")
+                Terms = New CodeMasterClass(ClassBase.DataSource.Sellars, "TERM", dr("Terms"))
             End If
-            Terms = New CodeMasterClass(ClassBase.DataSource.Sellars, "TERM", dr("Terms"))
-
-            ' close the data reader
-            dr.Close()
-        End If
-
-        ' free up the memory reserved by the datareader
-        dr = Nothing
+        End Using
     End Sub
 
     Public Function IsOverLimit(ByVal passcustomer As String) As Boolean
         Dim CreditUsed As Decimal = 0
-        Try
-            ' Start a task to get the total amount of ordered, but not invoiced customer order line items
-            Dim onicuTask As Task(Of Decimal) = Task.Factory.StartNew(Function() As Decimal
-                                                                          Return ReadMaxOpenOrderTotal2(passcustomer, "CU")
-                                                                      End Function)
 
-            ' Get the total amount of ordered, but not invoices credit memo line items
-            Dim onicrTask As Task(Of Decimal) = Task.Factory.StartNew(Function() As Decimal
-                                                                          Return ReadMaxOpenOrderTotal2(passcustomer, "CR")
-                                                                      End Function)
+        ' Start a task to get the total amount of ordered, but not invoiced customer order line items
+        Dim onicuTask As Task(Of Decimal) = Task.Factory.StartNew(Function() As Decimal
+                                                                      Return ReadMaxOpenOrderTotal2(passcustomer, "CU")
+                                                                  End Function)
 
-            ' Get the total amount of ordered, but not invoices credit memo line items
-            Dim onigcdTask As Task(Of Decimal) = Task.Factory.StartNew(Function() As Decimal
-                                                                           Return GetCreditData(passcustomer)
-                                                                       End Function)
+        ' Get the total amount of ordered, but not invoices credit memo line items
+        Dim onicrTask As Task(Of Decimal) = Task.Factory.StartNew(Function() As Decimal
+                                                                      Return ReadMaxOpenOrderTotal2(passcustomer, "CR")
+                                                                  End Function)
 
-            ' Wait for all the tasks running on threads to to complete before continuing
-            Task.WaitAll(onicuTask, onicrTask, onigcdTask)
+        ' Get the total amount of ordered, but not invoices credit memo line items
+        Dim onigcdTask As Task(Of Decimal) = Task.Factory.StartNew(Function() As Decimal
+                                                                       Return GetCreditData(passcustomer)
+                                                                   End Function)
 
-            _OrderedNotInvoicedAmount = onicuTask.Result
-            _OrderedNotInvoicedCredit = onicrTask.Result
-            CreditUsed = onigcdTask.Result
-        Catch
-        End Try
+        ' Wait for all the tasks running on threads to to complete before continuing
+        Task.WaitAll(onicuTask, onicrTask, onigcdTask)
+
+        _OrderedNotInvoicedAmount = onicuTask.Result
+        _OrderedNotInvoicedCredit = onicrTask.Result
+        CreditUsed = onigcdTask.Result
 
         ' Check if the credit used is over the credit limit
         If (CreditUsed + OrderedNotInvoicedAmount - OrderedNotInvoicedCredit) > CreditLimit Then
@@ -729,7 +712,6 @@ Public Class CustomerClass
             _AmountOverLimit = 0
             Return False
         End If
-
     End Function
 
     Private Function GetCreditData(ByVal passcustomer As String) As Decimal
@@ -741,11 +723,10 @@ Public Class CustomerClass
                                "from RM00103 " & _
                                "where CUSTNMBR = @CUSTID"
 
-        Dim dr As SqlDataReader
-
         '     Open the connection to the Dynamics tables
         '     and execute the SQL statement prepared above
         OpenDynamicsConnection()
+
         Try
             ' Set up a new SQL command object
             Dim cmd As New SqlCommand(strSQL, DynamicsConnection)
@@ -758,25 +739,26 @@ Public Class CustomerClass
 
             ' Set up a new sql data reader object that will contain the results of the command after it has been
             ' executed against the database
-            dr = cmd.ExecuteReader()
-            If dr.Read() Then
-                _CustomerBalance = dr("CUSTBLNC")
-                _UnpostedSalesAmount = dr("UNPSTDSA")
-                _UnpostedOtherSalesAmount = dr("UNPSTOSA")
-                _OnOrderAmount = dr("ONORDAMT")
-                _UnpostedCashAmount = dr("UNPSTDCA")
-                _UnpostedOtherCashAmount = dr("UNPSTOCA")
-                _DepositsReceived = dr("DEPRECV")
-                CreditUsed = dr("CUSTBLNC") + dr("UNPSTDSA") + dr("UNPSTOSA") + dr("ONORDAMT") - dr("UNPSTDCA") - dr("UNPSTOCA") - dr("DEPRECV")
-            Else
-                _CustomerBalance = 0
-                _UnpostedSalesAmount = 0
-                _UnpostedOtherSalesAmount = 0
-                _OnOrderAmount = 0
-                _UnpostedCashAmount = 0
-                _UnpostedOtherCashAmount = 0
-                _DepositsReceived = 0
-            End If
+            Using dr As SqlDataReader = cmd.ExecuteReader()
+                If dr.Read() Then
+                    _CustomerBalance = dr("CUSTBLNC")
+                    _UnpostedSalesAmount = dr("UNPSTDSA")
+                    _UnpostedOtherSalesAmount = dr("UNPSTOSA")
+                    _OnOrderAmount = dr("ONORDAMT")
+                    _UnpostedCashAmount = dr("UNPSTDCA")
+                    _UnpostedOtherCashAmount = dr("UNPSTOCA")
+                    _DepositsReceived = dr("DEPRECV")
+                    CreditUsed = dr("CUSTBLNC") + dr("UNPSTDSA") + dr("UNPSTOSA") + dr("ONORDAMT") - dr("UNPSTDCA") - dr("UNPSTOCA") - dr("DEPRECV")
+                Else
+                    _CustomerBalance = 0
+                    _UnpostedSalesAmount = 0
+                    _UnpostedOtherSalesAmount = 0
+                    _OnOrderAmount = 0
+                    _UnpostedCashAmount = 0
+                    _UnpostedOtherCashAmount = 0
+                    _DepositsReceived = 0
+                End If
+            End Using
         Catch Ex As Exception
             MsgBox("Error reading Dynamics Credit Limit Data:" & vbCrLf & vbCrLf & Ex.Message)
             _CustomerBalance = 0
@@ -789,9 +771,6 @@ Public Class CustomerClass
             CreditUsed = 0
         End Try
 
-        ' Free up the memory used for the dynamics connection
-        dr.Close()
-        dr = Nothing
         CloseDynamicsConnection()
 
         Return CreditUsed

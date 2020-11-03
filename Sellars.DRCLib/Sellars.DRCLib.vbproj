@@ -57,7 +57,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>Sellars.DRCLib.xml</DocumentationFile>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
@@ -74,7 +74,7 @@
     <WarningLevel>0</WarningLevel>
     <NoWarn>42016,42017,42018,42019,42020,42021,42022,42024,42025,42030,42032,42099,42104,42105,42106,42107,42108,42109,42353,42354,42355</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -103,14 +103,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>Sellars.DRCLib.xml</DocumentationFile>
     <Optimize>false</Optimize>
     <WarningLevel>0</WarningLevel>
     <NoWarn>42016,42017,42018,42019,42020,42021,42022,42024,42025,42030,42032,42099,42104,42105,42106,42107,42108,42109,42353,42354,42355</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.vb</CodeAnalysisModuleSuppressionsFile>
     <DefineDebug>true</DefineDebug>
@@ -131,12 +131,37 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>Sellars.DRCLib.xml</DocumentationFile>
+    <WarningLevel>0</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42020,42021,42022,42024,42025,42030,42032,42099,42104,42105,42106,42107,42108,42109,42353,42354,42355</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <BaseAddress>285212672</BaseAddress>
+    <DocumentationFile>Sellars.DRCLib.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <WarningLevel>0</WarningLevel>
+    <NoWarn>42016,42017,42018,42019,42020,42021,42022,42024,42025,42030,42032,42099,42104,42105,42106,42107,42108,42109,42353,42354,42355</NoWarn>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic.Compatibility" />
-    <Reference Include="Sellars.SQL, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SellarsSQL\bin\Sellars.SQL.dll</HintPath>
+    <Reference Include="Interop.MaxUpdateXML">
+      <HintPath>Third Party\Interop.MaxUpdateXML.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -206,6 +231,7 @@
     <Compile Include="EDITarget850Class.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ErrorLog.vb" />
     <Compile Include="Exceptions.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -225,6 +251,8 @@
     <Compile Include="MaxCompanies.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MAXTransaction.vb" />
+    <Compile Include="MAXTransactionASP.vb" />
     <Compile Include="MTSOverstockPriceList.vb" />
     <Compile Include="My Project\Settings.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -253,20 +281,27 @@
     <Compile Include="PriceQuoteClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ProcessLog.vb" />
     <Compile Include="PurchaseOrderClass.vb" />
+    <Compile Include="PurchaseOrderClassASP.vb" />
     <Compile Include="SalesOrderClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SalesOrderDetail.vb" />
     <Compile Include="SalesOrderDetailClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SalesOrderDetailClassASP.vb" />
+    <Compile Include="SalesOrderDetailNotes.vb" />
     <Compile Include="SalesOrderMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SalesOrderMasterClassASP.vb" />
     <Compile Include="SalesOrderPromotionCodes.vb" />
     <Compile Include="SalesRepMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ShippingCarrierInfo.vb" />
     <Compile Include="ShippingMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -274,6 +309,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ShopOrderMasterClass.vb" />
+    <Compile Include="ShopOrderMasterClassASP.vb" />
     <Compile Include="SODetailExtClass.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -281,7 +317,6 @@
     <Compile Include="SONotesClass.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StockAdjustment.vb" />
     <Compile Include="StockMasterClass.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -299,10 +334,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web\QueuedWebSalesOrderDetail.vb" />
+    <Compile Include="Web\QueuedWebSalesOrderMaster.vb" />
     <Compile Include="ZonePriceList.vb" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Third Party\MaxUpdateXML.dll" />
+    <Compile Include="SalesOrder.vb" />
+    <Content Include="Third Party\ERMRemCl.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\EXACTRMEnc.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\Interop.MaxUpdateXML.dll" />
+    <Content Include="Third Party\MAXEXEC2.DLL">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MaxOrdr2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MaxTran2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Third Party\MaxUpdateXML.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -328,10 +384,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="http://192.168.100.22/ReportServer/ReportExecution2005.asmx">
+    <WebReferenceUrl Include="http://sellarsreports/ReportServer/ReportExecution2005.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\ReportExecutionService\</RelPath>
-      <UpdateFromURL>http://192.168.100.22/ReportServer/ReportExecution2005.asmx</UpdateFromURL>
+      <UpdateFromURL>http://sellarsreports/ReportServer/ReportExecution2005.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -339,10 +395,10 @@
       <CachedAppSettingsObjectName>MySettings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>Sellars_DRCLib_ReportExecutionService_ReportExecutionService</CachedSettingsPropName>
     </WebReferenceUrl>
-    <WebReferenceUrl Include="http://192.168.100.22/ReportServer/ReportService2010.asmx">
+    <WebReferenceUrl Include="http://sellarsreports/ReportServer/ReportExecution2005.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\ReportService\</RelPath>
-      <UpdateFromURL>http://192.168.100.22/ReportServer/ReportService2010.asmx</UpdateFromURL>
+      <UpdateFromURL>http://sellarsreports/ReportServer/ReportExecution2005.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>
@@ -369,6 +425,9 @@
     <None Include="Web References\ReportExecutionService\ExecutionInfo2.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+    <None Include="Web References\ReportExecutionService\ExecutionInfo3.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
     <None Include="Web References\ReportExecutionService\Extension.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -380,115 +439,29 @@
     <None Include="Web References\ReportExecutionService\Warning.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\ReportService\ActiveState.datasource">
+    <None Include="Web References\ReportService\DocumentMapNode.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\ReportService\CacheRefreshPlan.datasource">
+    <None Include="Web References\ReportService\ExecutionInfo.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\ReportService\CacheRefreshPlanState.datasource">
+    <None Include="Web References\ReportService\ExecutionInfo2.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-    <None Include="Web References\ReportService\CatalogItem.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\DataRetrievalPlan.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\DataSetDefinition.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\DataSource.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\DataSourceDefinition.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\DataSourcePrompt.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Event.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ExpirationDefinition.datasource">
+    <None Include="Web References\ReportService\ExecutionInfo3.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\ReportService\Extension.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ExtensionParameter.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ExtensionSettings.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ItemHistorySnapshot.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ItemParameter.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ItemReferenceData.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Job.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ModelCatalogItem.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ModelDrillthroughReport.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ModelItem.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ParameterValue.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ParameterValueOrFieldReference.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Policy.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Property.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
     <None Include="Web References\ReportService\Reference.map">
       <Generator>MSDiscoCodeGenerator</Generator>
       <LastGenOutput>Reference.vb</LastGenOutput>
     </None>
-    <None Include="Web References\ReportService\ReportService2010.wsdl" />
-    <None Include="Web References\ReportService\Role.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Schedule.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\ScheduleDefinitionOrReference.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Subscription.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\ReportService\Task.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
+    <None Include="Web References\ReportService\ReportExecution2005.wsdl" />
     <None Include="Web References\ReportService\Warning.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="MaxUpdateXML">
-      <Guid>{7113270C-F76B-4BD7-8E86-28C074336F90}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ReportingServices.ReportViewerControl.Winforms">
@@ -497,6 +470,12 @@
     <PackageReference Include="Microsoft.SqlServer.Types">
       <Version>14.0.1016.290</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SellarsSQL\SellarsSQL.vbproj">
+      <Project>{6510ff9d-ee1d-4911-98f3-305ad85e9858}</Project>
+      <Name>SellarsSQL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

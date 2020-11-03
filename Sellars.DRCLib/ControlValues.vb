@@ -79,162 +79,142 @@ Public Class ControlValues
 
     Public Function Read(ByVal conn As SqlConnection, ByRef tran As SqlTransaction, ByVal Key As String) As String
         Dim command As String = "SELECT @Value = ISNULL(Value, '')" & vbTab & "from dbo.ControlValues where [Key] = @Key"
-        Dim cmd As New SqlCommand(command, conn)
-        cmd.CommandType = CommandType.Text
-        cmd.Transaction = tran
-        cmd.Parameters.Add(New SqlParameter("@Key", Key))
 
-        Dim parmValue As New SqlParameter("@Value", SqlDbType.NVarChar, -1)
-        parmValue.Direction = ParameterDirection.Output
-        parmValue.Value = Nothing
-        cmd.Parameters.Add(parmValue)
+        Using cmd As New SqlCommand(command, conn)
+            cmd.CommandType = CommandType.Text
+            cmd.Transaction = tran
+            cmd.Parameters.Add(New SqlParameter("@Key", Key))
 
-        'Perform the update to the database
-        Try
-            cmd.ExecuteNonQuery()
-            Text = parmValue.Value.ToString()
-        Catch ex As Exception
-            [Error] = True
-            ErrorMessage = ex.Message
-            Text = ""
-        End Try
+            Dim parmValue As New SqlParameter("@Value", SqlDbType.NVarChar, -1)
+            parmValue.Direction = ParameterDirection.Output
+            parmValue.Value = Nothing
+            cmd.Parameters.Add(parmValue)
 
-        ' Free up memory from the command object
-        cmd.Dispose()
+            Try
+                cmd.ExecuteNonQuery()
+                Text = parmValue.Value.ToString()
+            Catch ex As Exception
+                [Error] = True
+                ErrorMessage = ex.Message
+                Text = ""
+            End Try
+        End Using
 
         Return Text
     End Function
 
     Public Function Read(ByVal conn As SqlConnection, ByVal Key As String) As String
         Dim rtnValue As String = ""
-
         Dim command As String = "SELECT @Value = ISNULL(Value, '')" & vbTab & "from dbo.ControlValues where [Key] = @Key"
-        Dim cmd As New SqlCommand(command, conn)
-        cmd.CommandType = CommandType.Text
-        cmd.Parameters.Add(New SqlParameter("@Key", Key))
 
-        Dim parmValue As New SqlParameter("@Value", SqlDbType.NVarChar, -1)
-        parmValue.Direction = ParameterDirection.Output
-        parmValue.Value = Nothing
-        cmd.Parameters.Add(parmValue)
+        Using cmd As New SqlCommand(command, conn)
+            cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add(New SqlParameter("@Key", Key))
 
-        'Perform the update to the database
-        Try
-            cmd.ExecuteNonQuery()
-            rtnValue = parmValue.Value.ToString()
-        Catch ex As Exception
-            [Error] = True
-            ErrorMessage = ex.Message
-            rtnValue = ""
-        End Try
+            Dim parmValue As New SqlParameter("@Value", SqlDbType.NVarChar, -1)
+            parmValue.Direction = ParameterDirection.Output
+            parmValue.Value = Nothing
+            cmd.Parameters.Add(parmValue)
 
-        ' Free up memory from the command object
-        cmd.Dispose()
+            Try
+                cmd.ExecuteNonQuery()
+                rtnValue = parmValue.Value.ToString()
+            Catch ex As Exception
+                [Error] = True
+                ErrorMessage = ex.Message
+                rtnValue = ""
+            End Try
+        End Using
 
         Return rtnValue
     End Function
 
     Public Function ReadByte(ByVal conn As SqlConnection, ByVal Key As String) As String
         Dim rtnValue As String = Nothing
-
         Dim command As String = "SELECT @Value = isnull(FileData, '') from dbo.ControlValues where [Key] = @Key"
-        Dim cmd As New SqlCommand(command, conn)
-        cmd.CommandType = CommandType.Text
-        cmd.Parameters.Add(New SqlParameter("@Key", Key))
 
-        Dim parmValue As New SqlParameter("@Value", SqlDbType.NVarChar, -1)
-        parmValue.Direction = ParameterDirection.Output
-        parmValue.Value = Nothing
-        cmd.Parameters.Add(parmValue)
+        Using cmd As New SqlCommand(command, conn)
+            cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add(New SqlParameter("@Key", Key))
 
-        'Perform the update to the database
-        Try
-            cmd.ExecuteNonQuery()
-            rtnValue = parmValue.Value.ToString()
-        Catch ex As Exception
-            [Error] = True
-            ErrorMessage = ex.Message
-            rtnValue = ""
-        End Try
+            Dim parmValue As New SqlParameter("@Value", SqlDbType.NVarChar, -1)
+            parmValue.Direction = ParameterDirection.Output
+            parmValue.Value = Nothing
+            cmd.Parameters.Add(parmValue)
 
-        ' Free up memory from the command object
-        cmd.Dispose()
+            Try
+                cmd.ExecuteNonQuery()
+                rtnValue = parmValue.Value.ToString()
+            Catch ex As Exception
+                [Error] = True
+                ErrorMessage = ex.Message
+                rtnValue = ""
+            End Try
+        End Using
 
         Return rtnValue
     End Function
 
     Public Function WriteValue(ByVal conn As SqlConnection, ByRef tran As SqlTransaction, ByVal Key As String, ByVal Value As String) As String
         Dim rtnValue As String = ""
-
         Dim command As String = "update dbo.ControlValues Set Value = @Value where [Key] = @Key"
 
-        Dim cmd As New SqlCommand(command, conn)
-        cmd.Transaction = tran
-        cmd.CommandType = CommandType.Text
-        cmd.Parameters.Add(New SqlParameter("@Key", Key))
-        cmd.Parameters.Add(New SqlParameter("@Value", Value))
+        Using cmd As New SqlCommand(command, conn)
+            cmd.Transaction = tran
+            cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add(New SqlParameter("@Key", Key))
+            cmd.Parameters.Add(New SqlParameter("@Value", Value))
 
-        'Perform the update to the database
-        Try
-            cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            [Error] = True
-            ErrorMessage = ex.Message
-            rtnValue = ""
-        End Try
-
-        ' Free up memory from the command object
-        cmd.Dispose()
+            Try
+                cmd.ExecuteNonQuery()
+            Catch ex As Exception
+                [Error] = True
+                ErrorMessage = ex.Message
+                rtnValue = ""
+            End Try
+        End Using
 
         Return rtnValue
     End Function
 
     Public Function WriteValue(ByVal conn As SqlConnection, ByVal Key As String, ByVal Value As String) As String
         Dim rtnValue As String = ""
-
         Dim command As String = "update dbo.ControlValues Set Value = @Value where [Key] = @Key"
 
-        Dim cmd As New SqlCommand(command, conn)
-        cmd.CommandType = CommandType.Text
-        cmd.Parameters.Add(New SqlParameter("@Key", Key))
-        cmd.Parameters.Add(New SqlParameter("@Value", Value))
+        Using cmd As New SqlCommand(command, conn)
+            cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add(New SqlParameter("@Key", Key))
+            cmd.Parameters.Add(New SqlParameter("@Value", Value))
 
-        'Perform the update to the database
-        Try
-            cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            [Error] = True
-            ErrorMessage = ex.Message
-            rtnValue = ""
-        End Try
-
-        ' Free up memory from the command object
-        cmd.Dispose()
+            Try
+                cmd.ExecuteNonQuery()
+            Catch ex As Exception
+                [Error] = True
+                ErrorMessage = ex.Message
+                rtnValue = ""
+            End Try
+        End Using
 
         Return rtnValue
     End Function
 
     Public Function Write(ByVal conn As SqlConnection, ByVal Key As String, ByVal Value As String) As String
         Dim rtnValue As String = ""
-
         Dim command As String = "update dbo.ControlValues Set FileData = @Value where [Key] = @Key"
 
-        Dim cmd As New SqlCommand(command, conn)
-        cmd.CommandType = CommandType.Text
-        cmd.Parameters.Add(New SqlParameter("@Key", Key))
-        cmd.Parameters.Add(New SqlParameter("@Value", Value))
+        Using cmd As New SqlCommand(command, conn)
+            cmd.CommandType = CommandType.Text
+            cmd.Parameters.Add(New SqlParameter("@Key", Key))
+            cmd.Parameters.Add(New SqlParameter("@Value", Value))
 
-        'Perform the update to the database
-        Try
-            cmd.ExecuteNonQuery()
-        Catch ex As Exception
-            [Error] = True
-            ErrorMessage = ex.Message
-            rtnValue = ""
-        End Try
-
-        ' Free up memory from the command object
-        cmd.Dispose()
+            Try
+                cmd.ExecuteNonQuery()
+            Catch ex As Exception
+                [Error] = True
+                ErrorMessage = ex.Message
+                rtnValue = ""
+            End Try
+        End Using
 
         Return rtnValue
     End Function

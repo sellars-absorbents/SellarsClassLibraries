@@ -3,8 +3,51 @@ Imports System.Data.SqlClient
 Imports System.Collections.Specialized
 Imports System.Configuration
 Imports System.Text
+Imports MaxUpdateXML
+Imports Microsoft.VisualBasic.Compatibility.VB6
+Imports System.Runtime.Serialization
 
 Public MustInherit Class ClassBase
+
+#Region "Singleton - MAX Update"
+    Private Shared _maxUpdate As XMLWrapper
+
+    Protected Shared ReadOnly Property MAXUpdate As XMLWrapper
+        Get
+            If _maxUpdate Is Nothing Then
+                Throw New Exception("MAXUpdate must be Initialized before being used")
+            End If
+
+            Return _maxUpdate
+        End Get
+    End Property
+
+    Protected Shared Sub Initialize(ByVal connectionString As String, ByVal companyName As String, ByVal licensePath As String, ByVal logPath As String, ByVal errorReport As Boolean)
+        If _maxUpdate Is Nothing Then
+            _maxUpdate = New XMLWrapper()
+            _maxUpdate.Initialize(connectionString, companyName, licensePath, logPath, errorReport)
+            _maxUpdate.SetVisualErrorReportingXML(0)
+        End If
+    End Sub
+
+    Private Shared _maxUpdateASP As ASPXMLWrapper
+
+    Protected Shared ReadOnly Property MAXUpdateASP As ASPXMLWrapper
+        Get
+            If _maxUpdateASP Is Nothing Then
+                Throw New Exception("MAXUpdateASP must be Initialized before being used")
+            End If
+
+            Return _maxUpdateASP
+        End Get
+    End Property
+
+    Protected Shared Sub InitializeASP(ByVal connectionString As String, ByVal companyName As String, ByVal licensePath As String, ByVal logPath As String, ByVal errorReport As Boolean)
+        _maxUpdateASP = New ASPXMLWrapper()
+        _maxUpdateASP.InitASPXMLWrapper(connectionString, companyName, licensePath, logPath, errorReport)
+        _maxUpdateASP.SetVisualErrorReportingXML(0)
+    End Sub
+#End Region
 
     ' Declare varible to hold the database connection string
     Private _ConnectionString As String = System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString
@@ -70,17 +113,8 @@ Public MustInherit Class ClassBase
     ' ==== the following are functions necessary for maxupdate
 
     ' Routine to set the date correctly for maxupdate routines
-    Protected Function MakeDate(ByRef piYear As Short, ByRef piMon As Short, ByRef piDay As Short) As Long
-        ' Action  : Dates are held as long integers in an encoded YYYYMMDD format.
-        '           This routine encodes dates in the required format.
-        '
-        ' Takes   : piYear - 4 digit year portion of date
-        '           piMon  - 1 or 2 digit month
-        '           piDay  - 1 or 2 digit day
-        '
-        ' Returns : Encoded date.
-        '
-        Return piYear * 2 ^ 16 + piMon * 2 ^ 8 + piDay
+    Protected Function MakeDate(ByVal maxDate As Date) As String
+        Return maxDate.ToString("yyyy-MM-dd") ' piYear.ToString() + "-" + piMon.ToString().PadLeft(2, "0"c) + "-" + piDay.ToString().PadLeft(2, "0"c)
     End Function
 
 End Class

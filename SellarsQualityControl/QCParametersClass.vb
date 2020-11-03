@@ -1184,7 +1184,6 @@ Public Class QCParametersClass
         oSQL.AddParameter("@WDURL", SqlDbType.Float, 0, WDURL, ParameterDirection.Input)
         oSQL.AddParameter("@WDGraphMax", SqlDbType.Float, 0, WDGraphMax, ParameterDirection.Input)
         oSQL.AddParameter("@WDObjective", SqlDbType.Float, 0, WDObjective, ParameterDirection.Input)
-
     End Sub
 
     Public Sub Delete(ByVal Grade As Integer)
@@ -1207,247 +1206,244 @@ Public Class QCParametersClass
     End Function
 
     Public Sub Read(ByVal Grade As Integer)
-        Dim dr As SqlDataReader
-
-        ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
 
         ' Add the parameters to the command object
         oSQL.AddParameter("@Grade", SqlDbType.SmallInt, 0, Grade, ParameterDirection.Input)
 
         ' Execute the stored procedure
-        dr = oSQL.RunProcReader("ReadGradeParameters")
+        Using dr As SqlDataReader = oSQL.RunProcReader("ReadGradeParameters")
+            ' Read the first record
+            If Not dr.Read() Then
+                _Found = False
+                ' Assign the values
+                _WeightGraphMin = 0
+                _WeightLRL = 0
+                _WeightLCL = 0
+                _WeightUCL = 0
+                _WeightURL = 0
+                _WeightGraphMax = 0
+                _WeightObjective = 0
 
-        ' Read the first record
-        If Not dr.Read() Then
-            _Found = False
-            ' Assign the values
-            _WeightGraphMin = 0
-            _WeightLRL = 0
-            _WeightLCL = 0
-            _WeightUCL = 0
-            _WeightURL = 0
-            _WeightGraphMax = 0
-            _WeightObjective = 0
+                _OpSideBulkGraphMin = 0
+                _OpSideBulkLRL = 0
+                _OpSideBulkLCL = 0
+                _OpSideBulkUCL = 0
+                _OpSideBulkURL = 0
+                _OpSideBulkGraphMax = 0
+                _OpSideBulkObjective = 0
 
-            _OpSideBulkGraphMin = 0
-            _OpSideBulkLRL = 0
-            _OpSideBulkLCL = 0
-            _OpSideBulkUCL = 0
-            _OpSideBulkURL = 0
-            _OpSideBulkGraphMax = 0
-            _OpSideBulkObjective = 0
+                _DriveSideBulkGraphMin = 0
+                _DriveSideBulkLRL = 0
+                _DriveSideBulkLCL = 0
+                _DriveSideBulkUCL = 0
+                _DriveSideBulkURL = 0
+                _DriveSideBulkGraphMax = 0
+                _DriveSideBulkObjective = 0
 
-            _DriveSideBulkGraphMin = 0
-            _DriveSideBulkLRL = 0
-            _DriveSideBulkLCL = 0
-            _DriveSideBulkUCL = 0
-            _DriveSideBulkURL = 0
-            _DriveSideBulkGraphMax = 0
-            _DriveSideBulkObjective = 0
+                _MDTGraphMin = 0
+                _MDTLRL = 0
+                _MDTLCL = 0
+                _MDTUCL = 0
+                _MDTURL = 0
+                _MDTGraphMax = 0
+                _MDTObjective = 0
 
-            _MDTGraphMin = 0
-            _MDTLRL = 0
-            _MDTLCL = 0
-            _MDTUCL = 0
-            _MDTURL = 0
-            _MDTGraphMax = 0
-            _MDTObjective = 0
+                _MDTEGraphMin = 0
+                _MDTELRL = 0
+                _MDTELCL = 0
+                _MDTEUCL = 0
+                _MDTEURL = 0
+                _MDTEGraphMax = 0
+                _MDTEObjective = 0
 
-            _MDTEGraphMin = 0
-            _MDTELRL = 0
-            _MDTELCL = 0
-            _MDTEUCL = 0
-            _MDTEURL = 0
-            _MDTEGraphMax = 0
-            _MDTEObjective = 0
+                _CDTDGraphMin = 0
+                _CDTDLRL = 0
+                _CDTDLCL = 0
+                _CDTDUCL = 0
+                _CDTDURL = 0
+                _CDTDGraphMax = 0
+                _CDTDObjective = 0
 
-            _CDTDGraphMin = 0
-            _CDTDLRL = 0
-            _CDTDLCL = 0
-            _CDTDUCL = 0
-            _CDTDURL = 0
-            _CDTDGraphMax = 0
-            _CDTDObjective = 0
+                _CDTWGraphMin = 0
+                _CDTWLRL = 0
+                _CDTWLCL = 0
+                _CDTWUCL = 0
+                _CDTWURL = 0
+                _CDTWGraphMax = 0
+                _CDTWObjective = 0
 
-            _CDTWGraphMin = 0
-            _CDTWLRL = 0
-            _CDTWLCL = 0
-            _CDTWUCL = 0
-            _CDTWURL = 0
-            _CDTWGraphMax = 0
-            _CDTWObjective = 0
+                _CDTCGraphMin = 0
+                _CDTCLRL = 0
+                _CDTCLCL = 0
+                _CDTCUCL = 0
+                _CDTCURL = 0
+                _CDTCGraphMax = 0
+                _CDTCObjective = 0
 
-            _CDTCGraphMin = 0
-            _CDTCLRL = 0
-            _CDTCLCL = 0
-            _CDTCUCL = 0
-            _CDTCURL = 0
-            _CDTCGraphMax = 0
-            _CDTCObjective = 0
+                _TTGraphMin = 0
+                _TTLRL = 0
+                _TTLCL = 0
+                _TTUCL = 0
+                _TTURL = 0
+                _TTGraphMax = 0
+                _TTObjective = 0
 
-            _TTGraphMin = 0
-            _TTLRL = 0
-            _TTLCL = 0
-            _TTUCL = 0
-            _TTURL = 0
-            _TTGraphMax = 0
-            _TTObjective = 0
+                _ZPeelGraphMin = 0
+                _ZPeelLRL = 0
+                _ZPeelLCL = 0
+                _ZPeelUCL = 0
+                _ZPeelURL = 0
+                _ZPeelGraphMax = 0
+                _ZPeelObjective = 0
 
-            _ZPeelGraphMin = 0
-            _ZPeelLRL = 0
-            _ZPeelLCL = 0
-            _ZPeelUCL = 0
-            _ZPeelURL = 0
-            _ZPeelGraphMax = 0
-            _ZPeelObjective = 0
+                _ContaminationGraphMin = 0
+                _ContaminationLRL = 0
+                _ContaminationLCL = 0
+                _ContaminationUCL = 0
+                _ContaminationURL = 0
+                _ContaminationGraphMax = 0
+                _ContaminationObjective = 0
 
-            _ContaminationGraphMin = 0
-            _ContaminationLRL = 0
-            _ContaminationLCL = 0
-            _ContaminationUCL = 0
-            _ContaminationURL = 0
-            _ContaminationGraphMax = 0
-            _ContaminationObjective = 0
+                _TWAGraphMin = 0
+                _TWALRL = 0
+                _TWALCL = 0
+                _TWAUCL = 0
+                _TWAURL = 0
+                _TWAGraphMax = 0
+                _TWAObjective = 0
 
-            _TWAGraphMin = 0
-            _TWALRL = 0
-            _TWALCL = 0
-            _TWAUCL = 0
-            _TWAURL = 0
-            _TWAGraphMax = 0
-            _TWAObjective = 0
+                _PcntcGraphMin = 0
+                _PcntcLRL = 0
+                _PcntcLCL = 0
+                _PcntcUCL = 0
+                _PcntcURL = 0
+                _PcntcGraphMax = 0
+                _PcntcObjective = 0
 
-            _PcntcGraphMin = 0
-            _PcntcLRL = 0
-            _PcntcLCL = 0
-            _PcntcUCL = 0
-            _PcntcURL = 0
-            _PcntcGraphMax = 0
-            _PcntcObjective = 0
+                _WDGraphMin = 0
+                _WDLRL = 0
+                _WDLCL = 0
+                _WDUCL = 0
+                _WDURL = 0
+                _WDGraphMax = 0
+                _WDObjective = 0
+            Else
+                _Found = True
+                ' Assign the values
+                _WeightGraphMin = dr("WeightGraphMin")
+                _WeightLRL = dr("WeightLRL")
+                _WeightLCL = dr("WeightLCL")
+                _WeightUCL = dr("WeightUCL")
+                _WeightURL = dr("WeightURL")
+                _WeightGraphMax = dr("WeightGraphMax")
+                _WeightObjective = IIf(IsDBNull(dr("WeightObjective")), 0, dr("WeightObjective"))
 
-            _WDGraphMin = 0
-            _WDLRL = 0
-            _WDLCL = 0
-            _WDUCL = 0
-            _WDURL = 0
-            _WDGraphMax = 0
-            _WDObjective = 0
-        Else
-            _Found = True
-            ' Assign the values
-            _WeightGraphMin = dr("WeightGraphMin")
-            _WeightLRL = dr("WeightLRL")
-            _WeightLCL = dr("WeightLCL")
-            _WeightUCL = dr("WeightUCL")
-            _WeightURL = dr("WeightURL")
-            _WeightGraphMax = dr("WeightGraphMax")
-            _WeightObjective = IIf(IsDBNull(dr("WeightObjective")), 0, dr("WeightObjective"))
+                _OpSideBulkGraphMin = dr("OpSideBulkGraphMin")
+                _OpSideBulkLRL = dr("OpSideBulkLRL")
+                _OpSideBulkLCL = dr("OpSideBulkLCL")
+                _OpSideBulkUCL = dr("OpSideBulkUCL")
+                _OpSideBulkURL = dr("OpSideBulkURL")
+                _OpSideBulkGraphMax = dr("OpSideBulkGraphMax")
+                _OpSideBulkObjective = IIf(IsDBNull(dr("OpSideBulkObjective")), 0, dr("OpSideBulkObjective"))
 
-            _OpSideBulkGraphMin = dr("OpSideBulkGraphMin")
-            _OpSideBulkLRL = dr("OpSideBulkLRL")
-            _OpSideBulkLCL = dr("OpSideBulkLCL")
-            _OpSideBulkUCL = dr("OpSideBulkUCL")
-            _OpSideBulkURL = dr("OpSideBulkURL")
-            _OpSideBulkGraphMax = dr("OpSideBulkGraphMax")
-            _OpSideBulkObjective = IIf(IsDBNull(dr("OpSideBulkObjective")), 0, dr("OpSideBulkObjective"))
+                _DriveSideBulkGraphMin = dr("DriveSideBulkGraphMin")
+                _DriveSideBulkLRL = dr("DriveSideBulkLRL")
+                _DriveSideBulkLCL = dr("DriveSideBulkLCL")
+                _DriveSideBulkUCL = dr("DriveSideBulkUCL")
+                _DriveSideBulkURL = dr("DriveSideBulkURL")
+                _DriveSideBulkGraphMax = dr("DriveSideBulkGraphMax")
+                _DriveSideBulkObjective = IIf(IsDBNull(dr("DriveSideBulkObjective")), 0, dr("DriveSideBulkObjective"))
 
-            _DriveSideBulkGraphMin = dr("DriveSideBulkGraphMin")
-            _DriveSideBulkLRL = dr("DriveSideBulkLRL")
-            _DriveSideBulkLCL = dr("DriveSideBulkLCL")
-            _DriveSideBulkUCL = dr("DriveSideBulkUCL")
-            _DriveSideBulkURL = dr("DriveSideBulkURL")
-            _DriveSideBulkGraphMax = dr("DriveSideBulkGraphMax")
-            _DriveSideBulkObjective = IIf(IsDBNull(dr("DriveSideBulkObjective")), 0, dr("DriveSideBulkObjective"))
+                _MDTGraphMin = dr("MDTGraphMin")
+                _MDTLRL = dr("MDTLRL")
+                _MDTLCL = dr("MDTLCL")
+                _MDTUCL = dr("MDTUCL")
+                _MDTURL = dr("MDTURL")
+                _MDTGraphMax = dr("MDTGraphMax")
+                _MDTObjective = IIf(IsDBNull(dr("MDTObjective")), 0, dr("MDTObjective"))
 
-            _MDTGraphMin = dr("MDTGraphMin")
-            _MDTLRL = dr("MDTLRL")
-            _MDTLCL = dr("MDTLCL")
-            _MDTUCL = dr("MDTUCL")
-            _MDTURL = dr("MDTURL")
-            _MDTGraphMax = dr("MDTGraphMax")
-            _MDTObjective = IIf(IsDBNull(dr("MDTObjective")), 0, dr("MDTObjective"))
+                _MDTEGraphMin = dr("MDTEGraphMin")
+                _MDTELRL = dr("MDTELRL")
+                _MDTELCL = dr("MDTELCL")
+                _MDTEUCL = dr("MDTEUCL")
+                _MDTEURL = dr("MDTEURL")
+                _MDTEGraphMax = dr("MDTEGraphMax")
+                _MDTEObjective = IIf(IsDBNull(dr("MDTEObjective")), 0, dr("MDTEObjective"))
 
-            _MDTEGraphMin = dr("MDTEGraphMin")
-            _MDTELRL = dr("MDTELRL")
-            _MDTELCL = dr("MDTELCL")
-            _MDTEUCL = dr("MDTEUCL")
-            _MDTEURL = dr("MDTEURL")
-            _MDTEGraphMax = dr("MDTEGraphMax")
-            _MDTEObjective = IIf(IsDBNull(dr("MDTEObjective")), 0, dr("MDTEObjective"))
+                _CDTDGraphMin = dr("CDTDGraphMin")
+                _CDTDLRL = dr("CDTDLRL")
+                _CDTDLCL = dr("CDTDLCL")
+                _CDTDUCL = dr("CDTDUCL")
+                _CDTDURL = dr("CDTDURL")
+                _CDTDGraphMax = dr("CDTDGraphMax")
+                _CDTDObjective = IIf(IsDBNull(dr("CDTDObjective")), 0, dr("CDTDObjective"))
 
-            _CDTDGraphMin = dr("CDTDGraphMin")
-            _CDTDLRL = dr("CDTDLRL")
-            _CDTDLCL = dr("CDTDLCL")
-            _CDTDUCL = dr("CDTDUCL")
-            _CDTDURL = dr("CDTDURL")
-            _CDTDGraphMax = dr("CDTDGraphMax")
-            _CDTDObjective = IIf(IsDBNull(dr("CDTDObjective")), 0, dr("CDTDObjective"))
+                _CDTWGraphMin = dr("CDTWGraphMin")
+                _CDTWLRL = dr("CDTWLRL")
+                _CDTWLCL = dr("CDTWLCL")
+                _CDTWUCL = dr("CDTWUCL")
+                _CDTWURL = dr("CDTWURL")
+                _CDTWGraphMax = dr("CDTWGraphMax")
+                _CDTWObjective = IIf(IsDBNull(dr("CDTWObjective")), 0, dr("CDTWObjective"))
 
-            _CDTWGraphMin = dr("CDTWGraphMin")
-            _CDTWLRL = dr("CDTWLRL")
-            _CDTWLCL = dr("CDTWLCL")
-            _CDTWUCL = dr("CDTWUCL")
-            _CDTWURL = dr("CDTWURL")
-            _CDTWGraphMax = dr("CDTWGraphMax")
-            _CDTWObjective = IIf(IsDBNull(dr("CDTWObjective")), 0, dr("CDTWObjective"))
+                _CDTCGraphMin = dr("CDTCGraphMin")
+                _CDTCLRL = dr("CDTCLRL")
+                _CDTCLCL = dr("CDTCLCL")
+                _CDTCUCL = dr("CDTCUCL")
+                _CDTCURL = dr("CDTCURL")
+                _CDTCGraphMax = dr("CDTCGraphMax")
+                _CDTCObjective = IIf(IsDBNull(dr("CDTCObjective")), 0, dr("CDTCObjective"))
 
-            _CDTCGraphMin = dr("CDTCGraphMin")
-            _CDTCLRL = dr("CDTCLRL")
-            _CDTCLCL = dr("CDTCLCL")
-            _CDTCUCL = dr("CDTCUCL")
-            _CDTCURL = dr("CDTCURL")
-            _CDTCGraphMax = dr("CDTCGraphMax")
-            _CDTCObjective = IIf(IsDBNull(dr("CDTCObjective")), 0, dr("CDTCObjective"))
+                _TTGraphMin = dr("TTGraphMin")
+                _TTLRL = dr("TTLRL")
+                _TTLCL = dr("TTLCL")
+                _TTUCL = dr("TTUCL")
+                _TTURL = dr("TTURL")
+                _TTGraphMax = dr("TTGraphMax")
+                _TTObjective = IIf(IsDBNull(dr("TTObjective")), 0, dr("TTObjective"))
 
-            _TTGraphMin = dr("TTGraphMin")
-            _TTLRL = dr("TTLRL")
-            _TTLCL = dr("TTLCL")
-            _TTUCL = dr("TTUCL")
-            _TTURL = dr("TTURL")
-            _TTGraphMax = dr("TTGraphMax")
-            _TTObjective = IIf(IsDBNull(dr("TTObjective")), 0, dr("TTObjective"))
+                _ZPeelGraphMin = IIf(IsDBNull(dr("ZPeelGraphMin")), 0, dr("ZPeelGraphMin"))
+                _ZPeelLRL = IIf(IsDBNull(dr("ZPeelLRL")), 0, dr("ZPeelLRL"))
+                _ZPeelLCL = IIf(IsDBNull(dr("ZPeelLCL")), 0, dr("ZPeelLCL"))
+                _ZPeelUCL = IIf(IsDBNull(dr("ZPeelUCL")), 0, dr("ZPeelUCL"))
+                _ZPeelURL = IIf(IsDBNull(dr("ZPeelURL")), 0, dr("ZPeelURL"))
+                _ZPeelGraphMax = IIf(IsDBNull(dr("ZPeelGraphMax")), 0, dr("ZPeelGraphMax"))
+                _ZPeelObjective = IIf(IsDBNull(dr("ZPeelObjective")), 0, dr("ZPeelObjective"))
 
-            _ZPeelGraphMin = IIf(IsDBNull(dr("ZPeelGraphMin")), 0, dr("ZPeelGraphMin"))
-            _ZPeelLRL = IIf(IsDBNull(dr("ZPeelLRL")), 0, dr("ZPeelLRL"))
-            _ZPeelLCL = IIf(IsDBNull(dr("ZPeelLCL")), 0, dr("ZPeelLCL"))
-            _ZPeelUCL = IIf(IsDBNull(dr("ZPeelUCL")), 0, dr("ZPeelUCL"))
-            _ZPeelURL = IIf(IsDBNull(dr("ZPeelURL")), 0, dr("ZPeelURL"))
-            _ZPeelGraphMax = IIf(IsDBNull(dr("ZPeelGraphMax")), 0, dr("ZPeelGraphMax"))
-            _ZPeelObjective = IIf(IsDBNull(dr("ZPeelObjective")), 0, dr("ZPeelObjective"))
+                _ContaminationGraphMin = dr("ContaminationGraphMin")
+                _ContaminationLRL = dr("ContaminationLRL")
+                _ContaminationLCL = dr("ContaminationLCL")
+                _ContaminationUCL = dr("ContaminationUCL")
+                _ContaminationURL = dr("ContaminationURL")
+                _ContaminationGraphMax = dr("ContaminationGraphMax")
+                _ContaminationObjective = IIf(IsDBNull(dr("ContaminationObjective")), 0, dr("ContaminationObjective"))
 
-            _ContaminationGraphMin = dr("ContaminationGraphMin")
-            _ContaminationLRL = dr("ContaminationLRL")
-            _ContaminationLCL = dr("ContaminationLCL")
-            _ContaminationUCL = dr("ContaminationUCL")
-            _ContaminationURL = dr("ContaminationURL")
-            _ContaminationGraphMax = dr("ContaminationGraphMax")
-            _ContaminationObjective = IIf(IsDBNull(dr("ContaminationObjective")), 0, dr("ContaminationObjective"))
+                _TWAGraphMin = dr("TWAGraphMin")
+                _TWALRL = dr("TWALRL")
+                _TWALCL = dr("TWALCL")
+                _TWAUCL = dr("TWAUCL")
+                _TWAURL = dr("TWAURL")
+                _TWAGraphMax = dr("TWAGraphMax")
+                _TWAObjective = IIf(IsDBNull(dr("TWAObjective")), 0, dr("TWAObjective"))
 
-            _TWAGraphMin = dr("TWAGraphMin")
-            _TWALRL = dr("TWALRL")
-            _TWALCL = dr("TWALCL")
-            _TWAUCL = dr("TWAUCL")
-            _TWAURL = dr("TWAURL")
-            _TWAGraphMax = dr("TWAGraphMax")
-            _TWAObjective = IIf(IsDBNull(dr("TWAObjective")), 0, dr("TWAObjective"))
+                _PcntcGraphMin = dr("PcntcGraphMin")
+                _PcntcLRL = dr("PcntcLRL")
+                _PcntcLCL = dr("PcntcLCL")
+                _PcntcUCL = dr("PcntcUCL")
+                _PcntcURL = dr("PcntcURL")
+                _PcntcGraphMax = dr("PcntcGraphMax")
+                _PcntcObjective = IIf(IsDBNull(dr("PcntcObjective")), 0, dr("PcntcObjective"))
 
-            _PcntcGraphMin = dr("PcntcGraphMin")
-            _PcntcLRL = dr("PcntcLRL")
-            _PcntcLCL = dr("PcntcLCL")
-            _PcntcUCL = dr("PcntcUCL")
-            _PcntcURL = dr("PcntcURL")
-            _PcntcGraphMax = dr("PcntcGraphMax")
-            _PcntcObjective = IIf(IsDBNull(dr("PcntcObjective")), 0, dr("PcntcObjective"))
-
-            _WDGraphMin = dr("WDGraphMin")
-            _WDLRL = dr("WDLRL")
-            _WDLCL = dr("WDLCL")
-            _WDUCL = dr("WDUCL")
-            _WDURL = dr("WDURL")
-            _WDGraphMax = dr("WDGraphMax")
-            _WDObjective = IIf(IsDBNull(dr("WDObjective")), 0, dr("WDObjective"))
-        End If
+                _WDGraphMin = dr("WDGraphMin")
+                _WDLRL = dr("WDLRL")
+                _WDLCL = dr("WDLCL")
+                _WDUCL = dr("WDUCL")
+                _WDURL = dr("WDURL")
+                _WDGraphMax = dr("WDGraphMax")
+                _WDObjective = IIf(IsDBNull(dr("WDObjective")), 0, dr("WDObjective"))
+            End If
+        End Using
     End Sub
 
     Public Sub Update()
@@ -1462,7 +1458,6 @@ Public Class QCParametersClass
     End Sub
 
     Public Sub LoadParameters(ByVal Grade As Integer, ByRef QCSpecifications() As QCSpecificationsStructure, ByRef BasisAdjustment As Decimal)
-
         Read(Grade)
 
         QCSpecifications(FieldTypeEnum.Weight).GraphMin = WeightGraphMin

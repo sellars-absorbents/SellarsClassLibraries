@@ -36,42 +36,35 @@ Public Class CustomerMasterExtClass
         ' automatically generated invoice number for applicable orders
         Dim strSQL As String = "select @AcknowledgementLogo = AcknowledgementLogo from CustomerMasterExt where CUSTID = @CUSTID"
 
-        Dim conn As SqlConnection = New SqlConnection(connectionString)
-        Dim cmd As SqlCommand = Nothing
+        Using conn As SqlConnection = New SqlConnection(connectionString)
+            ' First try to update the CustomerMasterExt, if not there, then try to add it.
+            Try
+                ' Open the database connection
+                conn.Open()
 
-        ' First try to update the CustomerMasterExt, if not there, then try to add it.
-        Try
-            ' Open the database connection
-            conn.Open()
+                ' Set up a new SQL Command
+                Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                    cmd.CommandType = CommandType.Text
+                    cmd.CommandTimeout = 0
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+                    ' Add a parameter to the command that has the invoice number to update
+                    cmd.Parameters.Add(New SqlParameter("@CUSTID", CUSTID))
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@CUSTID", CUSTID))
+                    Dim parmLogo As New SqlParameter("@AcknowledgementLogo", SqlDbType.SmallInt, 0)
+                    parmLogo.Direction = ParameterDirection.Output
+                    parmLogo.Value = Nothing
+                    cmd.Parameters.Add(parmLogo)
 
-            Dim parmLogo As New SqlParameter("@AcknowledgementLogo", SqlDbType.SmallInt, 0)
-            parmLogo.Direction = ParameterDirection.Output
-            parmLogo.Value = Nothing
-            cmd.Parameters.Add(parmLogo)
+                    ' Execute the stored procedure to update the InvoiceMasterExt table
+                    cmd.ExecuteNonQuery()
 
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            cmd.ExecuteNonQuery()
-
-            ' Set the acknowledgement Logo value
-            _AcknowledgementLogo = parmLogo.Value
-        Catch ex As Exception
-            _AcknowledgementLogo = 1
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                    ' Set the acknowledgement Logo value
+                    _AcknowledgementLogo = parmLogo.Value
+                End Using
+            Catch ex As Exception
+                _AcknowledgementLogo = 1
+            End Try
+        End Using
     End Sub
 
     Public Function AddUpdate(ByVal CUSTID As String, ByVal AcknowledgementLogo As Short) As Boolean
@@ -89,30 +82,16 @@ Public Class CustomerMasterExtClass
         Dim strSQLUpdate As String = "update CustomerMasterExt set AcknowledgementLogo = @AcknowledgementLogo where CUSTID = @CUSTID"
         Dim strSQLAdd As String = "insert into CustomerMasterExt (CUSTID, AcknowledgementLogo) values (@CUSTID, @AcknowledgementLogo)"
 
-        Dim conn As SqlConnection = New SqlConnection(connectionString)
-        Dim cmd As SqlCommand = Nothing
+        Using conn As SqlConnection = New SqlConnection(connectionString)
+            ' First try to update the CustomerMasterExt, if not there, then try to add it.
+            Try
+                ' Open the database connection
+                conn.Open()
 
-        ' First try to update the CustomerMasterExt, if not there, then try to add it.
-        Try
-            ' Open the database connection
-            conn.Open()
+                Dim recsChanged As Integer = 0
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQLUpdate, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
-
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@CUSTID", CUSTID))
-            cmd.Parameters.Add(New SqlParameter("@AcknowledgementLogo", AcknowledgementLogo))
-
-            ' Execute the stored procedure to update the InvoiceMasterExt table
-            Dim recsChanged As Integer = cmd.ExecuteNonQuery()
-
-            If recsChanged = 0 Then
-                Try
-                    ' Set up a new SQL Command
-                    cmd = New SqlCommand(strSQLAdd, conn)
+                ' Set up a new SQL Command
+                Using cmd As SqlCommand = New SqlCommand(strSQLUpdate, conn)
                     cmd.CommandType = CommandType.Text
                     cmd.CommandTimeout = 0
 
@@ -121,26 +100,35 @@ Public Class CustomerMasterExtClass
                     cmd.Parameters.Add(New SqlParameter("@AcknowledgementLogo", AcknowledgementLogo))
 
                     ' Execute the stored procedure to update the InvoiceMasterExt table
-                    cmd.ExecuteNonQuery()
+                    recsChanged = cmd.ExecuteNonQuery()
+                End Using
 
+                If recsChanged = 0 Then
+                    Try
+                        ' Set up a new SQL Command
+                        Using cmd As SqlCommand = New SqlCommand(strSQLAdd, conn)
+                            cmd.CommandType = CommandType.Text
+                            cmd.CommandTimeout = 0
+
+                            ' Add a parameter to the command that has the invoice number to update
+                            cmd.Parameters.Add(New SqlParameter("@CUSTID", CUSTID))
+                            cmd.Parameters.Add(New SqlParameter("@AcknowledgementLogo", AcknowledgementLogo))
+
+                            ' Execute the stored procedure to update the InvoiceMasterExt table
+                            cmd.ExecuteNonQuery()
+                        End Using
+
+                        rtnData = True
+                    Catch exa As Exception
+                        rtnData = False
+                    End Try
+                Else
+                    ' Set the return flag to true
                     rtnData = True
-                Catch exa As Exception
-                    rtnData = False
-                End Try
-            Else
-                ' Set the return flag to true
-                rtnData = True
-            End If
-        Catch exu As Exception
-            rtnData = False
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                End If
+            Catch exu As Exception
+                rtnData = False
+            End Try
+        End Using
     End Function
-
 End Class

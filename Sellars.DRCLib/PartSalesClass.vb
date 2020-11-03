@@ -56,20 +56,18 @@ Public Class PartSalesClass
                                "Where PRTNUM_29 = '" & passpart.Trim & "' "
 
         ' Set up the new Sql command and read the database
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim PartSalesReader As SqlDataReader = cmd.ExecuteReader()
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using PartSalesReader As SqlDataReader = cmd.ExecuteReader()
+                ' if the record was found, and the taxabl indicator set to yes, return true from this function
+                If PartSalesReader.Read() Then
+                    If PartSalesReader("TAXABL_29") = "Y" Then
+                        taxabl = True
+                    End If
+                End If
+            End Using
+        End Using
 
-        ' if the record was found, and the taxabl indicator set to yes, return true from this function
-        If PartSalesReader.Read() Then
-            If PartSalesReader("TAXABL_29") = "Y" Then
-                taxabl = True
-            End If
-        End If
-
-        ' Close the reader, max connection and free up memory
-        PartSalesReader.Close()
-        PartSalesReader = Nothing
-        closeMaxConnection()
+        CloseMaxConnection()
 
         ' return the appropriate value showing whether the part is taxable
         Return taxabl
@@ -92,21 +90,20 @@ Public Class PartSalesClass
                                "From ""Part_Sales"" " & _
                                "Where PRTNUM_29 = '" & passpart.Trim & "' "
 
-        ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim PartSalesReader As SqlDataReader = cmd.ExecuteReader()
-        If PartSalesReader.Read() Then
-            _Description1 = PartSalesReader("PMDES1_29")
-            _Description2 = PartSalesReader("PMDES2_29")
-            _Conversion = PartSalesReader("SLSCNV_29")
-        Else
-            _Description1 = ""
-            _Description2 = ""
-            _Conversion = 1
-        End If
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using PartSalesReader As SqlDataReader = cmd.ExecuteReader()
+                If PartSalesReader.Read() Then
+                    _Description1 = PartSalesReader("PMDES1_29")
+                    _Description2 = PartSalesReader("PMDES2_29")
+                    _Conversion = PartSalesReader("SLSCNV_29")
+                Else
+                    _Description1 = ""
+                    _Description2 = ""
+                    _Conversion = 1
+                End If
+            End Using
+        End Using
 
-        PartSalesReader.Close()
-        PartSalesReader = Nothing
         CloseMaxConnection()
     End Sub
 
@@ -127,25 +124,24 @@ Public Class PartSalesClass
                                "From ""Part_Sales"" " & _
                                "Where PRTNUM_29 = '" & passpart.Trim & "' "
 
-        ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim PartSalesReader As SqlDataReader = cmd.ExecuteReader()
-        PartSalesReader.Read()
-        _Price = PartSalesReader("PRICE_29")
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using PartSalesReader As SqlDataReader = cmd.ExecuteReader()
+                PartSalesReader.Read()
+                _Price = PartSalesReader("PRICE_29")
 
-        SetPriceBreak(PartSalesReader("PRICE1_29"), PartSalesReader("BREAK1_29"), PartSalesReader("DISC1_29"))
-        SetPriceBreak(PartSalesReader("PRICE2_29"), PartSalesReader("BREAK2_29"), PartSalesReader("DISC2_29"))
-        SetPriceBreak(PartSalesReader("PRICE3_29"), PartSalesReader("BREAK3_29"), PartSalesReader("DISC3_29"))
-        SetPriceBreak(PartSalesReader("PRICE4_29"), PartSalesReader("BREAK4_29"), PartSalesReader("DISC4_29"))
-        SetPriceBreak(PartSalesReader("PRICE5_29"), PartSalesReader("BREAK5_29"), PartSalesReader("DISC5_29"))
-        SetPriceBreak(PartSalesReader("PRICE6_29"), PartSalesReader("BREAK6_29"), PartSalesReader("DISC6_29"))
-        SetPriceBreak(PartSalesReader("PRICE7_29"), PartSalesReader("BREAK7_29"), PartSalesReader("DISC7_29"))
-        SetPriceBreak(PartSalesReader("PRICE8_29"), PartSalesReader("BREAK8_29"), PartSalesReader("DISC8_29"))
-        SetPriceBreak(PartSalesReader("PRICE9_29"), PartSalesReader("BREAK9_29"), PartSalesReader("DISC9_29"))
+                SetPriceBreak(PartSalesReader("PRICE1_29"), PartSalesReader("BREAK1_29"), PartSalesReader("DISC1_29"))
+                SetPriceBreak(PartSalesReader("PRICE2_29"), PartSalesReader("BREAK2_29"), PartSalesReader("DISC2_29"))
+                SetPriceBreak(PartSalesReader("PRICE3_29"), PartSalesReader("BREAK3_29"), PartSalesReader("DISC3_29"))
+                SetPriceBreak(PartSalesReader("PRICE4_29"), PartSalesReader("BREAK4_29"), PartSalesReader("DISC4_29"))
+                SetPriceBreak(PartSalesReader("PRICE5_29"), PartSalesReader("BREAK5_29"), PartSalesReader("DISC5_29"))
+                SetPriceBreak(PartSalesReader("PRICE6_29"), PartSalesReader("BREAK6_29"), PartSalesReader("DISC6_29"))
+                SetPriceBreak(PartSalesReader("PRICE7_29"), PartSalesReader("BREAK7_29"), PartSalesReader("DISC7_29"))
+                SetPriceBreak(PartSalesReader("PRICE8_29"), PartSalesReader("BREAK8_29"), PartSalesReader("DISC8_29"))
+                SetPriceBreak(PartSalesReader("PRICE9_29"), PartSalesReader("BREAK9_29"), PartSalesReader("DISC9_29"))
+            End Using
+        End Using
 
-        PartSalesReader.Close()
-        PartSalesReader = Nothing
-        closeMaxConnection()
+        CloseMaxConnection()
 
         If _PriceBreaks.Count = 0 Then
             CustomerPrice = _Price

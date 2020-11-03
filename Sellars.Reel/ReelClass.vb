@@ -92,7 +92,6 @@ Public Class ReelClass
         Else
             Return parmReelCount.Value
         End If
-
     End Function
 
     '*********************************************************************
@@ -171,7 +170,6 @@ Public Class ReelClass
 
         ' Run the stored procedure and return a datareader
         Return oSQL.RunProcReader("GetSpecificReelTimes")
-
     End Function
 
     '*********************************************************************
@@ -202,7 +200,5 @@ Public Class ReelClass
         Else
             Return ReelProduct.Value
         End If
-
     End Function
-
 End Class

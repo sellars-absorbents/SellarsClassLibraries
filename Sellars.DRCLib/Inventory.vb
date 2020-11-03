@@ -37,7 +37,6 @@ Public Class Inventory
     ''' <returns>The quantity of inventory available to be ordered for the designated part at the designated warehouse.  If the item is backordered at the warehouse, zero will be returned.</returns>
     ''' <remarks></remarks>
     Public Function Available(ByVal Warehouse As String, ByVal Item As String) As Integer
-
         ' SStart a task to get how much of the item is currently on hand at the new warehouse
         Dim onHandTask As Task(Of Integer) = Task.Factory.StartNew(Function() As Integer
                                                                        Return GetOnHand(Warehouse, Item)
@@ -73,7 +72,6 @@ Public Class Inventory
         Else
             Return 0
         End If
-
     End Function
 
     ''' <summary>
@@ -84,7 +82,6 @@ Public Class Inventory
     ''' <returns>The quantity of inventory available to be ordered for the designated part at the designated warehouse.  If the item is backordered at the warehouse, zero will be returned.</returns>
     ''' <remarks></remarks>
     Public Function Available(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
-
         ' SStart a task to get how much of the item is currently on hand at the new warehouse
         Dim onHandTask As Task(Of Integer) = Task.Factory.StartNew(Function() As Integer
                                                                        Return GetOnHand(Warehouse, UseStage, Item)
@@ -127,7 +124,6 @@ Public Class Inventory
         Else
             Return 0
         End If
-
     End Function
 
     ''' <summary>
@@ -141,7 +137,6 @@ Public Class Inventory
     ''' <returns>Returns WarehouseData element with the first warehouse that can fulfill the line item.</returns>
     ''' <remarks></remarks>
     Public Function Available(ByVal Warehouse As String, ByVal PartNumber As String, ByVal OriginalQuantity As Integer, ByVal NewQuantity As Integer) As WarehouseData
-
         ' Get a list of all the warehouses (given, primary backup, and secondary backup)
         Dim Warehouses As BlockingCollection(Of WarehouseData) = GetBackupWarehouses(Warehouse)
 
@@ -168,10 +163,8 @@ Public Class Inventory
 
     Private Function GetOnHand(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
 
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
             Dim command As String = ""
@@ -182,140 +175,85 @@ Public Class Inventory
                 command = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('STG', STK_06) = 0 and charindex('TRN', STK_06) = 0 and charindex('REW', STK_06) = 0"
             End If
 
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
 
-            If UseStage Then
-                cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
-            Else
-                cmd.Parameters.Add(New SqlParameter("@STK", "%" + Warehouse + "%"))
-            End If
+                If UseStage Then
+                    cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
+                Else
+                    cmd.Parameters.Add(New SqlParameter("@STK", "%" + Warehouse + "%"))
+                End If
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
 
-            'Perform the update to the database
-            Try
                 cmd.ExecuteNonQuery()
                 rtnQty = Convert.ToInt32(parmQty.Value)
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
 
     Private Function GetOnHand(ByVal STK As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
 
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
             Dim command As String = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('TRN', STK_06) = 0 and charindex('REW', STK_06) = 0 and charindex('STG', STK_06) = 0"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-            cmd.Parameters.Add(New SqlParameter("@STK", "%" + STK + "%"))
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                cmd.Parameters.Add(New SqlParameter("@STK", "%" + STK + "%"))
 
-            'Perform the update to the database
-            Try
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
+
                 cmd.ExecuteNonQuery()
                 rtnQty = Convert.ToInt32(parmQty.Value)
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
 
     Private Function GetOnOrder(ByVal STK As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
 
-        ' Define a variable for the database name so the application automatically sets up the SQL string below with the correct table names for test versus production
-        Dim dataBaseName As String = IIf(System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString.ToUpper.Contains("TEST"), "TestShopfloorControl", "ShopfloorControl")
-
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
             Dim command As String = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-            cmd.Parameters.Add(New SqlParameter("@STK", "%" + STK + "%"))
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                cmd.Parameters.Add(New SqlParameter("@STK", "%" + STK + "%"))
 
-            'Perform the update to the database
-            Try
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
+
                 cmd.ExecuteNonQuery()
                 rtnQty = Convert.ToInt32(parmQty.Value.ToString())
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch ex As Exception
-            rtnQty = 0
-            Dim msg As String = ex.Message
-
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
 
     Private Function GetOnOrder(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
 
-        ' Define a variable for the database name so the application automatically sets up the SQL string below with the correct table names for test versus production
-        Dim dataBaseName As String = IIf(System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString.ToUpper.Contains("TEST"), "TestShopfloorControl", "ShopfloorControl")
-
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
             Dim command As String = ""
@@ -323,45 +261,28 @@ Public Class Inventory
             If UseStage Then
                 command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 = @STK"
             Else
-                command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK and charindex('STG', STK_06) = 0 and charindex('TRN', STK_06) = 0"
+                command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK and charindex('STG', STK_28) = 0 and charindex('TRN', STK_28) = 0"
             End If
 
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
 
-            If UseStage Then
-                cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
-            Else
-                cmd.Parameters.Add(New SqlParameter("@STK", "%" + Warehouse + "%"))
-            End If
+                If UseStage Then
+                    cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
+                Else
+                    cmd.Parameters.Add(New SqlParameter("@STK", "%" + Warehouse + "%"))
+                End If
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
 
-            'Perform the update to the database
-            Try
                 cmd.ExecuteNonQuery()
                 rtnQty = Convert.ToInt32(parmQty.Value.ToString())
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch ex As Exception
-            rtnQty = 0
-            Dim msg As String = ex.Message
-
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
@@ -369,130 +290,85 @@ Public Class Inventory
     Private Function GetConversion(ByVal Item As String) As Decimal
         Dim rtnConversion As Decimal = 0.0
 
-        ' Set up a new SQL connection string
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
-            Dim Transaction As SqlTransaction = Conn.BeginTransaction(IsolationLevel.ReadUncommitted)
+            Using Transaction As SqlTransaction = Conn.BeginTransaction(IsolationLevel.ReadUncommitted)
+                Dim command As String = "SELECT @Conversion = isnull(SLSCNV_29, 0) from Part_Sales where PRTNUM_29 = @PRTNUM"
 
-            Dim command As String = "SELECT @Conversion = isnull(SLSCNV_29, 0) from Part_Sales where PRTNUM_29 = @PRTNUM"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.Transaction = Transaction
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                Using cmd As New SqlCommand(command, Conn)
+                    cmd.Transaction = Transaction
+                    cmd.CommandType = CommandType.Text
+                    cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
 
-            Dim parmConversion As New SqlParameter("@Conversion", SqlDbType.Float, -1)
-            parmConversion.Direction = ParameterDirection.Output
-            parmConversion.Value = Nothing
-            cmd.Parameters.Add(parmConversion)
+                    Dim parmConversion As New SqlParameter("@Conversion", SqlDbType.Float, -1)
+                    parmConversion.Direction = ParameterDirection.Output
+                    parmConversion.Value = Nothing
+                    cmd.Parameters.Add(parmConversion)
 
-            'Perform the update to the database
-            Try
-                cmd.ExecuteNonQuery()
-                rtnConversion = Convert.ToDecimal(parmConversion.Value.ToString())
-            Catch ex As Exception
-                rtnConversion = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+                    cmd.ExecuteNonQuery()
+                    rtnConversion = Convert.ToDecimal(parmConversion.Value.ToString())
+                End Using
+            End Using
+        End Using
 
         Return rtnConversion
     End Function
 
     Private Function GetOnCart(ByVal Warehouse As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
             Conn.Open()
 
             Dim command As String = "SELECT @Quantity = isnull(sum(QuantityPurchased + QuantityFree), 0) from ShoppingCartDetail sd join ShoppingCartMaster sm on sm.CartID = sd.CartID where PRTNUM = @PRTNUM and Warehouse = @Warehouse"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-            cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
 
-            'Perform the update to the database
-            Try
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
+
                 cmd.ExecuteNonQuery()
                 rtnQty = Convert.ToInt32(parmQty.Value.ToString())
-            Catch ex As Exception
-                rtnQty = 0
-            Finally
-                ' Close the SQL connection object
-                If Conn.State = ConnectionState.Open Then
-                    Conn.Close()
-                End If
-                Conn.Dispose()
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
 
     Private Function GetOnCart(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
-        ' If we are using stage, then the cart does not come into play, so simply return 0
-        If UseStage Then
-            Return rtnQty
-        End If
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
+            ' If we are using stage, then the cart does not come into play, so simply return 0
+            If UseStage Then
+                Return rtnQty
+            End If
 
-        Try
             ' Open the SQL connection
             Conn.Open()
 
             Dim command As String = "SELECT @Quantity = isnull(sum(QuantityPurchased + QuantityFree), 0) from ShoppingCartDetail sd join ShoppingCartMaster sm on sm.CartID = sd.CartID where PRTNUM = @PRTNUM and Warehouse = @Warehouse"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-            cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
 
-            'Perform the update to the database
-            Try
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
+
                 cmd.ExecuteNonQuery()
                 rtnQty = Convert.ToInt32(parmQty.Value.ToString())
-            Catch ex As Exception
-                rtnQty = 0
-            Finally
-                ' Close the SQL connection object
-                If Conn.State = ConnectionState.Open Then
-                    Conn.Close()
-                End If
-                Conn.Dispose()
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
@@ -503,42 +379,26 @@ Public Class Inventory
     Private Function GetOnTransfer(ByVal STK As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
 
-        ' Set up a new SQL connection string
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
             Conn.Open()
 
             ' We need to get all transfer orders that are in status two, waiting for the carrier to be assigned, sent to Unisource, and acknowledged.
             Dim command As String = "SELECT @Quantity = isnull(sum(QuantityRequested), 0) from TransferDetail td join TransferMaster tm on tm.ID = td.TMID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0 and tm.Status >= 1 and  tm.Status < 5"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
-            cmd.Parameters.Add(New SqlParameter("@STK", STK))
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+                cmd.Parameters.Add(New SqlParameter("@STK", STK))
 
-            'Perform the update to the database
-            Try
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
+
                 cmd.ExecuteNonQuery()
                 rtnQty = parmQty.Value.ToString()
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = Data.ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
@@ -548,10 +408,7 @@ Public Class Inventory
     Private Function GetOnTransfer(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
 
-        ' Set up a new SQL connection string
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-        Try
-            ' Open the SQL connection
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
             Conn.Open()
 
             ' We need to get all transfer orders that are in status two, waiting for the carrier to be assigned, sent to Unisource, and acknowledged.
@@ -563,39 +420,25 @@ Public Class Inventory
                 command = "SELECT @Quantity = isnull(sum(QuantityRequested), 0) from TransferDetail td join TransferMaster tm on tm.ID = td.TMID where PartNumber = @PRTNUM and FromSTK like @STK and tm.Status >= 1 and  tm.Status < 5"
             End If
 
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
 
-            If UseStage Then
-                cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
-            Else
-                cmd.Parameters.Add(New SqlParameter("@STK", "%" + Warehouse + "%"))
-            End If
+                If UseStage Then
+                    cmd.Parameters.Add(New SqlParameter("@STK", "STG " + Warehouse))
+                Else
+                    cmd.Parameters.Add(New SqlParameter("@STK", "%" + Warehouse + "%"))
+                End If
 
-            Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-            parmQty.Direction = ParameterDirection.Output
-            parmQty.Value = Nothing
-            cmd.Parameters.Add(parmQty)
+                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
+                parmQty.Direction = ParameterDirection.Output
+                parmQty.Value = Nothing
+                cmd.Parameters.Add(parmQty)
 
-            'Perform the update to the database
-            Try
                 cmd.ExecuteNonQuery()
                 rtnQty = parmQty.Value.ToString()
-            Catch ex As Exception
-                rtnQty = 0
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        Finally
-            ' Close the SQL connection object
-            If Conn.State = Data.ConnectionState.Open Then
-                Conn.Close()
-            End If
-            Conn.Dispose()
-        End Try
+            End Using
+        End Using
 
         Return rtnQty
     End Function
@@ -629,7 +472,6 @@ Public Class Inventory
     ' This module returns the quantity of a product that is on a pending transfer that is being built within the system
     Private Function GetOnPendingTransfer(ByVal Warehouse As String, ByVal UseStage As Boolean, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
-
         Dim strSQl As String = ""
 
         If UseStage Then
@@ -638,10 +480,7 @@ Public Class Inventory
             strSQl = "SELECT isnull(sum(Quantity), 0) from PendingTransferDetail td join PendingTransferMaster tm on tm.UserID = td.UserID where PartNumber = @PRTNUM and charindex(@STK, FromSTK) > 0"
         End If
 
-        ' Set up a new SQL connection string
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-
-            ' Open the SQL connection
             Conn.Open()
 
             Using cmd As New SqlCommand(strSQl, Conn)
@@ -663,35 +502,32 @@ Public Class Inventory
 
     Private Function GetBackupWarehouses(ByVal Warehouse As String) As BlockingCollection(Of WarehouseData)
         Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
-        Dim Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
 
-        ' Add the calling warehouse to the return warehouses
-        Dim whse As New WarehouseData()
-        whse.Sequence = 1
-        whse.Warehouse = Warehouse
-        rtnWarehouses.Add(whse)
+        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
+            ' Add the calling warehouse to the return warehouses
+            Dim whse As New WarehouseData()
+            whse.Sequence = 1
+            whse.Warehouse = Warehouse
+            rtnWarehouses.Add(whse)
 
-        Try
-            ' Open the SQL connection
             Conn.Open()
 
             Dim command As String = "SELECT @Primary = isnull(PrimaryBackup, ''), @Secondary = isnull(SecondaryBackup, '') from Warehouses where STK = @Warehouse"
-            Dim cmd As New SqlCommand(command, Conn)
-            cmd.CommandType = CommandType.Text
-            cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
 
-            Dim parmPrimary As New SqlParameter("@Primary", SqlDbType.NVarChar, 10)
-            parmPrimary.Direction = ParameterDirection.Output
-            parmPrimary.Value = Nothing
-            cmd.Parameters.Add(parmPrimary)
+            Using cmd As New SqlCommand(command, Conn)
+                cmd.CommandType = CommandType.Text
+                cmd.Parameters.Add(New SqlParameter("@Warehouse", Warehouse))
 
-            Dim parmSecondary As New SqlParameter("@Secondary", SqlDbType.NVarChar, 10)
-            parmSecondary.Direction = ParameterDirection.Output
-            parmSecondary.Value = Nothing
-            cmd.Parameters.Add(parmSecondary)
+                Dim parmPrimary As New SqlParameter("@Primary", SqlDbType.NVarChar, 10)
+                parmPrimary.Direction = ParameterDirection.Output
+                parmPrimary.Value = Nothing
+                cmd.Parameters.Add(parmPrimary)
 
-            'Perform the update to the database
-            Try
+                Dim parmSecondary As New SqlParameter("@Secondary", SqlDbType.NVarChar, 10)
+                parmSecondary.Direction = ParameterDirection.Output
+                parmSecondary.Value = Nothing
+                cmd.Parameters.Add(parmSecondary)
+
                 cmd.ExecuteNonQuery()
 
                 ' Check if there is a primary backup warehouse to return
@@ -709,20 +545,8 @@ Public Class Inventory
                     whseSecondary.Warehouse = parmSecondary.Value
                     rtnWarehouses.Add(whseSecondary)
                 End If
-            Catch ex As Exception
-                ' do nothing
-            Finally
-                ' Close the SQL connection object
-                If Conn.State = ConnectionState.Open Then
-                    Conn.Close()
-                End If
-                Conn.Dispose()
-            End Try
-
-            ' Free up memory from the command object
-            cmd.Dispose()
-        Catch
-        End Try
+            End Using
+        End Using
 
         Return rtnWarehouses
     End Function
@@ -737,45 +561,30 @@ Public Class Inventory
         ' sorted by the closest to where the primary warehouse is to the farthest away
         Dim strSQL As String = "select Warehouse from PartPricingOverstockProducts where PRTNUM = @PRTNUM and Active = 1"
 
-        Dim conn As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-        Dim cmd As SqlCommand = Nothing
-        Dim dr As SqlDataReader = Nothing
-
-        Try
-            ' Open the database connection
+        Using conn As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
             conn.Open()
 
-            ' Set up a new SQL Command
-            cmd = New SqlCommand(strSQL, conn)
-            cmd.CommandType = CommandType.Text
-            cmd.CommandTimeout = 0
+            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
+                cmd.CommandType = CommandType.Text
+                cmd.CommandTimeout = 0
 
-            ' Add a parameter to the command that has the invoice number to update
-            cmd.Parameters.Add(New SqlParameter("@PRTNUM", PRTNUM))
+                ' Add a parameter to the command that has the invoice number to update
+                cmd.Parameters.Add(New SqlParameter("@PRTNUM", PRTNUM))
 
-            ' Execute the sql statement so it returns a datareader
-            dr = cmd.ExecuteReader()
+                ' Execute the sql statement so it returns a datareader
+                Using dr As SqlDataReader = cmd.ExecuteReader()
+                    If dr.Read() Then
+                        ' Split all the warehouses in the overstock value since it can contain multiple warehouse
+                        Dim warehouses As List(Of String) = dr("Warehouse").ToString().Split(",").ToList()
 
-            ' Loop through all the items returned
-            If dr.Read() Then
-                ' Split all the warehouses in the overstock value since it can contain multiple warehouse
-                Dim warehouses As List(Of String) = dr("Warehouse").ToString().Split(",").ToList()
-
-                ' Loop through the warehouses to get all of them
-                For Each warehouse As String In warehouses
-                    rtnWarehouses.Add(AllWarehouses.Where(Function(whse As WarehouseData) whse.Warehouse = warehouse).FirstOrDefault())
-                Next
-            End If
-
-        Catch ex As Exception
-        Finally
-            ' Close the database connection
-            conn.Close()
-        End Try
-
-        If cmd IsNot Nothing Then
-            cmd.Dispose()
-        End If
+                        ' Loop through the warehouses to get all of them
+                        For Each warehouse As String In warehouses
+                            rtnWarehouses.Add(AllWarehouses.Where(Function(whse As WarehouseData) whse.Warehouse = warehouse).FirstOrDefault())
+                        Next
+                    End If
+                End Using
+            End Using
+        End Using
 
         ' Get the geolocation coordinate of the primary warehouse
         Dim primaryWhse As WarehouseData = AllWarehouses.Where(Function(whse As WarehouseData) whse.Warehouse = PrimaryWarehouse).FirstOrDefault()
@@ -874,12 +683,9 @@ Public Class Inventory
 
     Private Function CheckCustomerExcludes(ByVal CUSTID As String) As Boolean
         Dim rtnData As Boolean = False
-
         Dim strSQL As String = "SELECT isnull(CUSTID, '') from RoundRobinCustomerExcludes where CUSTID = @CUSTID"
 
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-
-            ' Open the SQL connection
             Conn.Open()
 
             Using cmd As New SqlCommand(strSQL, Conn)
@@ -893,17 +699,13 @@ Public Class Inventory
                 End If
             End Using
         End Using
-
     End Function
 
     Private Function GetFGWarehouses() As BlockingCollection(Of WarehouseData)
         Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
-
         Dim strSQL As String = "SELECT STK, GeoLoc from Warehouses where FGWarehouse = 1 and Active = 1"
 
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-
-            ' Open the SQL connection
             Conn.Open()
 
             Using cmd As New SqlCommand(strSQL, Conn)
@@ -924,5 +726,4 @@ Public Class Inventory
 
         Return rtnWarehouses
     End Function
-
 End Class

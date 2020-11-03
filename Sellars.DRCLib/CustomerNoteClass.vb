@@ -80,17 +80,17 @@ Public Class CustomerNoteClass
         oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, _CustomerID, ParameterDirection.Input)
 
         ' Run the stored procedure and return a datareader
-        Dim dr As SqlDataReader = oSQL.RunProcReader("GetCustomerNote")
-
-        ' Clear out the note field
-        _Note = ""
-
-        ' Assign the variables from the database to properties
-        If dr.Read() Then
-            _Note = dr("NoteText")
-        Else
+        Using dr As SqlDataReader = oSQL.RunProcReader("GetCustomerNote")
+            ' Clear out the note field
             _Note = ""
-        End If
+
+            ' Assign the variables from the database to properties
+            If dr.Read() Then
+                _Note = dr("NoteText")
+            Else
+                _Note = ""
+            End If
+        End Using
 
         ' Return the note variable
         Return _Note

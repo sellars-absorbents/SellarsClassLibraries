@@ -31,17 +31,17 @@ Public Class StockMasterClass
                                "Where STK_05 = '" & passStockCode.Trim & "' "
 
         ' Set up the new Sql command
-        Dim cmd As New SqlCommand(strSQL, MaxConnection)
-        Dim PartSalesReader As SqlDataReader = cmd.ExecuteReader()
-        If PartSalesReader.Read() Then
-            bRecordFound = True
-        Else
-            bRecordFound = False
-        End If
+        Using cmd As New SqlCommand(strSQL, MaxConnection)
+            Using PartSalesReader As SqlDataReader = cmd.ExecuteReader()
+                If PartSalesReader.Read() Then
+                    bRecordFound = True
+                Else
+                    bRecordFound = False
+                End If
+            End Using
+        End Using
 
-        PartSalesReader.Close()
-        PartSalesReader = Nothing
-        closeMaxConnection()
+        CloseMaxConnection()
 
         ' Return whether or not the stock code was found on the Stock Master table
         Return bRecordFound

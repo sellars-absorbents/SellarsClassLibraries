@@ -64,9 +64,7 @@ Public Class PaymentTermsClass
     End Function
 
     Public Function Read(ByVal Code As String) As Boolean
-        ' set up the variable to be returned
         Dim rtnVal As Boolean = False
-
         Dim strSQL As String = "select @Days = DAYS_36, @Discount = DISC_36, @DiscountDays = DISCDY_36 " &
                                "from Code_Master with (nolock) " &
                                "where CDEKEY_36 = 'TERM' " &
@@ -111,7 +109,6 @@ Public Class PaymentTermsClass
 
     Public Function GetTermCodebyValues(ByVal _days As String, ByVal _disc As Decimal) As String
         Dim rtnVal As String = ""
-
         Dim discount As Decimal = _disc * 100
         Dim strSQL As String = "select CODE_36 as Code " &
                         "from Code_Master with (nolock) " &
