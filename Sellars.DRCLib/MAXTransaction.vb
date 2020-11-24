@@ -93,9 +93,7 @@ Public Class MAXTransaction
     Public Sub GenericTransaction()
         Dim transaction As XDocument = CreateXDocumentForTransaction()
         Dim errorMessage As String = ""
-
         Dim transactionString As String = transaction.ToString()
-
         Dim retValue As Integer = ProcessTransXML(transactionString, errorMessage)
 
         If retValue = 0 Then

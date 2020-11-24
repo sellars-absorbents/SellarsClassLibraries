@@ -262,12 +262,14 @@
     <Compile Include="NumberClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PalletDetails.vb" />
     <Compile Include="PartCharacteristicsClass.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PartClass.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PartData.vb" />
     <Compile Include="PartSalesClass.vb">
       <SubType>Code</SubType>
     </Compile>
