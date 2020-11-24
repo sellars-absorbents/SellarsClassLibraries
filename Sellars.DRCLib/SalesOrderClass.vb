@@ -139,8 +139,7 @@ Public Class SalesOrderClass
         Public Property Success As Boolean
     End Class
 
-    Public Function AddSPS(ByRef som As SalesOrderMasterClass, ByVal Username As String, ByVal Password As String, ByVal SO As SalesOrder, ByVal CarrierInfo As ShippingCarrierInfo, ByVal FixCrLf As Boolean,
-                           ByVal maxDLLConnectionString As String, ByVal company As String, ByVal licensePath As String, ByVal logPath As String) As AddSPSResult
+    Public Function AddSPS(ByRef som As SalesOrderMasterClass, ByVal SO As SalesOrder, ByVal CarrierInfo As ShippingCarrierInfo, ByVal FixCrLf As Boolean) As AddSPSResult
         Dim result As AddSPSResult = New AddSPSResult()
         ' Instantiate the sales order class
         ' Check if the Customer PO already exists, and if it does, then exit the routine
