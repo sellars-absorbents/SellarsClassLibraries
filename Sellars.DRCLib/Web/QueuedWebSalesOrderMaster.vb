@@ -178,7 +178,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_CUSTPO, "")
         End Get
         Set(ByVal value As String)
-            _CUSTPO = GetValue(value, "")
+            _CUSTPO = TruncateValue(GetValue(value, ""), 25)
         End Set
     End Property
 
@@ -196,7 +196,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_COMNT1, "")
         End Get
         Set(ByVal value As String)
-            _COMNT1 = GetValue(value, "")
+            _COMNT1 = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
 
@@ -205,7 +205,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_COMNT2, "")
         End Get
         Set(ByVal value As String)
-            _COMNT2 = GetValue(value, "")
+            _COMNT2 = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
 
@@ -214,7 +214,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_COMNT3, "")
         End Get
         Set(ByVal value As String)
-            _COMNT3 = GetValue(value, "")
+            _COMNT3 = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
     Public Property NAME() As String
@@ -222,7 +222,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_NAME, "")
         End Get
         Set(ByVal value As String)
-            _NAME = GetValue(value, "")
+            _NAME = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -231,7 +231,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ADDR1, "")
         End Get
         Set(ByVal value As String)
-            _ADDR1 = GetValue(value, "")
+            _ADDR1 = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -240,7 +240,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ADDR2, "")
         End Get
         Set(ByVal value As String)
-            _ADDR2 = GetValue(value, "")
+            _ADDR2 = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -249,7 +249,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ADDR3, "")
         End Get
         Set(ByVal value As String)
-            _ADDR3 = GetValue(value, "")
+            _ADDR3 = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -258,7 +258,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ADDR4, "")
         End Get
         Set(ByVal value As String)
-            _ADDR4 = GetValue(value, "")
+            _ADDR4 = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -267,7 +267,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ADDR5, "")
         End Get
         Set(ByVal value As String)
-            _ADDR5 = GetValue(value, "")
+            _ADDR5 = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -276,7 +276,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ADDR6, "")
         End Get
         Set(ByVal value As String)
-            _ADDR6 = GetValue(value, "")
+            _ADDR6 = TruncateValue(GetValue(value, ""), 64)
         End Set
     End Property
 
@@ -285,7 +285,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_CITY, "")
         End Get
         Set(ByVal value As String)
-            _CITY = GetValue(value, "")
+            _CITY = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
 
@@ -294,7 +294,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_STATE, "")
         End Get
         Set(ByVal value As String)
-            _STATE = GetValue(value, "")
+            _STATE = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
 
@@ -303,7 +303,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_ZIPCD, "")
         End Get
         Set(ByVal value As String)
-            _ZIPCD = GetValue(value, "")
+            _ZIPCD = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
 
@@ -312,7 +312,7 @@ Public Class QueuedWebSalesOrderMaster
             Return GetValue(_CNTRY, "")
         End Get
         Set(ByVal value As String)
-            _CNTRY = GetValue(value, "")
+            _CNTRY = TruncateValue(GetValue(value, ""), 30)
         End Set
     End Property
 
@@ -321,7 +321,7 @@ Public Class QueuedWebSalesOrderMaster
             Return _ShippingContactEmail
         End Get
         Set(value As String)
-            _ShippingContactEmail = value
+            _ShippingContactEmail = TruncateValue(value, 100)
         End Set
     End Property
 
@@ -330,7 +330,7 @@ Public Class QueuedWebSalesOrderMaster
             Return _ShippingContactName
         End Get
         Set(value As String)
-            _ShippingContactName = value
+            _ShippingContactName = TruncateValue(value, 100)
         End Set
     End Property
 
@@ -339,7 +339,7 @@ Public Class QueuedWebSalesOrderMaster
             Return _ShippingContactPhone
         End Get
         Set(value As String)
-            _ShippingContactPhone = value
+            _ShippingContactPhone = TruncateValue(value, 100)
         End Set
     End Property
 
@@ -539,6 +539,16 @@ Public Class QueuedWebSalesOrderMaster
                 Return value
             End If
         End If
+    End Function
+
+    Private Function TruncateValue(ByVal value As String, ByVal maxLength As Integer)
+        Dim result As String = value
+
+        If (value.Length > maxLength) Then
+            result = value.Substring(0, maxLength)
+        End If
+
+        Return result
     End Function
 
     Public Property ID As Guid
