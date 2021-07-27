@@ -117,7 +117,7 @@ Public Class MAXTransaction
 
     Public Sub StockTransfer()
         If TYPE_39 <> "F" OrElse SUBTYPE_39 <> " " Then
-            Throw New ApplicationException("The Type must be S and the subtype must be one blank space for a stock transfer transaction")
+            Throw New ApplicationException("The Type must be F and the subtype must be one blank space for a stock transfer transaction")
         End If
 
         Dim transaction As XDocument = CreateXDocumentForTransaction()
