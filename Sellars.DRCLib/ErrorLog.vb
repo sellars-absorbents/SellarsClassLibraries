@@ -36,7 +36,11 @@ Public Class ErrorLog
     End Sub
 
     Public Shared Sub Write(ByVal connectionString As String, ByVal subroutine As String, ByVal sourceModule As String, ByVal ex As Exception)
-        Dim truncStackTrace As String = ex.StackTrace
+        Dim truncStackTrace As String = ""
+
+        If ex.StackTrace IsNot Nothing Then
+            truncStackTrace = ex.StackTrace
+        End If
 
         If (truncStackTrace.Length > 2001) Then
             truncStackTrace = truncStackTrace.Substring(0, 2000)
