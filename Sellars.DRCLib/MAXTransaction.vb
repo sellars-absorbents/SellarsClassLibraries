@@ -173,7 +173,7 @@ Public Class MAXTransaction
                         <DELNUM_39><%= DELNUM_39().GetFixedLengthString(2) %></DELNUM_39>
                         <TNXQTY_39><%= TNXQTY_39() %></TNXQTY_39>
                         <TNXDTE_39><%= TNXDTE_39().ToString("yyMMdd") %></TNXDTE_39>
-                        <TNXTME_39><%= TNXTME_39().ToString("hhmmss") %></TNXTME_39>
+                        <TNXTME_39><%= TNXTME_39().ToString("HHmmss") %></TNXTME_39>
                         <REFDSC_39><%= REFDSC_39().GetFixedLengthString(20) %></REFDSC_39>
                         <GLREF_39><%= GLREF_39().GetFixedLengthString(3) %></GLREF_39>
                         <OPRSEQ_39><%= OPRSEQ_39().GetFixedLengthString(4) %></OPRSEQ_39>

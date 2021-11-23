@@ -115,7 +115,7 @@ Namespace Windows
                     Case Is >= Convert.ToDecimal(Round(m_OwnerObject.QCSpecParameters(m_FieldType).URL, 2))
                         backBrush = RedBrush(bounds)
                 End Select
-            ElseIf FieldType = FieldTypeEnum.Weight Or FieldType = FieldTypeEnum.OpSideBulk Or FieldTypeEnum.DriveSideBulk Then
+            ElseIf FieldType = FieldTypeEnum.Weight Or FieldType = FieldTypeEnum.OpSideBulk Or FieldType = FieldTypeEnum.DriveSideBulk Then
                 ' If the field type is weight or bulk compare to one decimal place, 
                 ' otherwise compare to whole numbers
                 Select Case Convert.ToDecimal(Round(passValue, 1))
