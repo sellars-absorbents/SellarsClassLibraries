@@ -16,7 +16,7 @@ Public Class PaymentTermsClass
         End Get
     End Property
 
-    Public ReadOnly Property Discount() As Integer
+    Public ReadOnly Property Discount() As Decimal
         Get
             Return _Discount
         End Get
