@@ -675,7 +675,7 @@ Public Class SalesOrderClass
     Private Function GetOnOrder(ByVal STK As String, ByVal Item As String) As Integer
         Dim rtnQty As Integer = 0
 
-        Dim strSQL As String = "SELECT isnull(sum(DUEQTY_28 * SLSCNV_29), 0) from SO_Detail join Part_Sales ps on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and PRTNUM_28 = @PRTNUM and STK_28 = @STK and STYPE_28 = 'CU'"
+        Dim strSQL As String = "SELECT isnull(sum(DUEQTY_28 * SLSCNV_29), 0) from SO_Detail join Part_Sales ps with (NOLOCK) on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and PRTNUM_28 = @PRTNUM and STK_28 = @STK and STYPE_28 = 'CU'"
 
         ' Set up a new SQL connection string
         Using Conn As New SqlConnection(MAXConnection)
@@ -741,7 +741,7 @@ Public Class SalesOrderClass
     Private Function GetConversion(ByVal Item As String) As Decimal
         Dim rtnConversion As Decimal = 0.0
 
-        Dim strSQL As String = "SELECT isnull(SLSCNV_29, 0) from Part_Sales where PRTNUM_29 = @PRTNUM"
+        Dim strSQL As String = "SELECT isnull(SLSCNV_29, 0) from Part_Sales with (NOLOCK) where PRTNUM_29 = @PRTNUM"
 
         ' Set up a new SQL connection string
         Using Conn As New SqlConnection(MAXConnection)

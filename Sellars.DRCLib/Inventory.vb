@@ -230,7 +230,7 @@ Public Class Inventory
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
-            Dim command As String = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK"
+            Dim command As String = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK"
 
             Using cmd As New SqlCommand(command, Conn)
                 cmd.CommandType = CommandType.Text
@@ -259,9 +259,9 @@ Public Class Inventory
             Dim command As String = ""
 
             If UseStage Then
-                command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 = @STK"
+                command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 = @STK"
             Else
-                command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK and charindex('STG', STK_28) = 0 and charindex('TRN', STK_28) = 0"
+                command = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK and charindex('STG', STK_28) = 0 and charindex('TRN', STK_28) = 0"
             End If
 
             Using cmd As New SqlCommand(command, Conn)
@@ -294,7 +294,7 @@ Public Class Inventory
             Conn.Open()
 
             Using Transaction As SqlTransaction = Conn.BeginTransaction(IsolationLevel.ReadUncommitted)
-                Dim command As String = "SELECT @Conversion = isnull(SLSCNV_29, 0) from Part_Sales where PRTNUM_29 = @PRTNUM"
+                Dim command As String = "SELECT @Conversion = isnull(SLSCNV_29, 0) from Part_Sales with (NOLOCK) where PRTNUM_29 = @PRTNUM"
 
                 Using cmd As New SqlCommand(command, Conn)
                     cmd.Transaction = Transaction
