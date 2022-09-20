@@ -674,7 +674,8 @@ Public Class Inventory
                 rtnData.Warehouse = "DSC1"
             End If
         Catch Ex As Exception
-            ErrorMessage = Ex.Message
+            Dim err As New Sellars.DRCLib.ErrorLog()
+            err.Write(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString, "GetWarehouse", "SellarsOrderEntry", Ex)
         End Try
 
         ' Return the selected warehouse
@@ -693,9 +694,13 @@ Public Class Inventory
 
                 cmd.Parameters.Add(New System.Data.SqlClient.SqlParameter("@CUSTID", CUSTID))
 
-                ' Get the customer id returned from the sql call
-                If cmd.ExecuteScalar().ToString().Trim() <> "" Then
-                    rtnData = True
+                Dim resultq As Object = cmd.ExecuteScalar()
+
+                If resultq IsNot Nothing OrElse resultq IsNot DBNull.Value Then
+                    ' Get the customer id returned from the sql call
+                    If resultq.ToString().Trim() <> "" Then
+                        rtnData = True
+                    End If
                 End If
             End Using
         End Using

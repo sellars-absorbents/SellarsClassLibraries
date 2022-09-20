@@ -268,80 +268,93 @@ Public Class ShippingMasterClass
 
         Using cmd As New SqlCommand(strSQL, MaxConnection)
             Using ShipMasterReader As SqlDataReader = cmd.ExecuteReader()
-                ShipMasterReader.Read()
+                If (ShipMasterReader.Read()) Then
+                    _ShipCode = passShipCode
 
-                _ShipCode = passShipCode
+                    If IsDBNull(ShipMasterReader("ADDR1_24")) Then
+                        _Addr1 = ""
+                    Else
+                        _Addr1 = ShipMasterReader("ADDR1_24")
+                    End If
 
-                If IsDBNull(ShipMasterReader("ADDR1_24")) Then
+                    If IsDBNull(ShipMasterReader("ADDR2_24")) Then
+                        _Addr2 = ""
+                    Else
+                        _Addr2 = ShipMasterReader("ADDR2_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("ADDR3_24")) Then
+                        _Addr3 = ""
+                    Else
+                        _Addr3 = ShipMasterReader("ADDR3_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("CITY_24")) Then
+                        _City = ""
+                    Else
+                        _City = ShipMasterReader("CITY_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("STATE_24")) Then
+                        _State = ""
+                    Else
+                        _State = ShipMasterReader("STATE_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("ZIPCD_24")) Then
+                        _ZipCode = ""
+                    Else
+                        _ZipCode = ShipMasterReader("ZIPCD_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("CNTRY_24")) Then
+                        _Country = ""
+                    Else
+                        _Country = ShipMasterReader("CNTRY_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("NAME_24")) Then
+                        _Name = ""
+                    Else
+                        _Name = ShipMasterReader("NAME_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("TXCDE1_24")) Then
+                        _TaxCode1 = ""
+                    Else
+                        _TaxCode1 = ShipMasterReader("TXCDE1_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("TXCDE2_24")) Then
+                        _TaxCode2 = ""
+                    Else
+                        _TaxCode2 = ShipMasterReader("TXCDE2_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("TXCDE3_24")) Then
+                        _TaxCode3 = ""
+                    Else
+                        _TaxCode3 = ShipMasterReader("TXCDE3_24")
+                    End If
+
+                    If IsDBNull(ShipMasterReader("UsrDefKey")) Then
+                        _UsrDefKey = ""
+                    Else
+                        _UsrDefKey = ShipMasterReader("UsrDefKey").ToString()
+                    End If
+                Else
                     _Addr1 = ""
-                Else
-                    _Addr1 = ShipMasterReader("ADDR1_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("ADDR2_24")) Then
                     _Addr2 = ""
-                Else
-                    _Addr2 = ShipMasterReader("ADDR2_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("ADDR3_24")) Then
                     _Addr3 = ""
-                Else
-                    _Addr3 = ShipMasterReader("ADDR3_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("CITY_24")) Then
                     _City = ""
-                Else
-                    _City = ShipMasterReader("CITY_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("STATE_24")) Then
                     _State = ""
-                Else
-                    _State = ShipMasterReader("STATE_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("ZIPCD_24")) Then
                     _ZipCode = ""
-                Else
-                    _ZipCode = ShipMasterReader("ZIPCD_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("CNTRY_24")) Then
                     _Country = ""
-                Else
-                    _Country = ShipMasterReader("CNTRY_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("NAME_24")) Then
                     _Name = ""
-                Else
-                    _Name = ShipMasterReader("NAME_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("TXCDE1_24")) Then
                     _TaxCode1 = ""
-                Else
-                    _TaxCode1 = ShipMasterReader("TXCDE1_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("TXCDE2_24")) Then
                     _TaxCode2 = ""
-                Else
-                    _TaxCode2 = ShipMasterReader("TXCDE2_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("TXCDE3_24")) Then
                     _TaxCode3 = ""
-                Else
-                    _TaxCode3 = ShipMasterReader("TXCDE3_24")
-                End If
-
-                If IsDBNull(ShipMasterReader("UsrDefKey")) Then
                     _UsrDefKey = ""
-                Else
-                    _UsrDefKey = ShipMasterReader("UsrDefKey").ToString()
                 End If
             End Using
         End Using
