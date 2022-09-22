@@ -696,7 +696,7 @@ Public Class Inventory
 
                 Dim resultq As Object = cmd.ExecuteScalar()
 
-                If resultq IsNot Nothing OrElse resultq IsNot DBNull.Value Then
+                If resultq IsNot Nothing AndAlso resultq IsNot DBNull.Value Then
                     ' Get the customer id returned from the sql call
                     If resultq.ToString().Trim() <> "" Then
                         rtnData = True
