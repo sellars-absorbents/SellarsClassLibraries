@@ -551,51 +551,6 @@ Public Class Inventory
         Return rtnWarehouses
     End Function
 
-    Private Function GetOverstockWarehouses(ByVal PrimaryWarehouse As String, ByVal PRTNUM As String) As List(Of WarehouseData)
-        Dim rtnWarehouses As New List(Of WarehouseData)
-
-        ' Get all the warehouses data
-        Dim AllWarehouses As BlockingCollection(Of WarehouseData) = GetFGWarehouses()
-
-        ' Set up the query to get all the warehouses that have overstock quantities of the identified product
-        ' sorted by the closest to where the primary warehouse is to the farthest away
-        Dim strSQL As String = "select Warehouse from PartPricingOverstockProducts where PRTNUM = @PRTNUM and Active = 1"
-
-        Using conn As SqlConnection = New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-            conn.Open()
-
-            Using cmd As SqlCommand = New SqlCommand(strSQL, conn)
-                cmd.CommandType = CommandType.Text
-                cmd.CommandTimeout = 0
-
-                ' Add a parameter to the command that has the invoice number to update
-                cmd.Parameters.Add(New SqlParameter("@PRTNUM", PRTNUM))
-
-                ' Execute the sql statement so it returns a datareader
-                Using dr As SqlDataReader = cmd.ExecuteReader()
-                    If dr.Read() Then
-                        ' Split all the warehouses in the overstock value since it can contain multiple warehouse
-                        Dim warehouses As List(Of String) = dr("Warehouse").ToString().Split(",").ToList()
-
-                        ' Loop through the warehouses to get all of them
-                        For Each warehouse As String In warehouses
-                            rtnWarehouses.Add(AllWarehouses.Where(Function(whse As WarehouseData) whse.Warehouse = warehouse).FirstOrDefault())
-                        Next
-                    End If
-                End Using
-            End Using
-        End Using
-
-        ' Get the geolocation coordinate of the primary warehouse
-        Dim primaryWhse As WarehouseData = AllWarehouses.Where(Function(whse As WarehouseData) whse.Warehouse = PrimaryWarehouse).FirstOrDefault()
-
-        ' sort the list by the geographic distance from the primary warehouse
-        rtnWarehouses = rtnWarehouses.OrderBy(Function(whse As WarehouseData) whse.GeoCoord.GetDistanceTo(primaryWhse.GeoCoord)).ToList()
-
-        ' return the list
-        Return rtnWarehouses
-    End Function
-
     Public Function GetWarehouse(ByVal CUSTID As String, ByVal PrimaryWarehouse As String, ByVal PRTNUM As String, ByVal Quantity As Integer) As GetWarehouseResponse
         'define a variable for the warehouse to return
         Dim rtnData As New GetWarehouseResponse()
@@ -603,9 +558,6 @@ Public Class Inventory
         Try
             ' Define a variable to show if we found a warehouse that has enough inventory
             Dim found As Boolean = False
-
-            ' Define a variable to hold all the overstockWarehouse for a product
-            Dim overstockWarehouses As New List(Of WarehouseData)
 
             ' Check if the customer is excluded from participating in Round Robin, and if they are
             ' then set the found to true to end the searches and assign the warehouse to be the primary warehouse
@@ -615,67 +567,12 @@ Public Class Inventory
                 rtnData.Available = Available(PrimaryWarehouse, PRTNUM)
             End If
 
-            ' If we have not found a warehouse yet, then we don't have an override excluding a customer from
-            ' using RoundRobin
-            If Not found Then
-                ' If the item is overstock, we need to know which warehouses are all overstocked
-                overstockWarehouses = GetOverstockWarehouses(PrimaryWarehouse, PRTNUM)
-
-                ' Find the first warehouse that has enough inventory to fill the line
-                For Each whse As WarehouseData In overstockWarehouses
-
-                    ' if the available quantity at that warehouse is greater than the quantity needed for the order, then
-                    ' exit the loop
-                    Dim avail As Integer = Available(whse.Warehouse, PRTNUM)
-                    If avail >= Quantity Then
-                        found = True
-                        rtnData.Warehouse = whse.Warehouse
-                        rtnData.Available = avail
-                        rtnData.Overstock = True
-                        If whse.Warehouse <> PrimaryWarehouse Then
-                            rtnData.RoundRobined = True
-                        End If
-                        Exit For
-                    End If
-                Next
-            End If
-
-            ' If we didn't find a warehouse yet, we either didn't have any overstocks or none of the overstock
-            ' warehouses had enough to fill the line order
-            If Not found Then
-                ' First we need to get all the warehouses associated with the primary warehouse
-                Dim warehouses As List(Of String) = (From whse As WarehouseData In GetBackupWarehouses(PrimaryWarehouse)
-                                                     Order By whse.Sequence
-                                                     Select whse.Warehouse).ToList()
-
-                ' Find the first warehouse that has enough inventory to fill the line
-                ' since we checked the overstock warehouses in the search above, make sure that we exclude them from the 
-                ' search here
-                For Each whse As String In warehouses.Except((From whs As WarehouseData In overstockWarehouses Select whs.Warehouse).ToList())
-
-                    ' if the available quantity at that warehouse is greater than the quantity needed for the order, then
-                    ' exit the loop
-                    Dim avail As Integer = Available(whse, PRTNUM)
-                    If avail >= Quantity Then
-                        found = True
-                        rtnData.Warehouse = whse
-                        rtnData.Available = avail
-                        If whse <> PrimaryWarehouse Then
-                            rtnData.RoundRobined = True
-                        End If
-                        Exit For
-                    End If
-                Next
-            End If
-
-            ' if none of the warehouses had enough inventory, and the customer was not excluded from Round Robin 
-            ' then set the warehouse to be NEWB
             If Not found Then
                 rtnData.Warehouse = "DSC1"
             End If
         Catch Ex As Exception
             Dim err As New Sellars.DRCLib.ErrorLog()
-            err.Write(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString, "GetWarehouse", "SellarsOrderEntry", Ex)
+            err.Write(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString, "GetWarehouse", "DRCLib", Ex)
         End Try
 
         ' Return the selected warehouse
@@ -704,31 +601,5 @@ Public Class Inventory
                 End If
             End Using
         End Using
-    End Function
-
-    Private Function GetFGWarehouses() As BlockingCollection(Of WarehouseData)
-        Dim rtnWarehouses As New BlockingCollection(Of WarehouseData)
-        Dim strSQL As String = "SELECT STK, GeoLoc from Warehouses where FGWarehouse = 1 and Active = 1"
-
-        Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString)
-            Conn.Open()
-
-            Using cmd As New SqlCommand(strSQL, Conn)
-                cmd.CommandType = CommandType.Text
-
-                Using dr As SqlDataReader = cmd.ExecuteReader()
-
-                    While dr.Read()
-                        Dim whseSecondary As New WarehouseData
-                        whseSecondary.Warehouse = dr("STK")
-                        whseSecondary.GeoLoc = DirectCast(dr("GeoLoc"), SqlGeography)
-                        whseSecondary.GeoCoord = New Location.GeoCoordinate(whseSecondary.GeoLoc.Lat, whseSecondary.GeoLoc.Long)
-                        rtnWarehouses.Add(whseSecondary)
-                    End While
-                End Using
-            End Using
-        End Using
-
-        Return rtnWarehouses
     End Function
 End Class
