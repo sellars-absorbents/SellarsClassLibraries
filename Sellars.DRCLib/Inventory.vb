@@ -568,7 +568,7 @@ Public Class Inventory
             End If
 
             If Not found Then
-                rtnData.Warehouse = "DSC1"
+                rtnData.Warehouse = PrimaryWarehouse
             End If
         Catch Ex As Exception
             Dim err As New Sellars.DRCLib.ErrorLog()
