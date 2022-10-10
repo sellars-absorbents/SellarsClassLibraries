@@ -159,7 +159,7 @@
   <ItemGroup>
     <Reference Include="Interop.MaxUpdateXML">
       <HintPath>Third Party\Interop.MaxUpdateXML.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="System">
