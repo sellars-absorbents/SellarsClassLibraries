@@ -207,7 +207,7 @@
     </Compile>
     <Compile Include="ControlValues.vb" />
     <Compile Include="CustomerMasterExtClass.vb" />
-    <Compile Include="CustomerPOPartMapping.vb" />
+    <Compile Include="CustomerPartMapping.vb" />
     <Compile Include="EDIAutoZone850Class.vb" />
     <Compile Include="CustomerClass.vb">
       <SubType>Code</SubType>
