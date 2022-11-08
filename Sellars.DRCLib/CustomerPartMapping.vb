@@ -30,7 +30,7 @@ Public Class CustomerPartMapping
     End Function
 
     Public Shared Sub InsertMapping(ByVal shopfloorConnection As String, ByVal customerID As String, ByVal customerPONumber As String, ByVal externalPartNumber As String, ByVal internalPartNumber As String)
-        Dim sql As String = "insert into CustomerPOPartMappings select @CustomerID, @CustomerPONumber, @ExternalPartNumber, @InternalPartNumber"
+        Dim sql As String = "insert into CustomerPOPartMappings select @CustomerID, @CustomerPONumber, @ExternalPartNumber, @InternalPartNumber, @CreatedOn"
 
         Using connection = New SqlConnection(shopfloorConnection)
             connection.Open()
@@ -40,6 +40,7 @@ Public Class CustomerPartMapping
                 command.Parameters.Add(New SqlParameter("@CustomerPONumber", customerPONumber))
                 command.Parameters.Add(New SqlParameter("@ExternalPartNumber", externalPartNumber))
                 command.Parameters.Add(New SqlParameter("@InternalPartNumber", internalPartNumber))
+                command.Parameters.Add(New SqlParameter("@CreatedOn", Date.Now))
 
                 command.ExecuteNonQuery()
             End Using
