@@ -834,13 +834,13 @@ Public Class SalesOrderDetailClass
         Return Open
     End Function
 
-    Public Sub Add(ByVal value As DataSource, ByVal Order As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal PRTNUM As String, ByVal Quantity As Decimal, ByVal Price As Decimal, ByVal CusDue As Date, ByVal CurDue As Date, ByVal Pallets As Boolean, ByVal CustID As String, ByVal Type As String, ByVal Taxabl As String, ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal, ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal, ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal, ByVal GLCode As String, ByVal SLSUOM As String, ByVal StockCode As String)
+    Public Sub Add(ByVal value As DataSource, ByVal Order As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal PRTNUM As String, ByVal Quantity As Decimal, ByVal Price As Decimal, ByVal CurDue As Date, ByVal Pallets As Boolean, ByVal CustID As String, ByVal Type As String, ByVal Taxabl As String, ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal, ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal, ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal, ByVal GLCode As String, ByVal SLSUOM As String, ByVal StockCode As String)
         ' Add is only currently available for the max datasource
         If value = DataSource.Sellars Then
             Exit Sub
         End If
 
-        AddMax(Order, LINNUM, DELNUM, PRTNUM, Quantity, Price, CusDue, CurDue, Pallets, CustID, Type, Taxabl, TaxCode1, TaxRate1, TaxCode2, TaxRate2, TaxCode3, TaxRate3, GLCode, SLSUOM, StockCode)
+        AddMax(Order, LINNUM, DELNUM, PRTNUM, Quantity, Price, CurDue, Pallets, CustID, Type, Taxabl, TaxCode1, TaxRate1, TaxCode2, TaxRate2, TaxCode3, TaxRate3, GLCode, SLSUOM, StockCode)
     End Sub
 
     Public Sub Add(ByVal value As DataSource)
@@ -852,7 +852,7 @@ Public Class SalesOrderDetailClass
         AddMax()
     End Sub
 
-    Private Sub AddMax(ByVal Order As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal PRTNUM As String, ByVal Quantity As Decimal, ByVal Price As Decimal, ByVal CusDue As Date, ByVal CurDue As Date, ByVal Pallets As Boolean, ByVal CustID As String, ByVal Type As String, ByVal Taxable As String, ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal, ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal, ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal, ByVal GLCode As String, ByVal SLSUOM As String, ByVal StockCode As String)
+    Private Sub AddMax(ByVal Order As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal PRTNUM As String, ByVal Quantity As Decimal, ByVal Price As Decimal, ByVal CurDue As Date, ByVal Pallets As Boolean, ByVal CustID As String, ByVal Type As String, ByVal Taxable As String, ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal, ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal, ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal, ByVal GLCode As String, ByVal SLSUOM As String, ByVal StockCode As String)
         Dim lineNumber As String = LINNUM.PadLeft(2, "0")
         Dim delNumber As String = DELNUM.PadLeft(2, "0")
         Dim status As String = Convert.ToString(LineStatus.Open)
@@ -881,7 +881,7 @@ Public Class SalesOrderDetailClass
                         <QTLINE_28></QTLINE_28>
                         <ORGDUE_28><%= MakeDate(CurDue) %></ORGDUE_28>
                         <QTDEL_28></QTDEL_28>
-                        <CUSDUE_28><%= MakeDate(CusDue) %></CUSDUE_28>
+                        <CUSDUE_28><%= MakeDate(CurDue) %></CUSDUE_28>
                         <PROBAB_28><%= 0 %></PROBAB_28>
                         <SHPDTE_28/>
                         <FILL04_28></FILL04_28>
@@ -2389,8 +2389,8 @@ Public Class SalesOrderDetailClass
         End Select
     End Sub
 
-    ' This function updates the curdue and cusdue dates for a specific line item
-    Public Sub Update(ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pCurDue As Date, ByVal pCusDue As Date)
+    ' This function updates the curdue date for a specific line item
+    Public Sub Update(ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pCurDue As Date)
         ' Read the requested sales order detail record
         Read(pORDNUM, pLINNUM, pDELNUM)
 
@@ -2400,7 +2400,6 @@ Public Class SalesOrderDetailClass
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
         newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pCurDue)
-        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pCusDue)
 
         'Update the Sales Order Detail record via MAX Update
         Dim retryCount As Integer = 0
@@ -2436,7 +2435,6 @@ Public Class SalesOrderDetailClass
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
         newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pDueDate)
-        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pDueDate)
         newSODXML.Descendants("GLXREF_28").First().Value = GLCode.ToUpper.PadRight(32)
 
         'Update the Sales Order Detail record via MAX Update
@@ -2473,7 +2471,6 @@ Public Class SalesOrderDetailClass
         'Fill in the change functions new data structure by first setting the 
         'data to the original data record, and then modifying the fields that have changed
         newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pDueDate)
-        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pDueDate)
         newSODXML.Descendants("STK_28").First().Value = pStockCode.ToUpper.PadRight(8)
         newSODXML.Descendants("GLXREF_28").First().Value = GLCode.ToUpper.PadRight(32)
 
@@ -2545,7 +2542,7 @@ Public Class SalesOrderDetailClass
         End Select
     End Sub
 
-    Public Sub Update(ByVal value As DataSource, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pQuantity As Decimal, ByVal pPrice As Decimal, ByVal pCusDue As Date, ByVal pCurDue As Date, ByVal pGLCode As String, ByVal pStockCode As String,
+    Public Sub Update(ByVal value As DataSource, ByVal pORDNUM As String, ByVal pLINNUM As String, ByVal pDELNUM As String, ByVal pQuantity As Decimal, ByVal pPrice As Decimal, ByVal pCurDue As Date, ByVal pGLCode As String, ByVal pStockCode As String,
                       ByVal TaxCode1 As String, ByVal TaxRate1 As Decimal,
                       ByVal TaxCode2 As String, ByVal TaxRate2 As Decimal,
                       ByVal TaxCode3 As String, ByVal TaxRate3 As Decimal,
@@ -2560,7 +2557,6 @@ Public Class SalesOrderDetailClass
         'data to the original data record, and then modifying the fields that have changed
         newSODXML.Descendants("GLXREF_28").First().Value = pGLCode.ToUpper.PadRight(32)
         newSODXML.Descendants("CURDUE_28").First().Value = MakeDate(pCurDue)
-        newSODXML.Descendants("CUSDUE_28").First().Value = MakeDate(pCusDue)
         newSODXML.Descendants("PRICE_28").First().Value = pPrice
         newSODXML.Descendants("FORCUR_28").First().Value = pPrice
         newSODXML.Descendants("CURQTY_28").First().Value = pQuantity
