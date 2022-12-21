@@ -228,12 +228,12 @@ Public Class SalesOrderClass
                 Dim soe As New SOMasterExtClass
 
                 Dim ThirdPartyBillingID As Long = 0
-                If SO.CarrierThirdParty.Trim <> "" Then
+                If CarrierInfo.CarrierThirdParty.Trim <> "" Then
                     ' Get the third party billing ID
-                    ThirdPartyBillingID = GetThirdPartyBillingID(SO.CUSTID, SO.CarrierThirdParty, SO.NAME, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
+                    ThirdPartyBillingID = GetThirdPartyBillingID(SO.CUSTID, CarrierInfo.CarrierThirdParty, CarrierInfo.CarrierName, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
                     If ThirdPartyBillingID = 0 Then
-                        Dim Title As String = SO.CITY + "-" + SO.CarrierThirdParty
-                        ThirdPartyBillingID = AddThirdPartyBilling(SO.CUSTID, Title, SO.CarrierThirdParty, SO.NAME, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
+                        Dim Title As String = CarrierInfo.CarrierName + "-" + CarrierInfo.CarrierThirdParty
+                        ThirdPartyBillingID = AddThirdPartyBilling(SO.CUSTID, Title, CarrierInfo.CarrierThirdParty, CarrierInfo.CarrierName, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
                     End If
                 End If
 
@@ -392,12 +392,12 @@ Public Class SalesOrderClass
                 Dim soe As New SOMasterExtClass
 
                 Dim ThirdPartyBillingID As Long = 0
-                If SO.CarrierThirdParty.Trim <> "" Then
+                If CarrierInfo.CarrierThirdParty.Trim <> "" Then
                     ' Get the third party billing ID
-                    ThirdPartyBillingID = GetThirdPartyBillingID(SO.CUSTID, SO.CarrierThirdParty, SO.NAME, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
+                    ThirdPartyBillingID = GetThirdPartyBillingID(SO.CUSTID, CarrierInfo.CarrierThirdParty, CarrierInfo.CarrierName, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
                     If ThirdPartyBillingID = 0 Then
-                        Dim Title As String = SO.CITY + "-" + SO.CarrierThirdParty
-                        ThirdPartyBillingID = AddThirdPartyBilling(SO.CUSTID, Title, SO.CarrierThirdParty, SO.NAME, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
+                        Dim Title As String = CarrierInfo.CarrierName + "-" + CarrierInfo.CarrierThirdParty
+                        ThirdPartyBillingID = AddThirdPartyBilling(SO.CUSTID, Title, CarrierInfo.CarrierThirdParty, CarrierInfo.CarrierName, SO.ADDR1, SO.ADDR2, SO.CITY, SO.STATE, SO.ZIPCD, SO.CNTRY)
                     End If
                 End If
 
