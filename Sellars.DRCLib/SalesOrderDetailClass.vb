@@ -1598,6 +1598,12 @@ Public Class SalesOrderDetailClass
         myDataColumn.ReadOnly = True
         myDataTable.Columns.Add(myDataColumn)
 
+        myDataColumn = New DataColumn
+        myDataColumn.DataType = System.Type.GetType("System.DateTime")
+        myDataColumn.ColumnName = "RunDate"
+        myDataColumn.ReadOnly = True
+        myDataTable.Columns.Add(myDataColumn)
+
         ' Add the new DataTable to the DataSet. 
         Dim myDataSet As New DataSet
         myDataSet.Tables.Add(myDataTable)
@@ -1605,7 +1611,7 @@ Public Class SalesOrderDetailClass
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             connection.Open()
             ' Define a variable for the database name so the application automatically sets up the SQL string below with the correct table names for test versus production
-            Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth, isnull(GrossWeight, 0) GrossWeight " &
+            Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth, isnull(GrossWeight, 0) GrossWeight, IsNull(sodx.RunDate, CUSDUE_28) as RunDate " &
                        "From SO_Detail sod join CUSTOMER_MASTER cm on CUSTID_28 = CUSTID_23 " &
                        "join ShopfloorControl..SalesOrderDetailExt sodx on sodx.ORDNUM = sod.ORDNUM_28 and sodx.DELNUM = DELNUM_28 and sodx.LINNUM = LINNUM_28 " &
                        "left outer join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 " &
@@ -1672,6 +1678,7 @@ Public Class SalesOrderDetailClass
                                                                              End If
                                                                              myRow("CURDUE") = myReader("CURDUE")
                                                                              myRow("CUSDUE") = myReader("CUSDUE")
+                                                                             myRow("RunDate") = myReader("RunDate")
 
                                                                              ' if the Ship Date is the same as the default ship date, then only display the current due
                                                                              ' date to not confuse operators
@@ -2018,13 +2025,17 @@ Public Class SalesOrderDetailClass
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             connection.Open()
 
-            Dim strSQL As String = "Select * " &
-                       "From ""SO_Detail"" " &
-                       "Where ORDNUM_28 = '" & ORDNUM & "' " &
-                       "and LINNUM_28 = '" & LINNUM & "' " &
-                       "and DELNUM_28 = '" & DELNUM & "'"
+            Dim strSQL As String = "Select * 
+                       From SO_Detail
+                       Where ORDNUM_28 = @OrderNumber
+                       And LINNUM_28 = @LineNumber 
+                       And DELNUM_28 = @DelNumber"
 
             Using cmd As New SqlCommand(strSQL, connection)
+                cmd.Parameters.Add(New SqlParameter("@OrderNumber", ORDNUM))
+                cmd.Parameters.Add(New SqlParameter("@LineNumber", LINNUM))
+                cmd.Parameters.Add(New SqlParameter("@DelNumber", DELNUM))
+
                 Using myReader As SqlDataReader = cmd.ExecuteReader()
                     If myReader.Read() Then
                         _ORDNUM = myReader("ORDNUM_28")

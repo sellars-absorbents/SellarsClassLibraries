@@ -24,6 +24,7 @@ Public Class SODetailExtClass
     Private _ShippedFromUnisource As Date = DefaultDate
     Private _PromotionAddedLine As Boolean = False
     Private _ShipFromWarehouse As String = ""
+    Private _runDate As Date
 
     Public Enum Pallet
         No = 0
@@ -132,12 +133,23 @@ Public Class SODetailExtClass
         End Get
     End Property
 
+    Public ReadOnly Property RunDate() As Date
+        Get
+            Return _runDate
+        End Get
+    End Property
+
     Public Sub New()
 
     End Sub
 
     Public Sub New(ByVal Ordnum As String, ByVal LINNUM As String, ByVal DELNUM As String)
         Read(Ordnum, LINNUM, DELNUM)
+    End Sub
+
+    Public Sub Add(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean, ByVal passUnisourceStatus As Integer, ByVal BuyerPartNumber As String, ByVal passPromotionCode As String, ByVal passUnitPrice As Decimal, ByVal passDiscountPercent As Decimal, ByVal ShipFromWarehouse As String, ByVal WarehouseChangeReason As Short, ByVal runDate As Date, Optional ByVal creditMemo As Boolean = False)
+        Add(ORDNUM, LINNUM, DELNUM, passCoreSize, passOutsideDiameter, passWidth, passPallets, passUnisourceStatus, BuyerPartNumber, passPromotionCode, passUnitPrice, passDiscountPercent, ShipFromWarehouse, WarehouseChangeReason, creditMemo)
+        UpdateRunDate(ORDNUM, LINNUM, DELNUM, runDate)
     End Sub
 
     Public Sub Add(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean, ByVal passUnisourceStatus As Integer, ByVal BuyerPartNumber As String, ByVal passPromotionCode As String, ByVal passUnitPrice As Decimal, ByVal passDiscountPercent As Decimal, ByVal ShipFromWarehouse As String, ByVal WarehouseChangeReason As Short, Optional ByVal creditMemo As Boolean = False)
@@ -423,6 +435,27 @@ Public Class SODetailExtClass
                 ClearFields()
             End If
         End Using
+
+        Dim sql As String = $"select IsNull(RunDate, sod.CUSDUE_28) as RunDate
+                              from SalesOrderDetailExt sodx
+                              join exactmaxsellr.dbo.SO_Detail sod on sod.ORDNUM_28 = sodx.ORDNUM and SOD.LINNUM_28 = sodx.LINNUM and SOD.DELNUM_28 = sodx.DELNUM
+                              where sodx.ORDNUM = @OrderNumber and sodx.LINNUM = @LineNumber and sodx.DELNUM = @DelNumber"
+        Dim runDate As Date = Date.Now
+        Using connection As SqlConnection = New SqlConnection(ConnectionString)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@OrderNumber", ORDNUM))
+                command.Parameters.Add(New SqlParameter("@LineNumber", LINNUM))
+                command.Parameters.Add(New SqlParameter("@DelNumber", DELNUM))
+
+                Dim runDateResult As Object = command.ExecuteScalar()
+
+                If runDateResult IsNot Nothing AndAlso runDateResult IsNot DBNull.Value AndAlso Date.TryParse(runDateResult, runDate) Then
+                    _runDate = runDate
+                End If
+            End Using
+        End Using
     End Sub
 
     Private Sub ClearFields()
@@ -439,6 +472,22 @@ Public Class SODetailExtClass
         _UnitPrice = 0
         _SentToUnisource = DefaultDate
         _ShipFromWarehouse = ""
+    End Sub
+
+    Public Sub UpdateRunDate(orderNumber As String, lineNumber As String, delNumber As String, runDate As Date)
+        Dim sql As String = "update SalesOrderDetailExt set RunDate = @RunDate where ORDNUM = @OrderNumber and LINNUM = @LineNumber and DELNUM = @DelNumber"
+
+        Using connection As SqlConnection = New SqlConnection(ConnectionString)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@RunDate", runDate))
+                command.Parameters.Add(New SqlParameter("@OrderNumber", orderNumber))
+                command.Parameters.Add(New SqlParameter("@LineNumber", lineNumber))
+                command.Parameters.Add(New SqlParameter("@DelNumber", delNumber))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
     End Sub
 
     Public Sub Update(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean)
@@ -460,6 +509,11 @@ Public Class SODetailExtClass
 
         ' Run the stored procedure
         oSQL.RunProc("UpdateSODetailExt")
+    End Sub
+
+    Public Sub Update(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean, ByVal passPromotionCode As String, ByVal passUnitPrice As Decimal, ByVal passDiscountPercent As Decimal, ByVal PassWarehouse As String, ByVal runDate As Date)
+        Update(ORDNUM, LINNUM, DELNUM, passCoreSize, passOutsideDiameter, passWidth, passPallets, passPromotionCode, passUnitPrice, passDiscountPercent, PassWarehouse)
+        UpdateRunDate(ORDNUM, LINNUM, DELNUM, runDate)
     End Sub
 
     Public Sub Update(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean, ByVal passPromotionCode As String, ByVal passUnitPrice As Decimal, ByVal passDiscountPercent As Decimal, ByVal PassWarehouse As String)
@@ -485,6 +539,11 @@ Public Class SODetailExtClass
 
         ' Run the stored procedure
         oSQL.RunProc("UpdateSODetailExtWUnitPrice")
+    End Sub
+
+    Public Sub Update(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean, ByVal passPromotionCode As String, ByVal passUnitPrice As Decimal, ByVal passDiscountPercent As Decimal, ByVal PassWarehouse As String, ByVal WarehouseChangeReason As Short, ByVal runDate As Date)
+        Update(ORDNUM, LINNUM, DELNUM, passCoreSize, passOutsideDiameter, passWidth, passPallets, passPromotionCode, passUnitPrice, passDiscountPercent, PassWarehouse, WarehouseChangeReason)
+        UpdateRunDate(ORDNUM, LINNUM, DELNUM, runDate)
     End Sub
 
     Public Sub Update(ByVal ORDNUM As String, ByVal LINNUM As String, ByVal DELNUM As String, ByVal passCoreSize As Decimal, ByVal passOutsideDiameter As Decimal, ByVal passWidth As Decimal, ByVal passPallets As Boolean, ByVal passPromotionCode As String, ByVal passUnitPrice As Decimal, ByVal passDiscountPercent As Decimal, ByVal PassWarehouse As String, ByVal WarehouseChangeReason As Short)
