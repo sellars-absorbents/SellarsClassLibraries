@@ -665,6 +665,20 @@ Public Class SOMasterExtClass
         oSQL.RunProc("UpdateSOMasterExtLastChanged")
     End Sub
 
+    Public Sub UpdateShipFromWarehouse(ByVal orderNumber As String, ByVal shipfromWarehouse As String)
+        Dim sql As String = "update SalesOrderMasterExt set ShipFromStockID = @ShipFromStockID where ORDNUM = @OrderNumber"
+
+        Using connection As SqlConnection = New SqlConnection(ConnectionString)
+            connection.Open()
+
+            Using command As SqlCommand = New SqlCommand(sql, connection)
+                command.Parameters.Add(New SqlParameter("@ShipFromStockID", shipfromWarehouse))
+                command.Parameters.Add(New SqlParameter("@OrderNumber", orderNumber))
+                command.ExecuteNonQuery()
+            End Using
+        End Using
+    End Sub
+
     Public Sub Update(ByVal ORDNUM As String, ByVal CarrierID As Integer, ByVal CarrierMethod As String, ByVal CarrierThirdParty As String, ByVal CarrierName As String, ByVal ContactName As String, ByVal ContactPhone As String, ByVal ContactEmail As String, ByVal ShipFromStockID As String, ByVal ConversionID As Integer)
         If String.IsNullOrEmpty(ORDNUM.Trim) Then
             Throw New ApplicationException("SalesOrderMasterExtClass:Update():Order number is empty.")
