@@ -157,10 +157,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.MaxUpdateXML">
-      <HintPath>Third Party\Interop.MaxUpdateXML.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic.Compatibility" />
     <Reference Include="System">
       <Name>System</Name>
@@ -349,7 +345,9 @@
     <Content Include="Third Party\EXACTRMEnc.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Third Party\Interop.MaxUpdateXML.dll" />
+    <Content Include="Third Party\Interop.MaxUpdateXML.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Third Party\MAXEXEC2.DLL">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -479,6 +477,17 @@
       <Project>{6510ff9d-ee1d-4911-98f3-305ad85e9858}</Project>
       <Name>SellarsSQL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MaxUpdateXML">
+      <Guid>{7113270C-F76B-4BD7-8E86-28C074336F90}</Guid>
+      <VersionMajor>4</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
