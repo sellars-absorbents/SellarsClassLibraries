@@ -172,16 +172,22 @@ Public Class CustomerPartClass
                 End If
 
             Else
-                ' If we didn't find a match on the specified OD, then we need to try it with the dfault zero OD to see if there
-                ' is an entry for that!
-                If passOD <> 0 Then
-                    oSQL = New SqlService(ConnectionString)
+                _Found = False
+            End If
+        End Using
 
-                    ' Add the parameter to the command object
-                    oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, passCustomer, ParameterDirection.Input)
-                    oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passPart, ParameterDirection.Input)
-                    oSQL.AddParameter("@Width", SqlDbType.Decimal, 0, passWidth, ParameterDirection.Input)
-                    oSQL.AddParameter("@OD", SqlDbType.Decimal, 0, 0, ParameterDirection.Input)
+        If _Found = False Then
+            ' If we didn't find a match on the specified OD, then we need to try it with the dfault zero OD to see if there
+            ' is an entry for that!
+            If passOD <> 0 Then
+                oSQL = New SqlService(ConnectionString)
+
+                ' Add the parameter to the command object
+                oSQL.AddParameter("@CUSTID", SqlDbType.NVarChar, 20, passCustomer, ParameterDirection.Input)
+                oSQL.AddParameter("@PRTNUM", SqlDbType.NVarChar, 30, passPart, ParameterDirection.Input)
+                oSQL.AddParameter("@Width", SqlDbType.Decimal, 0, passWidth, ParameterDirection.Input)
+                oSQL.AddParameter("@OD", SqlDbType.Decimal, 0, 0, ParameterDirection.Input)
+                Using dr As SqlClient.SqlDataReader = oSQL.RunProcReader("ReadCustomerSlitWidthPart")
                     If dr.Read() Then
                         _Found = True
                         _CustomerPart = dr("CUSTPRT")
@@ -228,9 +234,9 @@ Public Class CustomerPartClass
                         _Description3 = ""
                         _Description4 = ""
                     End If
-                End If
+                End Using
             End If
-        End Using
+        End If
 
         oSQL = Nothing
     End Sub
