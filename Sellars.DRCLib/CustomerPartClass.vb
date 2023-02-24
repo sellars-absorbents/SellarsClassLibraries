@@ -71,7 +71,7 @@ Public Class CustomerPartClass
         Read(passCustomer, passPart)
     End Sub
 
-    Public Sub New(ByVal value As DataSource, ByVal passCustomer As String, ByVal passPart As String, ByVal passWidth As Decimal)
+    Public Sub New(ByVal value As DataSource, ByVal passCustomer As String, ByVal passPart As String, ByVal passWidth As Decimal, Optional ByVal passOD As Decimal = 0)
         _Customer = passCustomer
         _Part = passPart
 
@@ -80,7 +80,7 @@ Public Class CustomerPartClass
 
         ' If no part was found yet, then check the slit width customer part table
         If Not _Found Then
-            Read(passCustomer, passPart, passWidth)
+            Read(passCustomer, passPart, passWidth, passOD)
         End If
     End Sub
 

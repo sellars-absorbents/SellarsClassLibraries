@@ -1808,7 +1808,7 @@ Public Class SalesOrderDetailClass
                         ' Start a task to get the customer part information
                         Dim customerPartTask As Task = Task.Factory.StartNew(Sub()
                                                                                  ' Get the customer part number from the Customer Part Data Table
-                                                                                 Dim custprt As New CustomerPartClass(ClassBase.DataSource.Max, myReader("Customer"), myReader("PRTNUM"), ExtClass.SlitWidth)
+                                                                                 Dim custprt As New CustomerPartClass(ClassBase.DataSource.Max, myReader("Customer"), myReader("PRTNUM"), ExtClass.SlitWidth, ExtClass.OutsideDiameter)
                                                                                  myRow("CustomerPart") = custprt.CustomerPart.Trim
                                                                                  myRow("CustomerPartDescription1") = custprt.Description1.Trim
                                                                                  myRow("CustomerPartDescription2") = custprt.Description2.Trim
