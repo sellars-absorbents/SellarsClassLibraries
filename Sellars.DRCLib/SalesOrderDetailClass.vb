@@ -1604,6 +1604,12 @@ Public Class SalesOrderDetailClass
         myDataColumn.ReadOnly = True
         myDataTable.Columns.Add(myDataColumn)
 
+        myDataColumn = New DataColumn
+        myDataColumn.DataType = System.Type.GetType("System.Decimal")
+        myDataColumn.ColumnName = "EstimatedPalletCount"
+        myDataColumn.ReadOnly = True
+        myDataTable.Columns.Add(myDataColumn)
+
         ' Add the new DataTable to the DataSet. 
         Dim myDataSet As New DataSet
         myDataSet.Tables.Add(myDataTable)
@@ -1611,13 +1617,14 @@ Public Class SalesOrderDetailClass
         Using connection As New SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             connection.Open()
             ' Define a variable for the database name so the application automatically sets up the SQL string below with the correct table names for test versus production
-            Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth, isnull(GrossWeight, 0) GrossWeight, IsNull(sodx.RunDate, CUSDUE_28) as RunDate " &
-                       "From SO_Detail sod join CUSTOMER_MASTER cm on CUSTID_28 = CUSTID_23 " &
-                       "join ShopfloorControl..SalesOrderDetailExt sodx on sodx.ORDNUM = sod.ORDNUM_28 and sodx.DELNUM = DELNUM_28 and sodx.LINNUM = LINNUM_28 " &
-                       "left outer join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 " &
-                       "left outer join ShopfloorControl..PartMasterCharacteristics pmc on pmc.PRTNUM = PRTNUM_28 " &
-                       "Where ORDNUM_28 = '" & passorder & "' " &
-                       "Order by LINNUM_28, DELNUM_28"
+            Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth, isnull(GrossWeight, 0) GrossWeight, IsNull(sodx.RunDate, CUSDUE_28) as RunDate, 
+                        case when CasesPerPalletTL is null then 0 else CURQTY_28 / CasesPerPalletTL end as EstimatedPalletCount 
+                       From SO_Detail sod Join CUSTOMER_MASTER cm on CUSTID_28 = CUSTID_23 
+                       Join ShopfloorControl..SalesOrderDetailExt sodx on sodx.ORDNUM = sod.ORDNUM_28 And sodx.DELNUM = DELNUM_28 And sodx.LINNUM = LINNUM_28 
+                       Left outer Join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 
+                       Left outer Join ShopfloorControl..PartMasterCharacteristics pmc on pmc.PRTNUM = PRTNUM_28 
+                       Where ORDNUM_28 = '" & passorder & "'
+                       Order by LINNUM_28, DELNUM_28"
 
             Using cmd As New SqlCommand(strSQL, connection)
                 Using myReader As SqlDataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection)
@@ -1653,6 +1660,7 @@ Public Class SalesOrderDetailClass
                         myRow("CaseLength") = myReader("CaseLength")
                         myRow("CaseWidth") = myReader("CaseWidth")
                         myRow("CaseWeight") = myReader("GrossWeight")
+                        myRow("EstimatedPalletCount") = myReader("EstimatedPalletCount")
 
                         ' Start a task to get the base information
                         Dim baseInfoTask As Task = Task.Factory.StartNew(Sub()
@@ -1788,7 +1796,7 @@ Public Class SalesOrderDetailClass
                                                                               myRow("UOMPALLETS") = displayUOM & vbCrLf & strPallets 'dxing 9/17/10: changed to using part's SLSUOM from BOMUOM
 
                                                                               ' Get the comment from the SO Notes table
-                                                                              myRow("COMNT") = "Edit or view line notes"
+                                                                              myRow("COMNT") = "Edit Or view line notes"
 
                                                                               ' Send static text that can be displayed for the Line Notes linkcolumn
                                                                               myRow("ShortComment") = "Line Notes"
