@@ -1612,7 +1612,7 @@ Public Class SalesOrderDetailClass
 
         myDataColumn = New DataColumn
         myDataColumn.DataType = System.Type.GetType("System.Decimal")
-        myDataColumn.ColumnName = "SalesConversion"
+        myDataColumn.ColumnName = "TotalGrossWeight"
         myDataColumn.ReadOnly = True
         myDataTable.Columns.Add(myDataColumn)
 
@@ -1625,7 +1625,7 @@ Public Class SalesOrderDetailClass
             ' Define a variable for the database name so the application automatically sets up the SQL string below with the correct table names for test versus production
             Dim strSQL As String = "Select CUSTID_28 as Customer, CUSTYP_23 as CustomerType, LINNUM_28 as LINNUM, DELNUM_28 as DELNUM, PRTNUM_28 as PRTNUM, ORGQTY_28 as ORGQTY, CURQTY_28 as CURQTY, DUEQTY_28 as DUEQTY, SHPQTY_28 as SHPQTY, STATUS_28 as STATUS, SHPDTE_28 as SHPDTE, CURDUE_28 as CURDUE, CUSDUE_28 as CUSDUE, PRICE_28 as UnitPrice, DISC_28 as Discount, GLXREF_28 as GlCode, STK_28 as STK, isnull(STK_29, '') as DefaultSTK, isnull(SLSCNV_29, 1) PartSalesConversion, QuoteIssue, ShipFromWarehouse, AcknowledgedOn, isnull(CaseLength, 0) CaseLength, isnull(CaseHeight, 0) CaseHeight, isnull(CaseWidth, 0) CaseWidth, isnull(GrossWeight, 0) GrossWeight, IsNull(sodx.RunDate, CUSDUE_28) as RunDate, 
                         case when CasesPerPalletTL is null or CasesPerPalletTL = 0 then 0 else (CURQTY_28 * IsNull(Part_Sales.SLSCNV_29, 1)) / CasesPerPalletTL end as EstimatedPalletCount,
-						IsNull(Part_Sales.SLSCNV_29, 1) as SalesConversion
+                        (CURQTY_28 * IsNull(Part_Sales.SLSCNV_29, 1)) * IsNull(GrossWeight, 0) as TotalGrossWeight
                        From SO_Detail sod Join CUSTOMER_MASTER cm on CUSTID_28 = CUSTID_23 
                        Join ShopfloorControl..SalesOrderDetailExt sodx on sodx.ORDNUM = sod.ORDNUM_28 And sodx.DELNUM = DELNUM_28 And sodx.LINNUM = LINNUM_28 
                        Left outer Join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 
@@ -1668,7 +1668,7 @@ Public Class SalesOrderDetailClass
                         myRow("CaseWidth") = myReader("CaseWidth")
                         myRow("CaseWeight") = myReader("GrossWeight")
                         myRow("EstimatedPalletCount") = myReader("EstimatedPalletCount")
-                        myRow("SalesConversion") = myReader("SalesConversion")
+                        myRow("TotalGrossWeight") = myReader("TotalGrossWeight")
 
                         ' Start a task to get the base information
                         Dim baseInfoTask As Task = Task.Factory.StartNew(Sub()
