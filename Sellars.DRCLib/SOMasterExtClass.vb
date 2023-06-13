@@ -840,6 +840,38 @@ Public Class SOMasterExtClass
         End Using
     End Sub
 
+    Public Function AllowWebOrdersToBeAutomaticallyFinished() As Boolean
+        Dim result As Boolean = False
+
+        Using Conn As SqlConnection = New SqlConnection(ConnectionString)
+            Conn.Open()
+
+            Dim strSQL As String = "select [Value]
+                                    from ControlValues
+                                    where [Key] = @AllowWebOrderKey"
+            Dim FinishedAt As DateTime = New DateTime(2050, 12, 31, 0, 0, 0)
+
+            If Finished Then
+                FinishedAt = DateTime.Now
+            End If
+
+            Using Cmd As SqlCommand = New SqlCommand(strSQL, Conn)
+                Cmd.CommandType = CommandType.Text
+                Cmd.Parameters.Add(New SqlParameter("@AllowWebOrderKey", "AllowWebOrdersAutoFinish"))
+
+                Dim resultq As Object = Cmd.ExecuteScalar()
+
+                If (resultq IsNot Nothing AndAlso resultq IsNot DBNull.Value) Then
+                    If (resultq.ToString().ToUpper().Trim() = "TRUE") Then
+                        result = True
+                    End If
+                End If
+            End Using
+        End Using
+
+        Return result
+    End Function
+
     Public Sub Reset(ByVal OrderNumber As String)
         Using Conn As SqlConnection = New SqlConnection(ConnectionString)
             Conn.Open()
