@@ -204,20 +204,42 @@ Public Class Inventory
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
-            Dim command As String = "SELECT @Quantity = isnull(sum(QTYOH_06), 0) from Part_Stock where PRTNUM_06 = @PRTNUM and STK_06 like @STK and charindex('TRN', STK_06) = 0 and charindex('REW', STK_06) = 0 and charindex('STG', STK_06) = 0"
+            Dim command As String = "declare @Quantity as int = 0;
+
+                            SELECT @Quantity = isnull(sum(QTYOH_06), 0) 
+                            from ExactMAXSELLR.dbo.Part_Stock 
+                            where PRTNUM_06 = @PRTNUM 
+                            and STK_06 like @STK 
+                            and charindex('TRN', STK_06) = 0 
+                            and charindex('REW', STK_06) = 0 
+                            and charindex('STG', STK_06) = 0;
+
+		                    select @Quantity = @Quantity + sum(isnull(QTYOH_06, 0))
+		                    from ExactMAXSELLR.dbo.Part_Stock
+		                    where PRTNUM_06 = @PRTNUM 
+		                    and (STK_06 like 'STG%' or STK_06 like '%MIL2')
+		                    and STK_06 not like '%RSN%'
+		                    and STK_06 not like '%REW%'
+		                    and STK_06 not like 'TRN%'
+                            and @STK like '%DSC1%'
+		                    and QTYOH_06 > 0;
+		
+			                select @Quantity = @Quantity + sum(isnull(ps.QTYOH_06, 0))
+			                from ExactMAXSellr.dbo.Part_Stock ps
+			                where ps.STK_06 like 'TRN%'
+			                and ps.QTYOH_06 > 0
+                            and @STK like '%DSC1%'
+			                and (ps.STK_06 like '%DSC1' or ps.STK_06 like '%MIL2')
+							and ps.PRTNUM_06 = @PRTNUM;
+
+                            select IsNull(@Quantity, 0);"
 
             Using cmd As New SqlCommand(command, Conn)
                 cmd.CommandType = CommandType.Text
                 cmd.Parameters.Add(New SqlParameter("@PRTNUM", Item))
                 cmd.Parameters.Add(New SqlParameter("@STK", "%" + STK + "%"))
 
-                Dim parmQty As New SqlParameter("@Quantity", SqlDbType.Float, -1)
-                parmQty.Direction = ParameterDirection.Output
-                parmQty.Value = Nothing
-                cmd.Parameters.Add(parmQty)
-
-                cmd.ExecuteNonQuery()
-                rtnQty = Convert.ToInt32(parmQty.Value)
+                rtnQty = Convert.ToInt32(cmd.ExecuteScalar())
             End Using
         End Using
 
@@ -230,7 +252,14 @@ Public Class Inventory
         Using Conn As New SqlConnection(ConfigurationManager.ConnectionStrings("MaxData").ConnectionString)
             Conn.Open()
 
-            Dim command As String = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) from SO_Detail join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 where STATUS_28 = '3' and STYPE_28 = 'CU' and PRTNUM_28 = @PRTNUM and STK_28 like @STK"
+            Dim command As String = "SELECT @Quantity = isnull(sum(Round(DUEQTY_28 * SLSCNV_29, 0)), 0) 
+                                     from SO_Detail 
+                                    join Part_Sales with (NOLOCK) on PRTNUM_29 = PRTNUM_28 
+	                                join ShopfloorControl.dbo.SalesOrderDetailExt sodx on ORDNUM_28 = sodx.ORDNUM and LINNUM_28 = sodx.LINNUM
+                                    where STATUS_28 = '3' 
+                                    and STYPE_28 = 'CU' 
+                                    and PRTNUM_28 = @PRTNUM 
+                                    and STK_28 like @STK;"
 
             Using cmd As New SqlCommand(command, Conn)
                 cmd.CommandType = CommandType.Text
