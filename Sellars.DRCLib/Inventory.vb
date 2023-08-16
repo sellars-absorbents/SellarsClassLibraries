@@ -214,7 +214,9 @@ Public Class Inventory
                             and charindex('REW', STK_06) = 0 
                             and charindex('STG', STK_06) = 0;
 
-		                    select @Quantity = @Quantity + sum(isnull(QTYOH_06, 0))
+							select @Quantity = @Quantity + IsNull(x.Qty, 0)
+							from (
+		                    select sum(isnull(QTYOH_06, 0)) as Qty
 		                    from ExactMAXSELLR.dbo.Part_Stock
 		                    where PRTNUM_06 = @PRTNUM 
 		                    and (STK_06 like 'STG%' or STK_06 like '%MIL2')
@@ -222,16 +224,18 @@ Public Class Inventory
 		                    and STK_06 not like '%REW%'
 		                    and STK_06 not like 'TRN%'
                             and @STK like '%DSC1%'
-		                    and QTYOH_06 > 0;
+		                    and QTYOH_06 > 0)x;
 		
-			                select @Quantity = @Quantity + sum(isnull(ps.QTYOH_06, 0))
+							select @Quantity = @Quantity + IsNull(x.Qty, 0)
+							from (
+			                select sum(isnull(ps.QTYOH_06, 0)) as Qty
 			                from ExactMAXSellr.dbo.Part_Stock ps
 			                where ps.STK_06 like 'TRN%'
 			                and ps.QTYOH_06 > 0
                             and @STK like '%DSC1%'
 			                and (ps.STK_06 like '%DSC1' or ps.STK_06 like '%MIL2')
-							and ps.PRTNUM_06 = @PRTNUM;
-
+							and ps.PRTNUM_06 = @PRTNUM) x;
+							
                             select IsNull(@Quantity, 0);"
 
             Using cmd As New SqlCommand(command, Conn)
