@@ -651,7 +651,6 @@ Public Class SODetailExtClass
                 cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
                 cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
 
-                ' Execute the stored procedure to update the InvoiceMasterExt table
                 cmd.ExecuteNonQuery()
 
                 ' Set the return flag to true
@@ -690,7 +689,6 @@ Public Class SODetailExtClass
                 cmd.Parameters.Add(New SqlParameter("@ShipFromWarehouse", ShipfromWarehouse))
                 cmd.Parameters.Add(New SqlParameter("@WarehouseChangeReason", WarehouseChangeReason))
 
-                ' Execute the stored procedure to update the InvoiceMasterExt table
                 cmd.ExecuteNonQuery()
             End Using
         End Using
@@ -732,7 +730,6 @@ Public Class SODetailExtClass
                 cmd.Parameters.Add(New SqlParameter("@ShipFromWarehouse", ShipFromWarehouse))
                 cmd.Parameters.Add(New SqlParameter("@WarehouseChangeReason", WarehouseChangeReason))
 
-                ' Execute the stored procedure to update the InvoiceMasterExt table
                 cmd.ExecuteNonQuery()
 
                 ' Set the return flag to true
@@ -768,7 +765,6 @@ Public Class SODetailExtClass
                 cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
                 cmd.Parameters.Add(New SqlParameter("@SentToUnisource", SentToUnisource))
 
-                ' Execute the stored procedure to update the InvoiceMasterExt table
                 cmd.ExecuteNonQuery()
 
                 ' Set the return flag to true
@@ -804,7 +800,6 @@ Public Class SODetailExtClass
                 cmd.Parameters.Add(New SqlParameter("@DELNUM", DELNUM))
                 cmd.Parameters.Add(New SqlParameter("@UnisourceStatus", UnisourceStatus))
 
-                ' Execute the stored procedure to update the InvoiceMasterExt table
                 cmd.ExecuteNonQuery()
 
                 ' Set the return flag to true
@@ -843,7 +838,6 @@ Public Class SODetailExtClass
                 cmd.Parameters.Add(New SqlParameter("@DiscountPercent", DiscountPercent))
                 cmd.Parameters.Add(New SqlParameter("@QuoteIssue", QuoteIssue))
 
-                ' Execute the stored procedure to update the InvoiceMasterExt table
                 cmd.ExecuteNonQuery()
 
                 ' Set the return flag to true

@@ -55,7 +55,6 @@ Public Class CustomerMasterExtClass
                     parmLogo.Value = Nothing
                     cmd.Parameters.Add(parmLogo)
 
-                    ' Execute the stored procedure to update the InvoiceMasterExt table
                     cmd.ExecuteNonQuery()
 
                     ' Set the acknowledgement Logo value
@@ -99,7 +98,6 @@ Public Class CustomerMasterExtClass
                     cmd.Parameters.Add(New SqlParameter("@CUSTID", CUSTID))
                     cmd.Parameters.Add(New SqlParameter("@AcknowledgementLogo", AcknowledgementLogo))
 
-                    ' Execute the stored procedure to update the InvoiceMasterExt table
                     recsChanged = cmd.ExecuteNonQuery()
                 End Using
 
@@ -114,7 +112,6 @@ Public Class CustomerMasterExtClass
                             cmd.Parameters.Add(New SqlParameter("@CUSTID", CUSTID))
                             cmd.Parameters.Add(New SqlParameter("@AcknowledgementLogo", AcknowledgementLogo))
 
-                            ' Execute the stored procedure to update the InvoiceMasterExt table
                             cmd.ExecuteNonQuery()
                         End Using
 

@@ -402,7 +402,6 @@ Public Class PartClass
                     prmCount.Direction = ParameterDirection.Output
                     Cmd.Parameters.Add(prmCount)
 
-                    ' Execute the stored procedure to update the InvoiceMasterExt table
                     Cmd.ExecuteNonQuery()
 
                     ' Set the return flag to true
