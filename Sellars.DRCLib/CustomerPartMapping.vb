@@ -2,6 +2,7 @@
 
 Public Class CustomerPartMapping
     Public Property InternalPartNumber As String = ""
+    Public Property ExternalPartNumber As String = ""
     Public Property SalesUOM As String = ""
     Public Property SalesConversion As Double = 1
 
@@ -77,7 +78,7 @@ Public Class CustomerPartMapping
 
                 Using dr As SqlDataReader = command.ExecuteReader()
                     If dr.Read() Then
-                        result.InternalPartNumber = dr("InternalPartNumber").ToString().Trim()
+                        result.ExternalPartNumber = dr("InternalPartNumber").ToString().Trim()
                         result.SalesUOM = dr("SalesUOM").ToString().Trim()
                         result.SalesConversion = Convert.ToDouble(dr("SalesConversion"))
                     End If
