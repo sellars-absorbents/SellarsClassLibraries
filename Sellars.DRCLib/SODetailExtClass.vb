@@ -218,7 +218,7 @@ Public Class SODetailExtClass
         oSQL.RunProc("AddSODetailExtFree")
     End Sub
 
-    Public Sub Clone(ByVal OldORDNUM As String, ByVal NewORDNUM As String, ByVal SelectedPart As String)
+    Public Sub Clone(ByVal OldORDNUM As String, ByVal NewORDNUM As String, ByVal SelectedPart As String, ByVal scheduledDate As DateTime)
         Dim strSQL As String = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE (TABLE_NAME = 'SalesOrderDetailExt')"
         Dim columnListTarget As New StringBuilder()
         Dim connectionString As String = System.Configuration.ConfigurationManager.ConnectionStrings("Shopfloor").ConnectionString
@@ -250,6 +250,9 @@ Public Class SODetailExtClass
 
                             Case "EstProduction"
                                 columnListTarget.Append(", '2000-01-01 12:01:00.00 AM'")
+
+                            Case "RunDate"
+                                columnListTarget.Append(", '" + scheduledDate.ToString("yyyy-MM-dd") + "'")
 
                             Case Else
                                 columnListTarget.Append("," + colName)
