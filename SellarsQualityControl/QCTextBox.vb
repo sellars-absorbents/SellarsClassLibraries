@@ -91,18 +91,19 @@ Namespace Windows
             TWA = 12
             Pcntc = 13
             WD = 14
-            BPDate = 15
-            BPReelNo = 16
+            AbsorbRate = 15
+            BPDate = 16
+            BPReelNo = 17
         End Enum
 
         ' This is set up to show how many decimal digits to accept after the decimal point
         ' it must be kept in synch with the FieldTypeEnum with the same number of items
         ' This should also match how each field is defined in the SQL database with the decimal(18,x) where x equals
         ' the value for each of the digits in the declaration for each item below.
-        Private DecimalDigits() As Short = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0}
+        Private DecimalDigits() As Short = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 0, 0}
 
         'dim FieldNames() as String = ("Unassigned", "Weight", "Bulk", "MDT", "MDTE", "CDTD", "CDTC", "TT", "ZPeel", "BPDate", "BPReelNo")
-        
+
         <System.ComponentModel.Category("Behavior"), _
          System.ComponentModel.Description(FieldTypeDescription)> _
         Public Property FieldType() As FieldTypeEnum
@@ -335,7 +336,7 @@ Namespace Windows
                     ' If there is a decimal place already in the textbox, then check how many
                     ' decimal digits there are
                     If Not Me.Text.LastIndexOf(Chr(46)) = -1 Then
-                        If Me.TextLength - Me.Text.LastIndexOf(Chr(46)) > DecimalDigits(CInt(Me.FieldType)) Then
+                        If Me.Text.Substring(Me.Text.LastIndexOf(Chr(46)) + 1).Length >= DecimalDigits(CInt(Me.FieldType)) Then
                             'if length is over the number of decimal places for this item, don't 
                             'send message to system 
                             KeyAscii = 0

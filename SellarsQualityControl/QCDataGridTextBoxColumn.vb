@@ -30,8 +30,9 @@ Namespace Windows
             TWA = 12
             C_Percentage = 13
             WD = 14
-            BPDate = 15
-            BPReelNo = 16
+            AbsorbRate = 15
+            BPDate = 16
+            BPReelNo = 17
         End Enum
 
         Private m_OwnerObject As Object

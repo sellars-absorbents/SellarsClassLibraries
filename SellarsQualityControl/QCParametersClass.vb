@@ -105,6 +105,14 @@ Public Class QCParametersClass
     Private _TWAGraphMax As Decimal = 0
     Private _TWAObjective As Decimal = 0
 
+    Private _AbsorbRateGraphMin As Decimal = 0
+    Private _AbsorbRateLRL As Decimal = 0
+    Private _AbsorbRateLCL As Decimal = 0
+    Private _AbsorbRateUCL As Decimal = 0
+    Private _AbsorbRateURL As Decimal = 0
+    Private _AbsorbRateGraphMax As Decimal = 0
+    Private _AbsorbRateObjective As Decimal = 0
+
     Private _PcntcGraphMin As Decimal = 0
     Private _PcntcLRL As Decimal = 0
     Private _PcntcLCL As Decimal = 0
@@ -137,6 +145,7 @@ Public Class QCParametersClass
         TWA = 12
         Pcntc = 13
         WD = 14
+        AbsorbRate = 15
     End Enum
 
     Public Structure QCSpecificationsStructure
@@ -928,6 +937,70 @@ Public Class QCParametersClass
         End Set
     End Property
 
+
+    Public Property AbsorbRateGraphMin() As Decimal
+        Get
+            Return _AbsorbRateGraphMin
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateGraphMin = Value
+        End Set
+    End Property
+
+    Public Property AbsorbRateLRL() As Decimal
+        Get
+            Return _AbsorbRateLRL
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateLRL = Value
+        End Set
+    End Property
+
+    Public Property AbsorbRateLCL() As Decimal
+        Get
+            Return _AbsorbRateLCL
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateLCL = Value
+        End Set
+    End Property
+
+    Public Property AbsorbRateUCL() As Decimal
+        Get
+            Return _AbsorbRateUCL
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateUCL = Value
+        End Set
+    End Property
+
+    Public Property AbsorbRateURL() As Decimal
+        Get
+            Return _AbsorbRateURL
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateURL = Value
+        End Set
+    End Property
+
+    Public Property AbsorbRateGraphMax() As Decimal
+        Get
+            Return _AbsorbRateGraphMax
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateGraphMax = Value
+        End Set
+    End Property
+
+    Public Property AbsorbRateObjective() As Decimal
+        Get
+            Return _AbsorbRateObjective
+        End Get
+        Set(ByVal Value As Decimal)
+            _AbsorbRateObjective = Value
+        End Set
+    End Property
+
     Public Property PcntcGraphMin() As Decimal
         Get
             Return _PcntcGraphMin
@@ -1169,6 +1242,14 @@ Public Class QCParametersClass
         oSQL.AddParameter("@TWAGraphMax", SqlDbType.Float, 0, TWAGraphMax, ParameterDirection.Input)
         oSQL.AddParameter("@TWAObjective", SqlDbType.Float, 0, TWAObjective, ParameterDirection.Input)
 
+        oSQL.AddParameter("@AbsorbRateGraphMin", SqlDbType.Float, 0, AbsorbRateGraphMin, ParameterDirection.Input)
+        oSQL.AddParameter("@AbsorbRateLRL", SqlDbType.Float, 0, AbsorbRateLRL, ParameterDirection.Input)
+        oSQL.AddParameter("@AbsorbRateLCL", SqlDbType.Float, 0, AbsorbRateLCL, ParameterDirection.Input)
+        oSQL.AddParameter("@AbsorbRateUCL", SqlDbType.Float, 0, AbsorbRateUCL, ParameterDirection.Input)
+        oSQL.AddParameter("@AbsorbRateURL", SqlDbType.Float, 0, AbsorbRateURL, ParameterDirection.Input)
+        oSQL.AddParameter("@AbsorbRateGraphMax", SqlDbType.Float, 0, AbsorbRateGraphMax, ParameterDirection.Input)
+        oSQL.AddParameter("@AbsorbRateObjective", SqlDbType.Float, 0, AbsorbRateObjective, ParameterDirection.Input)
+
         oSQL.AddParameter("@PcntcGraphMin", SqlDbType.Float, 0, PcntcGraphMin, ParameterDirection.Input)
         oSQL.AddParameter("@PcntcLRL", SqlDbType.Float, 0, PcntcLRL, ParameterDirection.Input)
         oSQL.AddParameter("@PcntcLCL", SqlDbType.Float, 0, PcntcLCL, ParameterDirection.Input)
@@ -1313,6 +1394,14 @@ Public Class QCParametersClass
                 _TWAGraphMax = 0
                 _TWAObjective = 0
 
+                _AbsorbRateGraphMin = 0
+                _AbsorbRateLRL = 0
+                _AbsorbRateLCL = 0
+                _AbsorbRateUCL = 0
+                _AbsorbRateURL = 0
+                _AbsorbRateGraphMax = 0
+                _AbsorbRateObjective = 0
+
                 _PcntcGraphMin = 0
                 _PcntcLRL = 0
                 _PcntcLCL = 0
@@ -1426,6 +1515,14 @@ Public Class QCParametersClass
                 _TWAURL = dr("TWAURL")
                 _TWAGraphMax = dr("TWAGraphMax")
                 _TWAObjective = IIf(IsDBNull(dr("TWAObjective")), 0, dr("TWAObjective"))
+
+                _AbsorbRateGraphMin = dr("AbsorbRateGraphMin")
+                _AbsorbRateLRL = dr("AbsorbRateLRL")
+                _AbsorbRateLCL = dr("AbsorbRateLCL")
+                _AbsorbRateUCL = dr("AbsorbRateUCL")
+                _AbsorbRateURL = dr("AbsorbRateURL")
+                _AbsorbRateGraphMax = dr("AbsorbRateGraphMax")
+                _AbsorbRateObjective = IIf(IsDBNull(dr("AbsorbRateObjective")), 0, dr("AbsorbRateObjective"))
 
                 _PcntcGraphMin = dr("PcntcGraphMin")
                 _PcntcLRL = dr("PcntcLRL")
@@ -1555,6 +1652,14 @@ Public Class QCParametersClass
         QCSpecifications(FieldTypeEnum.TWA).URL = TWAURL
         QCSpecifications(FieldTypeEnum.TWA).GraphMax = TWAGraphMax
         QCSpecifications(FieldTypeEnum.TWA).Objective = TWAObjective
+
+        QCSpecifications(FieldTypeEnum.AbsorbRate).GraphMin = AbsorbRateGraphMin
+        QCSpecifications(FieldTypeEnum.AbsorbRate).LRL = AbsorbRateLRL
+        QCSpecifications(FieldTypeEnum.AbsorbRate).LCL = AbsorbRateLCL
+        QCSpecifications(FieldTypeEnum.AbsorbRate).UCL = AbsorbRateUCL
+        QCSpecifications(FieldTypeEnum.AbsorbRate).URL = AbsorbRateURL
+        QCSpecifications(FieldTypeEnum.AbsorbRate).GraphMax = AbsorbRateGraphMax
+        QCSpecifications(FieldTypeEnum.AbsorbRate).Objective = AbsorbRateObjective
 
         QCSpecifications(FieldTypeEnum.Pcntc).GraphMin = PcntcGraphMin
         QCSpecifications(FieldTypeEnum.Pcntc).LRL = PcntcLRL
