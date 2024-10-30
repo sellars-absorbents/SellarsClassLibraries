@@ -27,6 +27,7 @@ Public Class QCTestsClass
     Private _Contamination As Decimal
     Private _BPDate As Date
     Private _BPReelNo As Integer
+    Private _BPRollID As String
 
     Public ReadOnly Property Pattern() As Integer
         Get
@@ -148,6 +149,12 @@ Public Class QCTestsClass
         End Get
     End Property
 
+    Public ReadOnly Property BPRollID() As String
+        Get
+            Return _BPRollID
+        End Get
+    End Property
+
     Public Sub New(ByVal ConnectionString As String)
         _ConnectionString = ConnectionString
     End Sub
@@ -156,7 +163,7 @@ Public Class QCTestsClass
     ' Add(Location, Line, ProductionTime)
     ' Adds a new test result to the database
     '*********************************************************************
-    Public Sub Add(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal Grade As Integer, ByVal Color As Integer, ByVal Pattern As Integer, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDDry As Decimal, ByVal MDDryEl As Decimal, ByVal CDDry As Decimal, ByVal CDWet As Decimal, ByVal CDCured As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal)
+    Public Sub Add(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal Grade As Integer, ByVal Color As Integer, ByVal Pattern As Integer, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDDry As Decimal, ByVal MDDryEl As Decimal, ByVal CDDry As Decimal, ByVal CDWet As Decimal, ByVal CDCured As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal, ByVal bpRollID As String)
 
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
@@ -182,6 +189,7 @@ Public Class QCTestsClass
         oSQL.AddParameter("@AbsorbRate", SqlDbType.Float, 0, AbsorbRate, ParameterDirection.Input)
         oSQL.AddParameter("@BPDate", SqlDbType.SmallDateTime, 0, BPDate, ParameterDirection.Input)
         oSQL.AddParameter("@BPReelNo", SqlDbType.SmallInt, 0, BPReelNo, ParameterDirection.Input)
+        oSQL.AddParameter("@BPRollID", SqlDbType.VarChar, 0, bpRollID, ParameterDirection.Input)
 
         ' Add the output parameters to the command object
         Dim TestTime As New Parameter("@TestTime", SqlDbType.SmallDateTime, 0, CDate("1/1/2000 12:01 AM"), ParameterDirection.Output)
@@ -218,6 +226,7 @@ Public Class QCTestsClass
         _Pattern = 99
         _Grade = 99
         _Contamination = 0
+        _BPRollID = ""
 
         ' Add the parameter to the command object
         oSQL.AddParameter("@LocationID", SqlDbType.SmallInt, 0, LocationID, ParameterDirection.Input)
@@ -301,6 +310,7 @@ Public Class QCTestsClass
         dt.Columns.Add("BPDate", Type.GetType("System.DateTime"))
         dt.Columns.Add("BPReelNo", Type.GetType("System.Decimal"))
         dt.Columns.Add("AbsorbRate", Type.GetType("System.Decimal"))
+        dt.Columns.Add("BPRollID", Type.GetType("System.String"))
 
         Dim drow As DataRow
 
@@ -341,6 +351,7 @@ Public Class QCTestsClass
                 drow("AbsorbRate") = dr("AbsorbRate")
                 drow("BPDate") = dr("BPDate")
                 drow("BPReelNo") = dr("BPReelNo")
+                drow("BPRollID") = dr("BPRollID")
                 dt.Rows.Add(drow)
             End While
         End Using
@@ -394,6 +405,7 @@ Public Class QCTestsClass
         _Color = 99
         _Pattern = 99
         _Grade = 99
+        _BPRollID = ""
 
         ' Add the parameter to the command object
         oSQL.AddParameter("@LocationID", SqlDbType.SmallInt, 0, LocationID, ParameterDirection.Input)
@@ -421,6 +433,7 @@ Public Class QCTestsClass
                 _AbsorbRate = dr("AbsorbRate")
                 _BPDate = IIf(IsDBNull(dr("BPDate")), "1/1/2000", dr("BPDate"))
                 _BPReelNo = IIf(IsDBNull(dr("BPReelNo")), 0, dr("BPReelNo"))
+                _BPRollID = dr("BPRollID").ToString()
             End While
         End Using
     End Sub
@@ -501,7 +514,7 @@ Public Class QCTestsClass
     ' Update(Location, Line, ProductionTime)
     ' Updates a test result to the database
     '*********************************************************************
-    Public Sub Update(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal TestTime As Date, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDT As Decimal, ByVal MDTE As Decimal, ByVal CDTD As Decimal, ByVal CDTW As Decimal, ByVal CDTC As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal)
+    Public Sub Update(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal TestTime As Date, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDT As Decimal, ByVal MDTE As Decimal, ByVal CDTD As Decimal, ByVal CDTW As Decimal, ByVal CDTC As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal, ByVal BPRollID As String)
 
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
@@ -525,6 +538,7 @@ Public Class QCTestsClass
         oSQL.AddParameter("@AbsorbRate", SqlDbType.Float, 0, AbsorbRate, ParameterDirection.Input)
         oSQL.AddParameter("@BPDate", SqlDbType.SmallDateTime, 0, BPDate, ParameterDirection.Input)
         oSQL.AddParameter("@BPReelNo", SqlDbType.SmallInt, 0, BPReelNo, ParameterDirection.Input)
+        oSQL.AddParameter("@BPRollID", SqlDbType.VarChar, 0, BPRollID, ParameterDirection.Input)
 
         ' Run the stored procedure
         oSQL.RunProc("UpdateQCTestResult")
