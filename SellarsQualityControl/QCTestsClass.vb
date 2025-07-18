@@ -279,12 +279,14 @@ Public Class QCTestsClass
     ' Reads all the tests from the QCTestResults table which have the
     ' specified grade ID
     '*********************************************************************
-    Public Function Read(ByVal Grade As String) As DataSet
+    Public Function Read(ByVal Grade As String, LocationId As Integer, LineId As Integer) As DataSet
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
 
         ' Add the parameter to the command object
         oSQL.AddParameter("@Grade", SqlDbType.SmallInt, 0, Grade, ParameterDirection.Input)
+        oSQL.AddParameter("@LocationId", SqlDbType.SmallInt, 0, LocationId, ParameterDirection.Input)
+        oSQL.AddParameter("@LineId", SqlDbType.SmallInt, 0, LineId, ParameterDirection.Input)
 
         REM -- create the datatable
         Dim ds As DataSet = New DataSet("QCResults")
