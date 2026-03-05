@@ -31,8 +31,10 @@ Namespace Windows
             C_Percentage = 13
             WD = 14
             AbsorbRate = 15
-            BPDate = 16
-            BPReelNo = 17
+            RWidth = 16
+            BPWidth = 17
+            BPDate = 18
+            BPReelNo = 19
         End Enum
 
         Private m_OwnerObject As Object

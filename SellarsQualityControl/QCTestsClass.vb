@@ -28,6 +28,8 @@ Public Class QCTestsClass
     Private _BPDate As Date
     Private _BPReelNo As Integer
     Private _BPRollID As String
+    Private _RWidth As Decimal
+    Private _BPWidth As Decimal
 
     Public ReadOnly Property Pattern() As Integer
         Get
@@ -155,6 +157,18 @@ Public Class QCTestsClass
         End Get
     End Property
 
+    Public ReadOnly Property RWidth() As Decimal
+        Get
+            Return _RWidth
+        End Get
+    End Property
+
+    Public ReadOnly Property BPWidth() As Decimal
+        Get
+            Return _BPWidth
+        End Get
+    End Property
+
     Public Sub New(ByVal ConnectionString As String)
         _ConnectionString = ConnectionString
     End Sub
@@ -163,7 +177,7 @@ Public Class QCTestsClass
     ' Add(Location, Line, ProductionTime)
     ' Adds a new test result to the database
     '*********************************************************************
-    Public Sub Add(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal Grade As Integer, ByVal Color As Integer, ByVal Pattern As Integer, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDDry As Decimal, ByVal MDDryEl As Decimal, ByVal CDDry As Decimal, ByVal CDWet As Decimal, ByVal CDCured As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal, ByVal bpRollID As String)
+    Public Sub Add(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal Grade As Integer, ByVal Color As Integer, ByVal Pattern As Integer, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDDry As Decimal, ByVal MDDryEl As Decimal, ByVal CDDry As Decimal, ByVal CDWet As Decimal, ByVal CDCured As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal, ByVal RWidth As Decimal, ByVal BPWidth As Decimal, ByVal bpRollID As String)
 
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
@@ -190,6 +204,8 @@ Public Class QCTestsClass
         oSQL.AddParameter("@BPDate", SqlDbType.SmallDateTime, 0, BPDate, ParameterDirection.Input)
         oSQL.AddParameter("@BPReelNo", SqlDbType.SmallInt, 0, BPReelNo, ParameterDirection.Input)
         oSQL.AddParameter("@BPRollID", SqlDbType.VarChar, 0, bpRollID, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidth", SqlDbType.Float, 0, RWidth, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidth", SqlDbType.Float, 0, BPWidth, ParameterDirection.Input)
 
         ' Add the output parameters to the command object
         Dim TestTime As New Parameter("@TestTime", SqlDbType.SmallDateTime, 0, CDate("1/1/2000 12:01 AM"), ParameterDirection.Output)
@@ -219,6 +235,8 @@ Public Class QCTestsClass
         _CDTC = 0
         _TWA = 0
         _AbsorbRate = 0
+        _RWidth = 0
+        _BPWidth = 0
         _ZPeel = 0
         _BPDate = "1/1/2000"
         _BPReelNo = 0
@@ -312,6 +330,8 @@ Public Class QCTestsClass
         dt.Columns.Add("BPDate", Type.GetType("System.DateTime"))
         dt.Columns.Add("BPReelNo", Type.GetType("System.Decimal"))
         dt.Columns.Add("AbsorbRate", Type.GetType("System.Decimal"))
+        dt.Columns.Add("RWidth", Type.GetType("System.Decimal"))
+        dt.Columns.Add("BPWidth", Type.GetType("System.Decimal"))
         dt.Columns.Add("BPRollID", Type.GetType("System.String"))
 
         Dim drow As DataRow
@@ -351,6 +371,8 @@ Public Class QCTestsClass
                 drow("Contamination") = dr("Contamination")
                 drow("TWA") = dr("TWA")
                 drow("AbsorbRate") = dr("AbsorbRate")
+                drow("RWidth") = dr("RWidth")
+                drow("BPWidth") = dr("BPWidth")
                 drow("BPDate") = dr("BPDate")
                 drow("BPReelNo") = dr("BPReelNo")
                 drow("BPRollID") = dr("BPRollID")
@@ -400,6 +422,8 @@ Public Class QCTestsClass
         _CDTC = 0
         _TWA = 0
         _AbsorbRate = 0
+        _RWidth = 0
+        _BPWidth = 0
         _ZPeel = 0
         _Contamination = 0
         _BPDate = "1/1/2000"
@@ -433,6 +457,8 @@ Public Class QCTestsClass
                 _Contamination = dr("Contamination")
                 _TWA = dr("TWA")
                 _AbsorbRate = dr("AbsorbRate")
+                _RWidth = dr("RWidth")
+                _BPWidth = dr("BPWidth")
                 _BPDate = IIf(IsDBNull(dr("BPDate")), "1/1/2000", dr("BPDate"))
                 _BPReelNo = IIf(IsDBNull(dr("BPReelNo")), 0, dr("BPReelNo"))
                 _BPRollID = dr("BPRollID").ToString()
@@ -516,7 +542,7 @@ Public Class QCTestsClass
     ' Update(Location, Line, ProductionTime)
     ' Updates a test result to the database
     '*********************************************************************
-    Public Sub Update(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal TestTime As Date, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDT As Decimal, ByVal MDTE As Decimal, ByVal CDTD As Decimal, ByVal CDTW As Decimal, ByVal CDTC As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal, ByVal BPRollID As String)
+    Public Sub Update(ByVal Location As Integer, ByVal Line As Integer, ByVal ProductionTime As Date, ByVal TestTime As Date, ByVal Weight As Decimal, ByVal OpSideBulk As Decimal, ByVal DriveSideBulk As Decimal, ByVal MDT As Decimal, ByVal MDTE As Decimal, ByVal CDTD As Decimal, ByVal CDTW As Decimal, ByVal CDTC As Decimal, ByVal ZPeel As Decimal, ByVal Contamination As Decimal, ByVal TWA As Decimal, ByVal BPDate As Date, ByVal BPReelNo As Integer, ByVal AbsorbRate As Decimal, ByVal RWidth As Decimal, ByVal BPWidth As Decimal, ByVal BPRollID As String)
 
         ' Declare the SQL data layer class
         Dim oSQL As New SqlService(ConnectionString)
@@ -538,6 +564,8 @@ Public Class QCTestsClass
         oSQL.AddParameter("@Contamination", SqlDbType.Float, 0, Contamination, ParameterDirection.Input)
         oSQL.AddParameter("@TWA", SqlDbType.Float, 0, TWA, ParameterDirection.Input)
         oSQL.AddParameter("@AbsorbRate", SqlDbType.Float, 0, AbsorbRate, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidth", SqlDbType.Float, 0, RWidth, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidth", SqlDbType.Float, 0, BPWidth, ParameterDirection.Input)
         oSQL.AddParameter("@BPDate", SqlDbType.SmallDateTime, 0, BPDate, ParameterDirection.Input)
         oSQL.AddParameter("@BPReelNo", SqlDbType.SmallInt, 0, BPReelNo, ParameterDirection.Input)
         oSQL.AddParameter("@BPRollID", SqlDbType.VarChar, 0, BPRollID, ParameterDirection.Input)
