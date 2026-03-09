@@ -75,6 +75,7 @@ Namespace Windows
         Private Const CheckGreaterThanObjectDescription As String = "Object whose value must be greater than the value contained in this item."
         Private Const CheckLessThanObjectDescription As String = "Object whose value must be less than the value contained in this item."
 
+        ' This enum is used to index into an array, so the values need to be contiguous
         Public Enum FieldTypeEnum
             Unassigned = 0
             Weight = 1
@@ -92,10 +93,11 @@ Namespace Windows
             Pcntc = 13
             WD = 14
             AbsorbRate = 15
-            BPDate = 16
-            BPReelNo = 17
-            RWidth = 19
-            BPWidth = 20
+            RWidth = 16
+            BPWidth = 17
+            ' BPDate and BPReelNo have to have the highest values in the enum or a StackOverflow will occur when entering data in fields after them
+            BPDate = 18
+            BPReelNo = 19
         End Enum
 
         ' This is set up to show how many decimal digits to accept after the decimal point
