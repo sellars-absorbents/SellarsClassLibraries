@@ -75,6 +75,7 @@ Namespace Windows
         Private Const CheckGreaterThanObjectDescription As String = "Object whose value must be greater than the value contained in this item."
         Private Const CheckLessThanObjectDescription As String = "Object whose value must be less than the value contained in this item."
 
+        ' This enum is used to index into an array, so the values need to be contiguous
         Public Enum FieldTypeEnum
             Unassigned = 0
             Weight = 1
@@ -92,17 +93,18 @@ Namespace Windows
             Pcntc = 13
             WD = 14
             AbsorbRate = 15
-            BPDate = 16
-            BPReelNo = 17
+            RWidth = 16
+            BPWidth = 17
+            ' BPDate and BPReelNo have to have the highest values in the enum or a StackOverflow will occur when entering data in fields after them
+            BPDate = 18
+            BPReelNo = 19
         End Enum
 
         ' This is set up to show how many decimal digits to accept after the decimal point
         ' it must be kept in synch with the FieldTypeEnum with the same number of items
         ' This should also match how each field is defined in the SQL database with the decimal(18,x) where x equals
         ' the value for each of the digits in the declaration for each item below.
-        Private DecimalDigits() As Short = {0, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 0, 0}
-
-        'dim FieldNames() as String = ("Unassigned", "Weight", "Bulk", "MDT", "MDTE", "CDTD", "CDTC", "TT", "ZPeel", "BPDate", "BPReelNo")
+        Private DecimalDigits() As Short = {0, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 0, 0, 2, 2}
 
         <System.ComponentModel.Category("Behavior"), _
          System.ComponentModel.Description(FieldTypeDescription)> _

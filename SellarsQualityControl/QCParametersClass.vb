@@ -113,6 +113,22 @@ Public Class QCParametersClass
     Private _AbsorbRateGraphMax As Decimal = 0
     Private _AbsorbRateObjective As Decimal = 0
 
+    Private _RWidthGraphMin As Decimal = 0
+    Private _RWidthLRL As Decimal = 0
+    Private _RWidthLCL As Decimal = 0
+    Private _RWidthUCL As Decimal = 0
+    Private _RWidthURL As Decimal = 0
+    Private _RWidthGraphMax As Decimal = 0
+    Private _RWidthObjective As Decimal = 0
+
+    Private _BPWidthGraphMin As Decimal = 0
+    Private _BPWidthLRL As Decimal = 0
+    Private _BPWidthLCL As Decimal = 0
+    Private _BPWidthUCL As Decimal = 0
+    Private _BPWidthURL As Decimal = 0
+    Private _BPWidthGraphMax As Decimal = 0
+    Private _BPWidthObjective As Decimal = 0
+
     Private _PcntcGraphMin As Decimal = 0
     Private _PcntcLRL As Decimal = 0
     Private _PcntcLCL As Decimal = 0
@@ -146,6 +162,8 @@ Public Class QCParametersClass
         Pcntc = 13
         WD = 14
         AbsorbRate = 15
+        RWidth = 16
+        BPWidth = 17
     End Enum
 
     Public Structure QCSpecificationsStructure
@@ -1001,6 +1019,132 @@ Public Class QCParametersClass
         End Set
     End Property
 
+    Public Property RWidthGraphMin() As Decimal
+        Get
+            Return _RWidthGraphMin
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthGraphMin = Value
+        End Set
+    End Property
+
+    Public Property RWidthLRL() As Decimal
+        Get
+            Return _RWidthLRL
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthLRL = Value
+        End Set
+    End Property
+
+    Public Property RWidthLCL() As Decimal
+        Get
+            Return _RWidthLCL
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthLCL = Value
+        End Set
+    End Property
+
+    Public Property RWidthUCL() As Decimal
+        Get
+            Return _RWidthUCL
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthUCL = Value
+        End Set
+    End Property
+
+    Public Property RWidthURL() As Decimal
+        Get
+            Return _RWidthURL
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthURL = Value
+        End Set
+    End Property
+
+    Public Property RWidthGraphMax() As Decimal
+        Get
+            Return _RWidthGraphMax
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthGraphMax = Value
+        End Set
+    End Property
+
+    Public Property RWidthObjective() As Decimal
+        Get
+            Return _RWidthObjective
+        End Get
+        Set(ByVal Value As Decimal)
+            _RWidthObjective = Value
+        End Set
+    End Property
+
+    Public Property BPWidthGraphMin() As Decimal
+        Get
+            Return _BPWidthGraphMin
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthGraphMin = Value
+        End Set
+    End Property
+
+    Public Property BPWidthLRL() As Decimal
+        Get
+            Return _BPWidthLRL
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthLRL = Value
+        End Set
+    End Property
+
+    Public Property BPWidthLCL() As Decimal
+        Get
+            Return _BPWidthLCL
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthLCL = Value
+        End Set
+    End Property
+
+    Public Property BPWidthUCL() As Decimal
+        Get
+            Return _BPWidthUCL
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthUCL = Value
+        End Set
+    End Property
+
+    Public Property BPWidthURL() As Decimal
+        Get
+            Return _BPWidthURL
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthURL = Value
+        End Set
+    End Property
+
+    Public Property BPWidthGraphMax() As Decimal
+        Get
+            Return _BPWidthGraphMax
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthGraphMax = Value
+        End Set
+    End Property
+
+    Public Property BPWidthObjective() As Decimal
+        Get
+            Return _BPWidthObjective
+        End Get
+        Set(ByVal Value As Decimal)
+            _BPWidthObjective = Value
+        End Set
+    End Property
+
     Public Property PcntcGraphMin() As Decimal
         Get
             Return _PcntcGraphMin
@@ -1250,6 +1394,22 @@ Public Class QCParametersClass
         oSQL.AddParameter("@AbsorbRateGraphMax", SqlDbType.Float, 0, AbsorbRateGraphMax, ParameterDirection.Input)
         oSQL.AddParameter("@AbsorbRateObjective", SqlDbType.Float, 0, AbsorbRateObjective, ParameterDirection.Input)
 
+        oSQL.AddParameter("@RWidthGraphMin", SqlDbType.Float, 0, RWidthGraphMin, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidthLRL", SqlDbType.Float, 0, RWidthLRL, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidthLCL", SqlDbType.Float, 0, RWidthLCL, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidthUCL", SqlDbType.Float, 0, RWidthUCL, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidthURL", SqlDbType.Float, 0, RWidthURL, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidthGraphMax", SqlDbType.Float, 0, RWidthGraphMax, ParameterDirection.Input)
+        oSQL.AddParameter("@RWidthObjective", SqlDbType.Float, 0, RWidthObjective, ParameterDirection.Input)
+
+        oSQL.AddParameter("@BPWidthGraphMin", SqlDbType.Float, 0, BPWidthGraphMin, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidthLRL", SqlDbType.Float, 0, BPWidthLRL, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidthLCL", SqlDbType.Float, 0, BPWidthLCL, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidthUCL", SqlDbType.Float, 0, BPWidthUCL, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidthURL", SqlDbType.Float, 0, BPWidthURL, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidthGraphMax", SqlDbType.Float, 0, BPWidthGraphMax, ParameterDirection.Input)
+        oSQL.AddParameter("@BPWidthObjective", SqlDbType.Float, 0, BPWidthObjective, ParameterDirection.Input)
+
         oSQL.AddParameter("@PcntcGraphMin", SqlDbType.Float, 0, PcntcGraphMin, ParameterDirection.Input)
         oSQL.AddParameter("@PcntcLRL", SqlDbType.Float, 0, PcntcLRL, ParameterDirection.Input)
         oSQL.AddParameter("@PcntcLCL", SqlDbType.Float, 0, PcntcLCL, ParameterDirection.Input)
@@ -1402,6 +1562,22 @@ Public Class QCParametersClass
                 _AbsorbRateGraphMax = 0
                 _AbsorbRateObjective = 0
 
+                _RWidthGraphMin = 0
+                _RWidthLRL = 0
+                _RWidthLCL = 0
+                _RWidthUCL = 0
+                _RWidthURL = 0
+                _RWidthGraphMax = 0
+                _RWidthObjective = 0
+
+                _BPWidthGraphMin = 0
+                _BPWidthLRL = 0
+                _BPWidthLCL = 0
+                _BPWidthUCL = 0
+                _BPWidthURL = 0
+                _BPWidthGraphMax = 0
+                _BPWidthObjective = 0
+
                 _PcntcGraphMin = 0
                 _PcntcLRL = 0
                 _PcntcLCL = 0
@@ -1523,6 +1699,22 @@ Public Class QCParametersClass
                 _AbsorbRateURL = dr("AbsorbRateURL")
                 _AbsorbRateGraphMax = dr("AbsorbRateGraphMax")
                 _AbsorbRateObjective = IIf(IsDBNull(dr("AbsorbRateObjective")), 0, dr("AbsorbRateObjective"))
+
+                _RWidthGraphMin = dr("RWidthGraphMin")
+                _RWidthLRL = dr("RWidthLRL")
+                _RWidthLCL = dr("RWidthLCL")
+                _RWidthUCL = dr("RWidthUCL")
+                _RWidthURL = dr("RWidthURL")
+                _RWidthGraphMax = dr("RWidthGraphMax")
+                _RWidthObjective = IIf(IsDBNull(dr("RWidthObjective")), 0, dr("RWidthObjective"))
+
+                _BPWidthGraphMin = dr("BPWidthGraphMin")
+                _BPWidthLRL = dr("BPWidthLRL")
+                _BPWidthLCL = dr("BPWidthLCL")
+                _BPWidthUCL = dr("BPWidthUCL")
+                _BPWidthURL = dr("BPWidthURL")
+                _BPWidthGraphMax = dr("BPWidthGraphMax")
+                _BPWidthObjective = IIf(IsDBNull(dr("BPWidthObjective")), 0, dr("BPWidthObjective"))
 
                 _PcntcGraphMin = dr("PcntcGraphMin")
                 _PcntcLRL = dr("PcntcLRL")
@@ -1660,6 +1852,22 @@ Public Class QCParametersClass
         QCSpecifications(FieldTypeEnum.AbsorbRate).URL = AbsorbRateURL
         QCSpecifications(FieldTypeEnum.AbsorbRate).GraphMax = AbsorbRateGraphMax
         QCSpecifications(FieldTypeEnum.AbsorbRate).Objective = AbsorbRateObjective
+
+        QCSpecifications(FieldTypeEnum.RWidth).GraphMin = RWidthGraphMin
+        QCSpecifications(FieldTypeEnum.RWidth).LRL = RWidthLRL
+        QCSpecifications(FieldTypeEnum.RWidth).LCL = RWidthLCL
+        QCSpecifications(FieldTypeEnum.RWidth).UCL = RWidthUCL
+        QCSpecifications(FieldTypeEnum.RWidth).URL = RWidthURL
+        QCSpecifications(FieldTypeEnum.RWidth).GraphMax = RWidthGraphMax
+        QCSpecifications(FieldTypeEnum.RWidth).Objective = RWidthObjective
+
+        QCSpecifications(FieldTypeEnum.BPWidth).GraphMin = BPWidthGraphMin
+        QCSpecifications(FieldTypeEnum.BPWidth).LRL = BPWidthLRL
+        QCSpecifications(FieldTypeEnum.BPWidth).LCL = BPWidthLCL
+        QCSpecifications(FieldTypeEnum.BPWidth).UCL = BPWidthUCL
+        QCSpecifications(FieldTypeEnum.BPWidth).URL = BPWidthURL
+        QCSpecifications(FieldTypeEnum.BPWidth).GraphMax = BPWidthGraphMax
+        QCSpecifications(FieldTypeEnum.BPWidth).Objective = BPWidthObjective
 
         QCSpecifications(FieldTypeEnum.Pcntc).GraphMin = PcntcGraphMin
         QCSpecifications(FieldTypeEnum.Pcntc).LRL = PcntcLRL
